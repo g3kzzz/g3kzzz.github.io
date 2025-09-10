@@ -21,6 +21,17 @@
   --border: rgba(0, 0, 0, 0.08);
   --shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }
+/* Para que el footer quede siempre abajo */
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1; /* Ocupa el espacio restante y empuja el footer */
+}
 
 
 
