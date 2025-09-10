@@ -1,3 +1,5 @@
+
+
 (function(){
   const root = document.documentElement;
   const themeToggle = document.getElementById('themeToggle');
@@ -23,20 +25,18 @@
   // Simple view router using hash
   const views = Array.from(document.querySelectorAll('[data-view]'));
   const navLinks = Array.from(document.querySelectorAll('[data-link]'));
-  const defaultView = 'profile';
+  const defaultView = 'home';
 
   function showView(name){
     views.forEach(v => {
       const match = v.dataset.view === name;
       v.hidden = !match;
     });
-    // update nav active
     navLinks.forEach(a => {
       const href = a.getAttribute('href') || '';
       const isActive = href.replace('#','') === name || (href === '#' && name === defaultView);
       a.classList.toggle('active', isActive);
     });
-    // lazy render
     if(name === 'profile') renderRecentInto('recentGridProfile');
   }
 
@@ -47,7 +47,11 @@
 
   window.addEventListener('hashchange', route);
   navLinks.forEach(a => a.addEventListener('click', ()=>{}));
-  route();
+
+  // --- estado inicial forzado a HOME ---
+  let requestedView = (location.hash.replace('#','') || 'profile');
+  location.hash = '#home';
+  showView('home');
 
   // Elements and state
   const platformBadges = document.getElementById('platformBadges');
@@ -69,7 +73,6 @@
   let selectedPlatform = '';
   let searchQuery = '';
   let selectedDifficulty = '';
-  let currentView = (location.hash.replace('#','') || defaultView);
 
   // Load data
   fetch('data/writeups.json')
@@ -77,13 +80,10 @@
     .then(data => {
       ALL = data;
       initUI();
-
-      // ✅ jugada sucia: si el hash es #profile, primero carga home y luego profile
-      if (currentView === 'profile') {
-        showView('home');
-        setTimeout(() => showView('profile'), 200);
-      } else {
-        showView(currentView);
+      // ✅ cuando todo cargó, si el usuario pidió profile → lo llevamos ahí
+      if (requestedView === 'profile') {
+        location.hash = '#profile';
+        showView('profile');
       }
     })
     .catch(err => {
@@ -243,4 +243,3 @@
   function escapeAttr(s){ return String(s||'').replace(/["']/g, c => ({'"':'&quot;',"'":'&#39;'}[c])); }
 
 })();
-
