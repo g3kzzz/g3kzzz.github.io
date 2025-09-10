@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title id="pageTitle">Writeup</title>
+  <meta name="description" content="Detailed writeup." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="./" class="brand">
+        <span class="brand-icon">🛡️</span>
+        <span class="brand-text">G3K Writeups</span>
+      </a>
+      <nav class="nav">
+        <a href="./" class="nav-link">Articles</a>
+        <a href="./#tags" class="nav-link">Tags</a>
+        <a href="./#about" class="nav-link">About</a>
+      </nav>
+      <button id="themeToggle" class="icon-btn" aria-label="Toggle theme" title="Toggle theme">
+        <svg id="icon-sun" class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zm10.48 0l1.79-1.8-1.41-1.41-1.8 1.79 1.42 1.42zM12 4V1h-0v3h0zm0 19v-3h0v3h0zM4 12H1v0h3v0zm19 0h-3v0h3v0zM6.76 19.16l-1.42 1.42-1.79-1.8 1.41-1.41 1.8 1.79zM19.16 17.24l1.8 1.79 1.41-1.41-1.79-1.8-1.42 1.42zM12 6a6 6 0 100 12 6 6 0 000-12z"/></svg>
+        <svg id="icon-moon" class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <article class="post">
+      <header class="post-header">
+        <h1 id="postTitle">Loading…</h1>
+        <div class="post-meta" id="postMeta"></div>
+      </header>
+      <div id="postContent" class="post-content">Loading content…</div>
+      <nav class="post-nav">
+        <a id="backHome" class="btn ghost" href="./">← Back to all writeups</a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>© <span id="year"></span> G3K. All rights reserved.</div>
+      <div class="muted">Built for GitHub Pages • No frameworks • Accessible</div>
+    </div>
+  </footer>
+
+  <script src="assets/js/post.js" defer></script>
+</body>
+</html>

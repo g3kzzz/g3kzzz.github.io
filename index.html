@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>G3K Writeups</title>
+  <meta name="description" content="Professional, fast writeups portal for CTF machines and labs." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="./" class="brand">
+        <span class="brand-icon">🛡️</span>
+        <span class="brand-text">G3K Writeups</span>
+      </a>
+      <nav class="nav">
+        <a href="./" class="nav-link active">Articles</a>
+        <a href="#tags" class="nav-link">Tags</a>
+        <a href="#about" class="nav-link">About</a>
+        <a target="_blank" rel="noopener" href="https://github.com/" class="nav-link">GitHub</a>
+      </nav>
+      <button id="themeToggle" class="icon-btn" aria-label="Toggle theme" title="Toggle theme">
+        <svg id="icon-sun" class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zm10.48 0l1.79-1.8-1.41-1.41-1.8 1.79 1.42 1.42zM12 4V1h-0v3h0zm0 19v-3h0v3h0zM4 12H1v0h3v0zm19 0h-3v0h3v0zM6.76 19.16l-1.42 1.42-1.79-1.8 1.41-1.41 1.8 1.79zM19.16 17.24l1.8 1.79 1.41-1.41-1.79-1.8-1.42 1.42zM12 6a6 6 0 100 12 6 6 0 000-12z"/></svg>
+        <svg id="icon-moon" class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-left">
+        <h1>Clean, fast & elegant writeups portal</h1>
+        <p class="muted">Static site that runs entirely on GitHub Pages. Dark/Light theme, powerful filters and search, and a beautiful UI.</p>
+      </div>
+      <div class="hero-right">
+        <div class="stat-card">
+          <div class="stat-number" id="totalWriteups">0</div>
+          <div class="stat-label">Total writeups</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="platformCount">0</div>
+          <div class="stat-label">Platforms</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="filters" aria-labelledby="filters-title">
+      <h2 id="filters-title" class="section-title">G3K Machines</h2>
+      <div id="platformBadges" class="platform-badges" aria-live="polite"></div>
+    </section>
+
+    <section class="search" aria-labelledby="search-title">
+      <h2 id="search-title" class="visually-hidden">Search writeups</h2>
+      <div class="search-bar">
+        <div class="search-input">
+          <span class="search-icon" aria-hidden="true">🔎</span>
+          <input id="searchInput" type="search" placeholder="Search writeups (title, tags, platform)..." />
+        </div>
+        <button id="searchBtn" class="btn">Search</button>
+        <select id="difficultySelect" class="select">
+          <option value="">All difficulties</option>
+          <option>Easy</option>
+          <option>Medium</option>
+          <option>Hard</option>
+        </select>
+        <button id="clearFilters" class="btn ghost">Clear</button>
+      </div>
+    </section>
+
+    <section class="results" aria-labelledby="results-title">
+      <div class="results-header">
+        <h2 id="results-title" class="section-title">Results</h2>
+        <div id="resultsMeta" class="muted"></div>
+      </div>
+      <div id="resultsGrid" class="grid"></div>
+    </section>
+
+    <section class="recent" aria-labelledby="recent-title">
+      <div class="results-header">
+        <h2 id="recent-title" class="section-title">Recent writeups</h2>
+        <div class="muted">Last 9 writeups by date</div>
+      </div>
+      <div id="recentGrid" class="grid"></div>
+    </section>
+
+    <section id="about" class="about">
+      <h2 class="section-title">About</h2>
+      <p>This site is a pure static front-end designed to work perfectly on GitHub Pages. All content is defined via <code>data/writeups.json</code> and individual <code>writeups/*.html</code> files. No databases or external servers are used.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>© <span id="year"></span> G3K. All rights reserved.</div>
+      <div class="muted">Built for GitHub Pages • No frameworks • Accessible</div>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js" defer></script>
+</body>
+</html>
