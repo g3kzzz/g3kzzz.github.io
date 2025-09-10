@@ -219,7 +219,7 @@
   function renderRecentInto(id){
     const container = document.getElementById(id);
     if(!container) return;
-    const recent = [...ALL].sort((a,b)=> new Date(b.date) - new Date(a.date)).slice(0,9);
+    const recent = [...ALL].sort((a,b)=> new Date(b.date) - new Date(a.date)).slice(0,3);
     renderGrid(container, recent);
   }
 
