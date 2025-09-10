@@ -1,0 +1,41 @@
+[
+  {
+    "title": "SilentDev",
+    "date": "2025-09-05",
+    "machine": "HackMyVM-Silentdev",
+    "tags": [
+      "Hackmyvm",
+      "Linux",
+      "Pwn"
+    ],
+    "description": "Solving SilentDev \u2014 foothold to root. Short recap.",
+    "file": "writeups/sample1.md",
+    "readtime": 3
+  },
+  {
+    "title": "VulnTarget A",
+    "date": "2025-09-04",
+    "machine": "vulntarget-a",
+    "tags": [
+      "Vulntarget",
+      "Redis",
+      "PTH"
+    ],
+    "description": "Quick writeup showing exploitation steps.",
+    "file": "writeups/sample2.md",
+    "readtime": 5
+  },
+  {
+    "title": "VulnTarget C",
+    "date": "2025-09-03",
+    "machine": "vulntarget-c",
+    "tags": [
+      "Vulntarget",
+      "Laravel",
+      "OVAS"
+    ],
+    "description": "Longer writeup with notes and references.",
+    "file": "writeups/sample3.md",
+    "readtime": 9
+  }
+]
