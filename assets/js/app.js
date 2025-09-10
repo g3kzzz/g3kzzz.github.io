@@ -38,7 +38,7 @@
     if(name === 'profile') renderRecentInto('recentGridProfile');
   }
   function route(){
-    const h = (location.hash || '#home').replace('#','') || 'home';
+    const h = (location.hash || '#profile').replace('#','') || 'profile';
     showView(h);
   }
   window.addEventListener('hashchange', route);
