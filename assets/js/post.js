@@ -23,6 +23,13 @@
     });
   }
 
+  // Apply profile avatar + accent color if available
+  const headerAvatar = document.getElementById('headerAvatar');
+  const avatar = localStorage.getItem('g3k-profile-avatar');
+  const accent = localStorage.getItem('g3k-accent');
+  if(avatar && headerAvatar) headerAvatar.src = avatar;
+  if(accent) document.documentElement.style.setProperty('--acc', accent);
+
   if(!id){
     document.getElementById('postTitle').textContent = 'Not found';
     document.getElementById('postContent').innerHTML = '<p>Missing writeup ID.</p>';
