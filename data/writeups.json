@@ -14,4 +14,19 @@
     "summary": "Exploit the PHP 8.1 dev backdoor header to obtain a shell and escalate with a misconfigured gem binary.",
     "file": "writeups/htb-knife.html"
   },
+  {
+    "id": "htb-knife",
+    "title": "HackTheBox: Knife (example)",
+    "platform": "HackTheBox",
+    "date": "2025-09-05",
+    "difficulty": "Easy",
+    "tags": [
+      "Linux",
+      "Web",
+      "PHP",
+      "Sudo"
+    ],
+    "summary": "Exploit the PHP 8.1 dev backdoor header to obtain a shell and escalate with a misconfigured gem binary.",
+    "file": "writeups/htb-knife.html"
+  }
 ]
