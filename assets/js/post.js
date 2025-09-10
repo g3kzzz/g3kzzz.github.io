@@ -49,7 +49,7 @@
       document.getElementById('postMeta').textContent = [item.platform, item.difficulty, new Date(item.date).toLocaleDateString()].filter(Boolean).join(' • ');
 
       // Load HTML content
-      fetch(item.file)
+      fetch(item.file + '?nocache=' + new Date().getTime())
         .then(r => r.text())
         .then(html => {
           document.getElementById('postContent').innerHTML = html;
