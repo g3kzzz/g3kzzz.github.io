@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>G3K Writeups</title>
-  <meta name="description" content="Professional static writeups portal."/>
+  <meta name="description" content="Professional static writeups portal for CTFs, HackTheBox, VulnHub and more."/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -31,13 +31,13 @@
   </header>
 
   <main class="container">
-    <!-- HOME view: lists, search, filters -->
+    <!-- HOME view -->
     <section class="view" data-view="home" hidden>
 
       <section class="hero small-hero">
         <div class="hero-left">
-          <h1>Clean, fast & elegant writeups portal</h1>
-          <p class="muted">Static site that runs entirely on GitHub Pages. Dark/Light theme, powerful filters and search, and a beautiful UI.</p>
+          <h1>Writeups crafted for Hackers & Learners</h1>
+          <p class="muted">Explore CTF solutions, HackTheBox machines, VulnHub labs, and custom challenges. Every writeup is structured to teach, guide, and inspire the offensive security mindset.</p>
         </div>
         <div class="hero-right">
           <div class="stats-grid">
@@ -55,10 +55,12 @@
 
       <section class="filters" aria-labelledby="filters-title">
         <h2 id="filters-title" class="section-title">G3K Machines</h2>
+        <p class="muted">Browse by platform. Quickly find machines from HackTheBox, VulnHub, TryHackMe and more.</p>
         <div id="platformBadges" class="platform-badges" aria-live="polite"></div>
       </section>
 
       <section class="search" aria-labelledby="search-title">
+        <h2 id="search-title" class="section-title">Search & Filter</h2>
         <div class="search-bar">
           <div class="search-input">
             <span class="search-icon" aria-hidden="true">🔎</span>
@@ -78,7 +80,7 @@
       <section class="results" aria-labelledby="results-title">
         <div class="results-header">
           <h2 id="results-title" class="section-title">Results</h2>
-          <div id="resultsMeta" class="muted"></div>
+          <div id="resultsMeta" class="muted">No results yet. Use search or select a platform.</div>
         </div>
         <div id="resultsGrid" class="grid"></div>
       </section>
@@ -88,11 +90,11 @@
     <!-- TAGS view -->
     <section class="view" data-view="tags" hidden>
       <h2 class="section-title">Platforms & Tag Overview</h2>
-      <p class="muted">Click any platform to filter its writeups.</p>
+      <p class="muted">Visualize the distribution of writeups by platform and tags. A quick way to discover learning paths.</p>
       <div id="platformOverview" class="platform-grid"></div>
       <hr/>
       <div id="tagOverview" class="tag-overview"></div>
-      <div class="muted" style="margin-top:12px">Tip: Use the top search to refine results.</div>
+      <div class="muted" style="margin-top:12px">Tip: Use the top search bar to refine results even further.</div>
       <div style="height:20px"></div>
     </section>
 
@@ -103,14 +105,15 @@
         <h1 id="profileName">G3Kzzz</h1>
         <p class="muted" id="profileTagline">Lost things will vanish, memories may meet again.</p>
         <div class="profile-social">
-          <a href="#" aria-label="GitHub">GitHub</a> • <a href="#" aria-label="Contact">Contact</a>
+          <a href="https://github.com/g3kzzz" aria-label="GitHub">GitHub</a> • 
+          <a href="mailto:contact@g3kzzz.io" aria-label="Contact">Contact</a>
         </div>
       </div>
 
       <section class="recent" aria-labelledby="recent-profile">
         <div class="results-header">
           <h2 id="recent-profile" class="section-title">Recent writeups</h2>
-          <div class="muted"></div>
+          <div class="muted">The latest 9 articles pushed to the repo.</div>
         </div>
         <div id="recentGridProfile" class="grid"></div>
       </section>
@@ -119,13 +122,25 @@
     <!-- ABOUT view -->
     <section class="view" data-view="about" hidden>
       <h2 class="section-title">About</h2>
-      <p>This site is a pure static front-end designed to work perfectly on GitHub Pages. All content is defined via <code>data/writeups.json</code> and individual <code>writeups/*.html</code> files. No databases or external servers are used.</p>
+      <p>This project is a <strong>fully static site</strong> designed for publishing hacking writeups. It runs <em>100% client-side</em> on GitHub Pages — no databases, no external servers, pure simplicity and performance.</p>
+
+      <h3>Features</h3>
+      <ul>
+        <li>Dark & Light mode toggle 🌙☀️</li>
+        <li>Filter writeups by platform, difficulty, and tags</li>
+        <li>Fast client-side search</li>
+        <li>Responsive & mobile-friendly layout</li>
+        <li>Easy content management via JSON + HTML</li>
+      </ul>
+
       <h3>How to add writeups</h3>
       <ol>
-        <li>Create <code>writeups/your-slug.html</code> with the writeup content.</li>
-        <li>Add metadata to <code>data/writeups.json</code>.</li>
-        <li>Commit and push.</li>
+        <li>Create a new HTML file in <code>writeups/</code> (e.g., <code>writeups/htb-example.html</code>).</li>
+        <li>Add metadata in <code>data/writeups.json</code> (title, platform, difficulty, tags).</li>
+        <li>Commit & push to GitHub. It auto-appears on the site.</li>
       </ol>
+
+      <p class="muted">G3K Writeups is built for <strong>sharing knowledge</strong>, <strong>documenting exploits</strong>, and <strong>helping learners</strong> grow in the infosec path.</p>
     </section>
   </main>
 
