@@ -127,20 +127,6 @@
     "file": "writeups/thm-blue.html"
   },
   {
-    "id": "offsec-sneaky",
-    "title": "OffSec Proving Grounds: Sneaky",
-    "platform": "OffSec PG",
-    "date": "2024-12-02",
-    "difficulty": "Medium",
-    "tags": [
-      "Linux",
-      "Docker",
-      "Weak Credentials"
-    ],
-    "summary": "From exposed registry to Docker breakout and root.",
-    "file": "writeups/pg-sneaky.html"
-  },
-  {
     "id": "htb-spectra",
     "title": "HackTheBox: Spectra",
     "platform": "HackTheBox",
