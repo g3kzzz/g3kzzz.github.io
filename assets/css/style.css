@@ -1,23 +1,27 @@
-:root{
-  --bg: #0a0a0a;
-  --bg-soft: #141414;
-  --card: #1c1c1c;
-  --text: #f0f0f0;
-  --muted: #9a9a9a;
-  --acc: #bbbbbb;
-  --border: rgba(255,255,255,0.1);
-  --shadow: 0 8px 24px rgba(0,0,0,0.5);
+:root {
+  /* Dark mode */
+  --bg: #0d0f11;          /* fondo casi negro pero con un toque grisáceo */
+  --bg-soft: #16181c;     /* un poco más claro que bg */
+  --card: #1e2126;        /* tarjetas con contraste sutil */
+  --text: #f3f4f6;        /* texto principal claro pero no blanco puro */
+  --muted: #9da3ae;       /* gris claro para texto secundario */
+  --acc: #4f7cff;         /* azul vibrante pero no eléctrico */
+  --border: rgba(255, 255, 255, 0.08);
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
 }
-:root.light{
-  --bg: #eceef1;        /* gris muy claro, no blanco puro */
-  --bg-soft: #f5f6f8;   /* un poco más claro para tarjetas */
-  --card: #ffffff;      /* tarjetas siguen blancas pero con contraste */
-  --text: #1a1d23;      /* casi negro, no 100% */
-  --muted: #6c7480;     /* gris medio para texto secundario */
-  --acc: #3b5cff;       /* azul acento más suave */
-  --border: rgba(0,0,0,0.08);
-  --shadow: 0 8px 20px rgba(0,0,0,0.06);
+
+:root.light {
+  /* Light mode */
+  --bg: #f2f4f7;          /* gris azulado muy suave */
+  --bg-soft: #f8f9fb;     /* tarjetas sobre un leve gris */
+  --card: #ffffff;        /* fondo de tarjetas limpio */
+  --text: #1e2229;        /* gris muy oscuro para texto */
+  --muted: #717986;       /* gris medio para subtítulos */
+  --acc: #3b5cff;         /* azul acento */
+  --border: rgba(0, 0, 0, 0.08);
+  --shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
+
 
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
