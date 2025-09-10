@@ -15,18 +15,31 @@
     "file": "writeups/htb-knife.html"
   },
   {
-    "id": "htb-knife",
-    "title": "HackTheBox: Knife (example)",
-    "platform": "HackTheBox",
-    "date": "2025-09-05",
+    "id": "vh-tr0ll",
+    "title": "VulnHub: Tr0ll 1",
+    "platform": "VulnHub",
+    "date": "2025-08-31",
     "difficulty": "Easy",
     "tags": [
       "Linux",
-      "Web",
-      "PHP",
-      "Sudo"
+      "Enumeration",
+      "Wordlists"
     ],
-    "summary": "Exploit the PHP 8.1 dev backdoor header to obtain a shell and escalate with a misconfigured gem binary.",
-    "file": "writeups/htb-knife.html"
+    "summary": "Classic enumeration-heavy box: hidden files, wordlist tricks and setuid escalation.",
+    "file": "writeups/vh-tr0ll.html"
+  },
+  {
+    "id": "vh-bt",
+    "title": "VulnHub: BlueTorrent",
+    "platform": "VulnHub",
+    "date": "2024-10-10",
+    "difficulty": "Hard",
+    "tags": [
+      "Linux",
+      "BitTorrent",
+      "Crypto"
+    ],
+    "summary": "Chain misconfigurations in a custom torrent service and crack weak crypto for root.",
+    "file": "writeups/vh-bluetorrent.html"
   }
 ]
