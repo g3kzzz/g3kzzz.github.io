@@ -99,26 +99,37 @@
     </section>
 
     <!-- PROFILE view -->
-<section class="view" data-view="profile" hidden>
-  <div class="profile-hero">
-    <img src="assets/images/user-image.png" alt="Profile avatar" class="avatar"/>
-    <h1 id="profileName">G3Kzzz</h1>
-    <p class="muted" id="profileTagline">Dreams fade with dawn, yet their echoes light the path ahead.</p>
-    <div class="profile-social">
-      <a href="https://github.com/g3kzzz" aria-label="GitHub">GitHub</a> • 
-      <a href="mailto:contact@g3kzzz.io" aria-label="Contact">Contact</a>
-    </div>
-  </div>
+    <section class="view" data-view="profile" hidden>
+      <div class="profile-hero">
+        <img src="assets/images/user-image.png" alt="Profile avatar" class="avatar"/>
+        <h1 id="profileName">G3Kzzz</h1>
+        <p class="muted" id="profileTagline">Dreams fade with dawn, yet their echoes light the path ahead.</p>
 
-  <section class="recent" aria-labelledby="recent-profile">
-    <div class="results-header">
-      <h2 id="recent-profile" class="section-title">Recent writeups</h2>
-    </div>
-    <!-- 🔥 Aquí se inyectan las cards -->
-    <div id="recentGridProfile" class="grid"></div>
-  </section>
-</section>
+        <!-- 🔥 Follow buttons -->
+        <div class="profile-buttons" style="margin:15px 0; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+          <a href="https://app.hackthebox.com/profile/2426983" target="_blank" rel="noopener">
+            <img src="https://img.shields.io/static/v1?message=HackTheBox&logo=hackthebox&label=&color=9FEF00&logoColor=black&labelColor=&style=for-the-badge" height="30" alt="HackTheBox Follow"/>
+          </a>
+          <a href="https://github.com/g3kzzz" target="_blank" rel="noopener">
+            <img src="https://img.shields.io/static/v1?message=GitHub&logo=github&label=&color=181717&logoColor=white&labelColor=&style=for-the-badge" height="30" alt="GitHub Follow"/>
+          </a>
+        </div>
+        <!-- 🔥 End Follow buttons -->
 
+        <div class="profile-social">
+          <a href="https://github.com/g3kzzz" aria-label="GitHub">GitHub</a> • 
+          <a href="mailto:contact@g3kzzz.io" aria-label="Contact">Contact</a>
+        </div>
+      </div>
+
+      <section class="recent" aria-labelledby="recent-profile">
+        <div class="results-header">
+          <h2 id="recent-profile" class="section-title">Recent writeups</h2>
+        </div>
+        <!-- 🔥 Aquí se inyectan las cards -->
+        <div id="recentGridProfile" class="grid"></div>
+      </section>
+    </section>
 
     <!-- ABOUT view -->
     <section class="view" data-view="about" hidden>
@@ -155,3 +166,4 @@
   <script src="assets/js/app.js" defer></script>
 </body>
 </html>
+
