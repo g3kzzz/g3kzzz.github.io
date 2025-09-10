@@ -11,16 +11,31 @@
 }
 
 :root.light {
-  /* Light mode con gris plomo azulado */
-  --bg: #dfe3ea;          /* gris plomo claro azulado para fondo general */
-  --bg-soft: #e8ecf2;     /* un tono más suave para secciones y hero */
-  --card: #f4f6fa;        /* tarjetas plomo-azul claro, no blanco */
-  --text: #22262e;        /* gris oscuro neutro para texto */
-  --muted: #586070;       /* gris plomo medio para texto secundario */
-  --acc: #3b6cff;         /* azul acento vivo pero equilibrado */
+  /* Fondo general, gris plomo azulado */
+  --bg: #dfe3ea;
+
+  /* Fondo de secciones suaves y héroes */
+  --bg-soft: #e8ecf2;
+
+  /* Tarjetas y recuadros */
+  --card: #f4f6fa;
+
+  /* Texto principal */
+  --text: #22262e;
+
+  /* Texto secundario (muted) */
+  --muted: #586070;
+
+  /* Color de acento (botones, links) */
+  --acc: #3b6cff;
+
+  /* Bordes suaves */
   --border: rgba(0, 0, 0, 0.08);
+
+  /* Sombras suaves */
   --shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }
+
 /* Para que el footer quede siempre abajo */
 html, body {
   height: 100%;
