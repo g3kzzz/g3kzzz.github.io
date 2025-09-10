@@ -155,24 +155,28 @@
     if(recentGridProfile) renderGrid(recentGridProfile, recent);
 
     // results
-    applyFilters();
+  applyFilters();
 
-    // events
-    function doSearch(){
-      searchQuery = (searchInput.value || '').trim().toLowerCase();
-      applyFilters();
-      location.hash = '#home';
-    }
-    if(searchBtn) searchBtn.addEventListener('click', doSearch);
-    if(searchInput) searchInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doSearch(); });
-    if(difficultySelect) difficultySelect.addEventListener('change', ()=>{ selectedDifficulty = difficultySelect.value; applyFilters(); });
-    if(clearBtn) clearBtn.addEventListener('click', ()=>{
-      selectedPlatform=''; searchQuery=''; selectedDifficulty='';
-      if(searchInput) searchInput.value=''; if(difficultySelect) difficultySelect.value='';
-      for(const b of platformBadges.querySelectorAll('.badge')) b.dataset.active = String(b.dataset.platform==='');
-      applyFilters();
-    });
+  // events
+  function doSearch(){
+    searchQuery = (searchInput.value || '').trim().toLowerCase();
+    applyFilters();
+    location.hash = '#home';
   }
+  if(searchBtn) searchBtn.addEventListener('click', doSearch);
+  if(searchInput) searchInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doSearch(); });
+  if(difficultySelect) difficultySelect.addEventListener('change', ()=>{ selectedDifficulty = difficultySelect.value; applyFilters(); });
+  if(clearBtn) clearBtn.addEventListener('click', ()=>{
+    selectedPlatform=''; searchQuery=''; selectedDifficulty='';
+    if(searchInput) searchInput.value=''; if(difficultySelect) difficultySelect.value='';
+    for(const b of platformBadges.querySelectorAll('.badge')) b.dataset.active = String(b.dataset.platform==='');
+    applyFilters();
+  });
+
+  // ✅ refrescar siempre la vista actual (soluciona que Profile aparezca vacío)
+  const currentView = (location.hash.replace('#','') || defaultView);
+  showView(currentView);
+}
 
   function makeBadge(label, count, platformValue){
     const b = document.createElement('button');
