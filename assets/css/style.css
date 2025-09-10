@@ -143,3 +143,19 @@ a.card-link:hover{text-decoration:underline}
   .profile-grid{grid-template-columns:1fr}
   .hero{grid-template-columns:1fr}
 }
+
+
+
+/* Profile hero */
+.profile-hero{display:flex;flex-direction:column;align-items:center;gap:10px;padding:36px 0}
+.avatar{width:140px;height:140px;border-radius:9999px;border:6px solid var(--card);object-fit:cover;box-shadow:0 12px 30px rgba(0,0,0,0.25)}
+.profile-social a{color:var(--acc);text-decoration:none;font-weight:700;margin:0 6px}
+.profile-social a:hover{text-decoration:underline}
+
+/* View visibility */
+.view{padding:10px 0 28px 0}
+.view[hidden]{display:none}
+
+/* nav active */
+.nav-link.active{color:var(--text);outline:2px solid transparent;padding:6px 8px;border-radius:8px}
+.nav-link{transition:all .15s ease}
