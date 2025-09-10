@@ -23,6 +23,8 @@
   // Simple view router using hash
   const views = Array.from(document.querySelectorAll('[data-view]'));
   const navLinks = Array.from(document.querySelectorAll('[data-link]'));
+  const defaultView = 'home';
+
   function showView(name){
     views.forEach(v => {
       const match = v.dataset.view === name;
@@ -31,16 +33,18 @@
     // update nav active
     navLinks.forEach(a => {
       const href = a.getAttribute('href') || '';
-      const isActive = href.replace('#','') === name || (href === '#' && name === 'home');
+      const isActive = href.replace('#','') === name || (href === '#' && name === defaultView);
       a.classList.toggle('active', isActive);
     });
     // lazy render: if profile view show profile recent
     if(name === 'profile') renderRecentInto('recentGridProfile');
   }
+
   function route(){
-    const h = (location.hash || '#profile').replace('#','') || 'profile';
+    const h = (location.hash || `#${defaultView}`).replace('#','') || defaultView;
     showView(h);
   }
+
   window.addEventListener('hashchange', route);
   // attach link clicks (for SPA feel)
   navLinks.forEach(a => a.addEventListener('click', (e)=>{
@@ -153,7 +157,7 @@
 
     // Render recent on home and profile
     const recent = [...ALL].sort((a,b)=> new Date(b.date) - new Date(a.date)).slice(0,9);
-    //if(recentGrid) renderGrid(recentGrid, recent);
+    if(recentGrid) renderGrid(recentGrid, recent);
     if(recentGridProfile) renderGrid(recentGridProfile, recent);
 
     // Initial results = all
