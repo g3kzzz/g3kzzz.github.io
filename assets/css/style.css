@@ -19,7 +19,6 @@
   --shadow: 0 8px 20px rgba(0,0,0,0.06);
 }
 
-
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{
@@ -51,7 +50,22 @@ body{
 .hero{display:grid;grid-template-columns:1.7fr 1fr;gap:24px;padding:40px 0 10px}
 .hero-left h1{margin:0 0 10px 0;font-size:2.1rem}
 .muted{color:var(--muted)}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:18px; padding:18px; box-shadow:var(--shadow)}
+
+/* 📌 Stats container con separación */
+.stats-grid{
+  display:flex;
+  gap:16px;
+  flex-wrap:wrap;
+}
+.stat-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:var(--shadow);
+  flex:1;
+  min-width:180px;
+}
 .stat-number{font-size:1.9rem;font-weight:800}
 .stat-label{color:var(--muted);font-weight:600}
 
