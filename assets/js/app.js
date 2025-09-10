@@ -75,7 +75,7 @@
   let selectedDifficulty = '';
 
   // Load data
-  fetch('data/writeups.json')
+  fetch('data/writeups.json?nocache=' + new Date().getTime())
     .then(r => r.json())
     .then(data => {
       ALL = data;
