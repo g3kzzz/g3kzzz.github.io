@@ -138,7 +138,7 @@ body{
 .card{
   background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 16px 14px 16px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow);
 }
-.card h3{margin:6px 0 0 0;font-size:1.05rem}
+.card h3{margin:6px 0 0 0;font-size:1.35rem}
 .card .meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-weight:600}
 .tag{font-size:.78rem;background:color-mix(in hsl, var(--acc), #000 85%);padding:2px 8px;border-radius:999px}
 a.card-link{margin-top:auto;text-decoration:none;font-weight:700;color:var(--acc)}
