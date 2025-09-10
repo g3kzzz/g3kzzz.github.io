@@ -15,20 +15,6 @@
     "file": "writeups/htb-knife.html"
   },
   {
-    "id": "thm-rootme",
-    "title": "TryHackMe: RootMe",
-    "platform": "TryHackMe",
-    "date": "2025-07-12",
-    "difficulty": "Easy",
-    "tags": [
-      "Linux",
-      "Web",
-      "Upload"
-    ],
-    "summary": "Web upload bypass, simple PHP reverse shell and cron-based privilege escalation.",
-    "file": "writeups/thm-rootme.html"
-  },
-  {
     "id": "htb-pikaboo",
     "title": "HackTheBox: Pikaboo",
     "platform": "HackTheBox",
