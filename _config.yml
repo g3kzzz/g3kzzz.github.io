@@ -1,0 +1,40 @@
+title: "HYH — Writeups & Security Notes"
+description: "Clean, fast, and filterable writeups site for GitHub Pages."
+url: ""  # set your custom domain or username.github.io repo URL later
+baseurl: ""  # set if deploying to /repo-name
+permalink: /:categories/:year/:month/:day/:title/
+markdown: kramdown
+kramdown:
+  input: GFM
+theme: null
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - .github
+  - "*.zip"
+collections:
+  posts:
+    output: true
+defaults:
+  -
+    scope:
+      path: ""
+    values:
+      layout: default
+  -
+    scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+      author: "HYH"
+      lang: "en"
+      tags: []
+      categories: ["Writeup"]
+      cover: "/assets/img/default-cover.jpg"
+      reading_time: "5 min"
+      summary: ""
+# Enable future posts false by default
+future: false
