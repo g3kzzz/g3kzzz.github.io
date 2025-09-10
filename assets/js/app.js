@@ -36,7 +36,7 @@
       const isActive = href.replace('#','') === name || (href === '#' && name === defaultView);
       a.classList.toggle('active', isActive);
     });
-    // lazy render: if profile view show profile recent
+    // lazy render
     if(name === 'profile') renderRecentInto('recentGridProfile');
   }
 
@@ -46,14 +46,10 @@
   }
 
   window.addEventListener('hashchange', route);
-  // attach link clicks (for SPA feel)
-  navLinks.forEach(a => a.addEventListener('click', (e)=>{
-    // let browser change hash - route will run
-  }));
-  // initial route
+  navLinks.forEach(a => a.addEventListener('click', ()=>{}));
   route();
 
-  // Elements and state for writeup UI
+  // Elements and state
   const platformBadges = document.getElementById('platformBadges');
   const resultsGrid = document.getElementById('resultsGrid');
   const recentGrid = document.getElementById('recentGrid');
@@ -88,7 +84,6 @@
 
   function initUI(){
     if(totalWriteupsEl) totalWriteupsEl.textContent = ALL.length;
-    // Build platform counts and tag map
     const map = new Map();
     const tagMap = new Map();
     for(const w of ALL){
@@ -100,7 +95,7 @@
     }
     if(platformCountEl) platformCountEl.textContent = map.size;
 
-    // Render badges for main filters
+    // badges
     if(platformBadges){
       platformBadges.innerHTML = '';
       platformBadges.appendChild(makeBadge('All', ALL.length, ''));
@@ -115,12 +110,11 @@
           b.dataset.active = String(b.dataset.platform === selectedPlatform);
         }
         applyFilters();
-        // show home view
         location.hash = '#home';
       });
     }
 
-    // Render platform overview (for Tags view)
+    // overview
     if(platformOverview){
       platformOverview.innerHTML = [...map.entries()].sort((a,b)=>b[1]-a[1]).map(([p,c])=>`
         <button class="badge platform-tile" data-platform="${escapeAttr(p)}">${escape(p)} <span class="tag">${c}</span></button>
@@ -129,9 +123,7 @@
         const btn = e.target.closest('.platform-tile');
         if(!btn) return;
         selectedPlatform = btn.dataset.platform;
-        // go to home and apply filter
         location.hash = '#home';
-        // small delay to ensure UI initialised
         setTimeout(()=>{
           for(const b of document.querySelectorAll('#platformBadges .badge')){
             b.dataset.active = String(b.dataset.platform === selectedPlatform);
@@ -141,7 +133,6 @@
       });
     }
 
-    // Render tag overview
     if(tagOverview){
       tagOverview.innerHTML = [...tagMap.entries()].sort((a,b)=>b[1]-a[1]).map(([t,c])=>`
         <button class="badge tag-tile" data-tag="${escapeAttr(t)}">${escape(t)} <span class="tag">${c}</span></button>
@@ -155,15 +146,15 @@
       });
     }
 
-    // Render recent on home and profile
+    // recent
     const recent = [...ALL].sort((a,b)=> new Date(b.date) - new Date(a.date)).slice(0,9);
     if(recentGrid) renderGrid(recentGrid, recent);
     if(recentGridProfile) renderGrid(recentGridProfile, recent);
 
-    // Initial results = all
+    // results
     applyFilters();
 
-    // Events
+    // events
     function doSearch(){
       searchQuery = (searchInput.value || '').trim().toLowerCase();
       applyFilters();
@@ -178,6 +169,11 @@
       for(const b of platformBadges.querySelectorAll('.badge')) b.dataset.active = String(b.dataset.platform==='');
       applyFilters();
     });
+
+    // 🔥 fix: si arrancamos en profile, render recientes ahora con datos cargados
+    if((location.hash.replace('#','') || defaultView) === 'profile'){
+      renderRecentInto('recentGridProfile');
+    }
   }
 
   function makeBadge(label, count, platformValue){
@@ -239,7 +235,6 @@
     `;
   }
 
-  // tiny escape helpers
   function escape(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   function escapeAttr(s){ return String(s||'').replace(/["']/g, c => ({'"':'&quot;',"'":'&#39;'}[c])); }
 
