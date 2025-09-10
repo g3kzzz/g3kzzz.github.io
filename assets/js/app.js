@@ -153,7 +153,7 @@
 
     // Render recent on home and profile
     const recent = [...ALL].sort((a,b)=> new Date(b.date) - new Date(a.date)).slice(0,9);
-    if(recentGrid) renderGrid(recentGrid, recent);
+    //if(recentGrid) renderGrid(recentGrid, recent);
     if(recentGridProfile) renderGrid(recentGridProfile, recent);
 
     // Initial results = all
