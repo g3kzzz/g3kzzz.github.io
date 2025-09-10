@@ -69,6 +69,7 @@
   let selectedPlatform = '';
   let searchQuery = '';
   let selectedDifficulty = '';
+  let currentView = (location.hash.replace('#','') || defaultView);
 
   // Load data
   fetch('data/writeups.json')
@@ -76,6 +77,8 @@
     .then(data => {
       ALL = data;
       initUI();
+      // ✅ tras cargar datos, refrescamos la vista actual
+      showView(currentView);
     })
     .catch(err => {
       console.error(err);
@@ -169,11 +172,6 @@
       for(const b of platformBadges.querySelectorAll('.badge')) b.dataset.active = String(b.dataset.platform==='');
       applyFilters();
     });
-
-    // 🔥 fix: si arrancamos en profile, render recientes ahora con datos cargados
-    if((location.hash.replace('#','') || defaultView) === 'profile'){
-      renderRecentInto('recentGridProfile');
-    }
   }
 
   function makeBadge(label, count, platformValue){
@@ -239,3 +237,4 @@
   function escapeAttr(s){ return String(s||'').replace(/["']/g, c => ({'"':'&quot;',"'":'&#39;'}[c])); }
 
 })();
+
