@@ -15,6 +15,34 @@
     "file": "writeups/htb-knife.html"
   },
   {
+    "id": "thm-rootme",
+    "title": "TryHackMe: RootMe",
+    "platform": "TryHackMe",
+    "date": "2025-07-12",
+    "difficulty": "Easy",
+    "tags": [
+      "Linux",
+      "Web",
+      "Upload"
+    ],
+    "summary": "Web upload bypass, simple PHP reverse shell and cron-based privilege escalation.",
+    "file": "writeups/thm-rootme.html"
+  },
+  {
+    "id": "htb-pikaboo",
+    "title": "HackTheBox: Pikaboo",
+    "platform": "HackTheBox",
+    "date": "2025-06-22",
+    "difficulty": "Medium",
+    "tags": [
+      "Linux",
+      "NFS",
+      "Port Knocking"
+    ],
+    "summary": "Pivot through a hidden service using knockd, mount NFS and abuse writable exports.",
+    "file": "writeups/htb-pikaboo.html"
+  },
+  {
     "id": "vh-tr0ll",
     "title": "VulnHub: Tr0ll 1",
     "platform": "VulnHub",
