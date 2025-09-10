@@ -99,25 +99,27 @@
     </section>
 
     <!-- PROFILE view -->
-    <section class="view" data-view="profile" hidden>
-      <div class="profile-hero">
-        <img src="assets/images/user-image.png" alt="Profile avatar" class="avatar"/>
-        <h1 id="profileName">G3Kzzz</h1>
-        <p class="muted" id="profileTagline">Lost things will vanish, memories may meet again.</p>
-        <div class="profile-social">
-          <a href="https://github.com/g3kzzz" aria-label="GitHub">GitHub</a> • 
-          <a href="mailto:contact@g3kzzz.io" aria-label="Contact">Contact</a>
-        </div>
-      </div>
+<section class="view" data-view="profile" hidden>
+  <div class="profile-hero">
+    <img src="assets/images/user-image.png" alt="Profile avatar" class="avatar"/>
+    <h1 id="profileName">G3Kzzz</h1>
+    <p class="muted" id="profileTagline">Lost things will vanish, memories may meet again.</p>
+    <div class="profile-social">
+      <a href="https://github.com/g3kzzz" aria-label="GitHub">GitHub</a> • 
+      <a href="mailto:contact@g3kzzz.io" aria-label="Contact">Contact</a>
+    </div>
+  </div>
 
-      <section class="recent" aria-labelledby="recent-profile">
-        <div class="results-header">
-          <h2 id="recent-profile" class="section-title">Recent writeups</h2>
-          <div class="muted">The latest 9 articles pushed to the repo.</div>
-        </div>
-        <div id="recentGridProfile" class="grid"></div>
-      </section>
-    </section>
+  <section class="recent" aria-labelledby="recent-profile">
+    <div class="results-header">
+      <h2 id="recent-profile" class="section-title">Recent writeups</h2>
+      <div class="muted">The latest 9 articles pushed to the repo.</div>
+    </div>
+    <!-- 🔥 Aquí se inyectan las cards -->
+    <div id="recentGridProfile" class="grid"></div>
+  </section>
+</section>
+
 
     <!-- ABOUT view -->
     <section class="view" data-view="about" hidden>
