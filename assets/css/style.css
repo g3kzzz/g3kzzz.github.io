@@ -11,16 +11,17 @@
 }
 
 :root.light {
-  /* Light mode */
-  --bg: #f2f4f7;          /* gris azulado muy suave */
-  --bg-soft: #f8f9fb;     /* tarjetas sobre un leve gris */
-  --card: #ffffff;        /* fondo de tarjetas limpio */
-  --text: #1e2229;        /* gris muy oscuro para texto */
-  --muted: #717986;       /* gris medio para subtítulos */
-  --acc: #3b5cff;         /* azul acento */
-  --border: rgba(0, 0, 0, 0.08);
-  --shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  /* Light mode refinado */
+  --bg: #eef1f5;          /* fondo general gris azulado muy suave */
+  --bg-soft: #f6f7fa;     /* secciones suaves (hero, etc.) */
+  --card: #ffffff;        /* tarjetas blancas pero sobre fondo suave */
+  --text: #21242c;        /* gris oscuro cómodo, no negro puro */
+  --muted: #5f6774;       /* gris medio para texto secundario */
+  --acc: #3b6cff;         /* azul acento más vivo pero no chillón */
+  --border: rgba(0, 0, 0, 0.07);
+  --shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
 }
+
 
 
 *{box-sizing:border-box}
