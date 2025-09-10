@@ -35,8 +35,7 @@
     document.getElementById('postContent').innerHTML = '<p>Missing writeup ID.</p>';
     return;
   }
-
-  fetch('data/writeups.json')
+  fetch('data/writeups.json?nocache=' + new Date().getTime())
     .then(r => r.json())
     .then(list => {
       const item = list.find(x => x.id === id);
