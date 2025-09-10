@@ -23,7 +23,7 @@
   // Simple view router using hash
   const views = Array.from(document.querySelectorAll('[data-view]'));
   const navLinks = Array.from(document.querySelectorAll('[data-link]'));
-  const defaultView = 'home';
+  const defaultView = 'profile';
 
   function showView(name){
     views.forEach(v => {
