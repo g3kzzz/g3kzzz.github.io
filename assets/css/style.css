@@ -77,7 +77,13 @@ body{
 .section-title{font-size:1.3rem;margin:22px 0 10px 0}
 
 .filters,.search,.results,.recent,.about{margin:18px 0 28px 0}
-.platform-badges{display:flex;flex-wrap:wrap;gap:10px}
+.platform-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: #fff; /* 👈 texto blanco */
+}
+
 .badge{
   display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;
   background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow);
