@@ -133,22 +133,117 @@
     </section>
 
     <!-- ABOUT ME view -->
-    <section class="view" data-view="about" hidden>
-      <h2 class="section-title">About Me</h2>
-      <div class="about-grid">
-        <div class="about-left">
-          <img src="assets/images/user-image.png" alt="Profile picture" class="avatar"/>
-        </div>
-        <div class="about-right">
-          <p>Hello! I'm <strong>G3Kzzz</strong>, a cybersecurity enthusiast and CTF player.  
-          I enjoy solving challenges, exploring vulnerabilities, and documenting my learning process through detailed writeups.  
-          My main focus is <em>offensive security</em>, and I use platforms like HackTheBox and VulnHub to sharpen my skills.</p>
-          
-          <p>Beyond hacking labs, I’m passionate about sharing knowledge and making technical concepts accessible for learners in the community.  
-          This project is part of that mission — to inspire and guide others in the infosec path.</p>
-        </div>
+    <!-- ABOUT ME view mejorada -->
+<section class="view" data-view="about" hidden>
+  <h2 class="section-title">About Me</h2>
+  <div class="about-card">
+    <div class="about-left">
+      <img src="assets/images/user-image.png" alt="Profile picture" class="about-avatar"/>
+    </div>
+    <div class="about-right">
+      <h1 class="about-name">G3Kzzz</h1>
+      <h3 class="about-role">Cybersecurity Enthusiast & CTF Player</h3>
+      <p>Hello! I'm <strong>G3Kzzz</strong>, a passionate offensive security learner. I enjoy solving challenges, exploring vulnerabilities, and sharing detailed writeups to help others level up in cybersecurity.</p>
+      <p>My main focus is <em>penetration testing, vulnerability research</em>, and CTF competitions. I use platforms like HackTheBox, VulnHub, and TryHackMe to sharpen my skills.</p>
+      <p>Beyond hacking labs, I love mentoring and making complex technical concepts accessible to learners in the community. This project is my way of sharing knowledge and inspiring others in the infosec path.</p>
+      <div class="about-links">
+        <a href="mailto:fabian.huamani@ucsm.edu.pe" class="btn about-btn">Contact Me</a>
+        <a href="https://github.com/g3kzzz" target="_blank" rel="noopener" class="btn about-btn">GitHub</a>
+        <a href="https://app.hackthebox.com/profile/#2426983" target="_blank" rel="noopener" class="btn about-btn">HackTheBox</a>
       </div>
-    </section>
+    </div>
+  </div>
+
+  <style>
+    .about-card {
+      display: flex;
+      flex-wrap: wrap;
+      background: linear-gradient(145deg, #f3f3f3, #e0e0e0);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      gap: 30px;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .about-left {
+      flex: 0 0 180px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .about-avatar {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      border: 5px solid #0e75b6;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .about-right {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .about-name {
+      font-size: 2em;
+      margin-bottom: 5px;
+      color: #222;
+    }
+
+    .about-role {
+      font-size: 1.2em;
+      color: #0e75b6;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .about-right p {
+      margin-bottom: 12px;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    .about-links {
+      margin-top: 15px;
+    }
+
+    .about-btn {
+      display: inline-block;
+      background-color: #0e75b6;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 8px;
+      margin-right: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .about-btn:hover {
+      background-color: #095191;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      .about-card {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .about-left {
+        margin-bottom: 20px;
+      }
+
+      .about-btn {
+        margin-top: 8px;
+        margin-right: 0;
+      }
+    }
+  </style>
+</section>
+
   </main>
 
   <footer class="site-footer">
