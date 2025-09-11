@@ -5,10 +5,21 @@
     "platform": "HackTheBox",
     "date": "2025-09-11",
     "difficulty": "Medium",
-    "tags": ["xxxx", "xxxx", "xxxx", "xxxx"],
-    "summary": "XXXXX XXXXX XXXXX XXXXX XXXXX",
+    "tags": [
+        "Linux",
+        "Git",
+        "AWS Lambda",
+        "JWT",
+        "Flask",
+        "SSTI",
+        "Reverse Shell",
+        "Cronjob",
+        "Symbolic Links",
+        "Web Enumeration"
+    ],
+    "summary": "Epsilon is a medium-difficulty Linux machine that exposes a Git repository on the web server. During enumeration, leaked AWS Lambda credentials are discovered in Git commits, allowing the secret key to sign JWTs. With this key, admin access is obtained, SSTI is exploited for a reverse shell, and finally root is gained by abusing a cronjob running tar with the -h option via symbolic links.",
     "file": "writeups/htb-epsilon.html"
-  },
+  }, 
   {
     "id": "vh-djinn3",
     "title": "Djinn3",
