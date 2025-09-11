@@ -5,7 +5,7 @@
 <ol>
   <li>Escaneo y enumeración de puertos con <code>nmap</code>.</li>
   <li>Enumeración de la aplicación web y volcado del repositorio Git.</li>
-  <li>Análisis de scripts Python y extracción de credenciales AWS Lambda.</li>
+  <li>Revisión de commits para extracción de credenciales AWS Lambda.</li>
   <li>Generación de token JWT con la clave secreta para acceso administrativo.</li>
   <li>Explotación SSTI en la aplicación Flask para obtener shell.</li>
   <li>Escalada de privilegios usando cronjob con <code>tar</code> y enlaces simbólicos.</li>
@@ -41,34 +41,26 @@
 
 <p>Esto nos permite obtener todo el historial de commits, archivos y credenciales que hayan sido expuestos accidentalmente.</p>
 
-<p><strong>Archivos importantes encontrados:</strong></p>
-<ul>
-  <li><code>server.py</code>: Contiene la lógica de autenticación de la aplicación Flask y uso de JWT.</li>
-  <li><code>track_api_CR_148.py</code>: Contiene credenciales de AWS Lambda y lógica de conexión con la nube.</li>
-</ul>
+<h4>Revisión de commits para encontrar credenciales</h4>
+<p>Al inspeccionar los archivos actuales, las credenciales no estaban presentes. Por lo tanto, revisamos los commits anteriores:</p>
 
-<h4>track_api_CR_148.py</h4>
-<pre><code>aws_access_key_id='AQLA5M37BDN6FJP76TDC'
-aws_secret_access_key='OsK0o/glWwcjk2U3vVEowkvq5t4EiIreB+WdFo1A'
-region_name='us-east-1'
-endpoint_url='http://cloud.epsilong.htb'</code></pre>
+<pre><code>cd ~/CTF/Epsilon/loot/epsilon-repo
+git log --oneline --graph --all
+git log -p > ../commits_diff.txt
+cat ../commits_diff.txt</code></pre>
 
-<p>Estas credenciales permiten listar funciones Lambda y descargar su código.</p>
+<p>En el historial, encontramos un commit donde las credenciales de AWS Lambda sí estaban presentes:</p>
 
-<h4>server.py</h4>
-<pre><code>secret = '&lt;secret_key&gt;'
+<pre><code>@@ -8,8 +8,8 @@ session = Session(
+-     aws_access_key_id='<aws_access_key_id>',
+-     aws_secret_access_key='<aws_secret_access_key>',
++     aws_access_key_id='AQLA5M37BDN6FJP76TDC',
++     aws_secret_access_key='OsK0o/glWwcjk2U3vVEowkvq5t4EiIreB+WdFo1A',
+      region_name='us-east-1',
+      endpoint_url='http://cloud.epsilon.htb'
+)</code></pre>
 
-@app.route("/", methods=["GET","POST"])
-def index():
-    if request.method=="POST":
-        if request.form['username']=="admin" and request.form['password']=="admin":
-            res = make_response()
-            token=jwt.encode({"username":"admin"},secret,algorithm="HS256")
-            res.set_cookie("auth",token)
-            res.headers['location']='/home'
-            return res,302</code></pre>
-
-<p>Observamos que la aplicación utiliza JWT para la autenticación. Conocer la <code>secret</code> permite falsificar cookies y acceder como administrador.</p>
+<p>✅ Importante: Las credenciales no estaban visibles en la versión actual del repositorio, solo al retroceder en los commits.</p>
 
 <h3>3. Enumeración AWS Lambda</h3>
 <p>Configuramos AWS CLI usando las credenciales obtenidas:</p>
