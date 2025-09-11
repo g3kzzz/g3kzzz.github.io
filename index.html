@@ -102,9 +102,10 @@
         <img src="assets/images/user-image.png" alt="Profile avatar" class="avatar"/>
         <h1 id="profileName">G3Kzzz</h1>
 
+        <!-- Contador de visitas con CountAPI -->
         <div class="profile-views">
-  <img src="https://komarev.com/ghpvc/?username=g3kzzz&label=Page+views&color=0e75b6&style=flat" alt="Page views" />
-</div>
+          <span id="visitCount">0</span> visitas
+        </div>
 
         <p class="muted" id="profileTagline">Dreams fade with dawn, yet their echoes light the path ahead.</p>
         <div class="profile-social">
@@ -148,7 +149,18 @@
     </div>
   </footer>
 
+  <!-- Scripts -->
   <script src="assets/js/app.js" defer></script>
+
+  <!-- CountAPI para visitas -->
+  <script>
+    fetch('https://api.countapi.xyz/hit/g3kzzz.github.io/pageviews')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('visitCount').textContent = data.value;
+      })
+      .catch(err => console.error('CountAPI error:', err));
+  </script>
+
 </body>
 </html>
-
