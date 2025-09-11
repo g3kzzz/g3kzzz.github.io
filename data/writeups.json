@@ -3,6 +3,7 @@
     "id": "htb-epsilon",
     "title": "Epsilon",
     "platform": "HackTheBox",
+    "os": "Linux",
     "date": "2025-09-11",
     "difficulty": "Medium",
     "tags": [
@@ -24,20 +25,22 @@
     "id": "vh-djinn3",
     "title": "Djinn3",
     "platform": "VulnHub",
+    "os": "Linux",
     "date": "2025-09-12",
     "difficulty": "Medium",
-    "tags": ["xxxx", "xxxx", "xxxx", "xxxx"],
-    "summary": "XXXXX XXXXX XXXXX XXXXX XXXXX",
+    "tags": ["Enumeration", "Privilege Escalation", "Web", "Sudo"],
+    "summary": "Djinn3 is a VulnHub Linux machine with multiple web services. Users enumerate and exploit misconfigured scripts to gain initial access, followed by privilege escalation via SUID binaries.",
     "file": "writeups/vh-djinn3.html"
   },
   {
     "id": "vh-joestar",
     "title": "Joestar",
     "platform": "VulnHub",
+    "os": "Windows",
     "date": "2025-09-13",
     "difficulty": "Medium",
-    "tags": ["xxxx", "xxxx", "xxxx", "xxxx"],
-    "summary": "XXXXX XXXXX XXXXX XXXXX XXXXX",
+    "tags": ["Web", "IIS", "RCE", "Password Spraying"],
+    "summary": "Joestar is a Windows-based VulnHub machine. Attackers perform web enumeration to find credentials, exploit remote code execution, and escalate privileges using misconfigured services.",
     "file": "writeups/vh-joestar.html"
   }
 ]
