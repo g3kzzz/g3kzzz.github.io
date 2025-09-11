@@ -686,34 +686,33 @@ a.card-link:hover { text-decoration: underline; }
   .header-inner { gap: 10px; }
 }
 
-
 /* Contenedor principal de posts */
 .posts-container {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 columnas en desktop */
-  gap: 20px; /* espacio entre posts */
-  padding: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Se adapta al ancho */
+  gap: 1.5rem; /* espacio entre posts */
+  padding: 1rem;
 }
 
-/* Ajuste responsivo para tablet */
-@media screen and (max-width: 1024px) {
-  .posts-container {
-    grid-template-columns: repeat(2, 1fr); /* 2 columnas */
-  }
-}
-
-/* Ajuste responsivo para móvil */
-@media screen and (max-width: 600px) {
-  .posts-container {
-    grid-template-columns: 1fr; /* 1 columna, ocupa todo el ancho */
-  }
-}
-
-/* Estilo de cada post */
+/* Cada post */
 .post {
   background-color: var(--card);
   color: var(--text);
-  padding: 15px;
-  border-radius: 10px;
+  padding: 1rem;
+  border-radius: 0.8rem;
   box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem); /* Texto escalable según pantalla */
+}
+
+/* Si tienes títulos dentro del post */
+.post h3 {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  margin-bottom: 0.5rem;
+}
+
+/* Para imágenes dentro del post */
+.post img {
+  width: 100%; /* siempre se adapta al contenedor */
+  height: auto;
+  border-radius: 0.5rem;
 }
