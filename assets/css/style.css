@@ -167,11 +167,10 @@ main { flex: 1; }
 
 .stat-number { font-size: 1.9rem; font-weight: 800; }
 .stat-label { color: var(--muted); font-weight: 600; }
-
 /* ==============================
    ABOUT ME / PERFIL
    ============================== */
-.about-me {
+.about-card {
   display: flex;
   align-items: flex-start;
   gap: 24px;
@@ -183,7 +182,7 @@ main { flex: 1; }
   flex-wrap: wrap;
 }
 
-.about-me .avatar {
+.about-left .about-avatar {
   width: 160px;
   height: 160px;
   border-radius: 50%;
@@ -193,35 +192,40 @@ main { flex: 1; }
   flex-shrink: 0;
 }
 
-.about-me-content {
+.about-right {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.about-me-content h2 {
+.about-right .about-name {
   font-size: 1.8rem;
   font-weight: 700;
   color: var(--text);
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
-.about-me-content p {
+.about-right .about-role {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.about-right p {
   font-size: 1rem;
   color: var(--muted);
   line-height: 1.7;
 }
 
-.about-me-content .profile-social {
+.about-links {
   display: flex;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
-.about-me-content .profile-social a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.about-links .about-btn {
   background: var(--acc);
   color: #fff;
   font-weight: 600;
@@ -231,7 +235,7 @@ main { flex: 1; }
   transition: all 0.2s ease;
 }
 
-.about-me-content .profile-social a:hover {
+.about-links .about-btn:hover {
   background: color-mix(in hsl, var(--acc), #000 15%);
   transform: translateY(-2px);
 }
@@ -240,20 +244,21 @@ main { flex: 1; }
    RESPONSIVE ABOUT ME
    ============================== */
 @media (max-width: 900px) {
-  .about-me {
+  .about-card {
     flex-direction: column;
     align-items: center;
     text-align: center;
   }
 
-  .about-me .avatar {
+  .about-left .about-avatar {
     margin-bottom: 16px;
   }
 
-  .about-me-content .profile-social {
+  .about-links {
     justify-content: center;
   }
 }
+
 
 
 /* ==============================
