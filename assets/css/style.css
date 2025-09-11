@@ -167,29 +167,44 @@ main { flex: 1; }
 
 .stat-number { font-size: 1.9rem; font-weight: 800; }
 .stat-label { color: var(--muted); font-weight: 600; }
+
 /* ==============================
    ABOUT ME / PERFIL
    ============================== */
 .about-card {
   display: flex;
-  align-items: flex-start;
-  gap: 24px;
+  align-items: center; /* Centra verticalmente */
+  gap: 36px;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 18px;
-  padding: 24px;
+  padding: 32px;
   box-shadow: var(--shadow);
   flex-wrap: wrap;
 }
 
+.about-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
 .about-left .about-avatar {
-  width: 160px;
-  height: 160px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   border: 4px solid var(--acc);
   object-fit: cover;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.35);
-  flex-shrink: 0;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+.about-certifications {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text); /* Color adaptativo dark/light */
+  text-align: center;
 }
 
 .about-right {
@@ -200,17 +215,15 @@ main { flex: 1; }
 }
 
 .about-right .about-name {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 700;
   color: var(--text);
-  margin-bottom: 4px;
 }
 
 .about-right .about-role {
   font-size: 1.1rem;
   font-weight: 500;
   color: var(--muted);
-  margin-bottom: 12px;
 }
 
 .about-right p {
@@ -251,15 +264,13 @@ main { flex: 1; }
   }
 
   .about-left .about-avatar {
-    margin-bottom: 16px;
+    margin-bottom: 8px;
   }
 
   .about-links {
     justify-content: center;
   }
 }
-
-
 
 /* ==============================
    SECTIONS & BADGES
