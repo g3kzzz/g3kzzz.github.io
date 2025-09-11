@@ -173,7 +173,7 @@ main { flex: 1; }
    ============================== */
 .about-card {
   display: flex;
-  align-items: center; /* Centra verticalmente */
+  align-items: center; /* centra verticalmente la imagen y el texto */
   gap: 36px;
   background: var(--card);
   border: 1px solid var(--border);
@@ -187,6 +187,7 @@ main { flex: 1; }
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center; /* centra verticalmente dentro de la columna */
   gap: 12px;
   flex-shrink: 0;
 }
@@ -203,7 +204,7 @@ main { flex: 1; }
 .about-certifications {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--text); /* Color adaptativo dark/light */
+  color: var(--text); /* blanco dark / negro light */
   text-align: center;
 }
 
@@ -228,7 +229,7 @@ main { flex: 1; }
 
 .about-right p {
   font-size: 1rem;
-  color: var(--muted);
+  color: #999; /* gris profesional */
   line-height: 1.7;
 }
 
@@ -263,6 +264,10 @@ main { flex: 1; }
     text-align: center;
   }
 
+  .about-left {
+    flex-direction: column;
+  }
+
   .about-left .about-avatar {
     margin-bottom: 8px;
   }
@@ -271,6 +276,7 @@ main { flex: 1; }
     justify-content: center;
   }
 }
+
 
 /* ==============================
    SECTIONS & BADGES
