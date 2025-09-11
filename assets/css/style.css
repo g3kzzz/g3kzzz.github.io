@@ -159,14 +159,15 @@ a.card-link:hover{ text-decoration:underline }
 .copy-btn:hover{ opacity:1 }
 
 /* Imágenes dentro de posts */
-.post-content img{
-  max-width:100%;
-  height:auto;
-  display:block;
-  margin:16px auto;
-  border-radius:12px;
-  box-shadow:var(--shadow);
+.post-content img {
+  max-width: 100%;   /* nunca excede el ancho del contenedor */
+  height: auto;      /* mantiene proporción */
+  display: block;
+  margin: 16px auto; /* espacio arriba y abajo, y centrada */
+  border-radius: 12px;
+  box-shadow: var(--shadow);
 }
+
 
 .post-content h2{ margin-top:1.2em }
 .post-nav{ margin-top:18px }
