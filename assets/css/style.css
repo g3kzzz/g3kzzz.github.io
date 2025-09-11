@@ -169,6 +169,94 @@ main { flex: 1; }
 .stat-label { color: var(--muted); font-weight: 600; }
 
 /* ==============================
+   ABOUT ME / PERFIL
+   ============================== */
+.about-me {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  flex-wrap: wrap;
+}
+
+.about-me .avatar {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 4px solid var(--acc);
+  object-fit: cover;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+  flex-shrink: 0;
+}
+
+.about-me-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.about-me-content h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.about-me-content p {
+  font-size: 1rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.about-me-content .profile-social {
+  display: flex;
+  gap: 12px;
+}
+
+.about-me-content .profile-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--acc);
+  color: #fff;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.about-me-content .profile-social a:hover {
+  background: color-mix(in hsl, var(--acc), #000 15%);
+  transform: translateY(-2px);
+}
+
+/* ==============================
+   RESPONSIVE ABOUT ME
+   ============================== */
+@media (max-width: 900px) {
+  .about-me {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .about-me .avatar {
+    margin-bottom: 16px;
+  }
+
+  .about-me-content .profile-social {
+    justify-content: center;
+  }
+}
+
+
+/* ==============================
    SECTIONS & BADGES
    ============================== */
 .section-title { font-size: 1.3rem; margin: 22px 0 10px; }
