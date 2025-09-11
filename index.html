@@ -9,6 +9,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css"/>
+  <style>
+    /* Estilo del contador de visitas */
+    .profile-views {
+      margin-top: 12px;
+      text-align: center;
+      font-weight: 600;
+      color: #0e75b6;
+    }
+  </style>
 </head>
 <body>
   <header class="site-header">
@@ -119,7 +128,6 @@
         <div class="results-header">
           <h2 id="recent-profile" class="section-title">Recent writeups</h2>
         </div>
-        <!-- 🔥 Aquí se inyectan las cards -->
         <div id="recentGridProfile" class="grid"></div>
       </section>
     </section>
@@ -149,18 +157,17 @@
     </div>
   </footer>
 
-  <!-- Scripts -->
   <script src="assets/js/app.js" defer></script>
 
-  <!-- CountAPI para visitas -->
+  <!-- CountAPI para visitas reales -->
   <script>
-    fetch('https://api.countapi.xyz/hit/g3kzzz.github.io/pageviews')
+    fetch('https://api.countapi.xyz/hit/g3kzzz/ghpages')
       .then(res => res.json())
       .then(data => {
         document.getElementById('visitCount').textContent = data.value;
       })
       .catch(err => console.error('CountAPI error:', err));
   </script>
-
 </body>
 </html>
+
