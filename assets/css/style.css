@@ -424,7 +424,7 @@ main { flex: 1; }
 /* Listas */
 .post-content ul,
 .post-content ol {
-  padding-left: 2em;          /* dale un poco más de espacio */
+  padding-left: 5em;          /* dale un poco más de espacio */
   margin: 12px 0 16px 0;
   list-style-position: outside; /* los números alineados afuera */
   color: inherit;               /* usa el color normal del texto */
