@@ -685,3 +685,35 @@ a.card-link:hover { text-decoration: underline; }
   .grid { grid-template-columns: 1fr; }
   .header-inner { gap: 10px; }
 }
+
+
+/* Contenedor principal de posts */
+.posts-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columnas en desktop */
+  gap: 20px; /* espacio entre posts */
+  padding: 10px;
+}
+
+/* Ajuste responsivo para tablet */
+@media screen and (max-width: 1024px) {
+  .posts-container {
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas */
+  }
+}
+
+/* Ajuste responsivo para móvil */
+@media screen and (max-width: 600px) {
+  .posts-container {
+    grid-template-columns: 1fr; /* 1 columna, ocupa todo el ancho */
+  }
+}
+
+/* Estilo de cada post */
+.post {
+  background-color: var(--card);
+  color: var(--text);
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
