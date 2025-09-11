@@ -291,6 +291,33 @@ main { flex: 1; }
   color: #fff;
 }
 
+
+
+.platform-badges .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: var(--card);      /* mantiene fondo del modo actual */
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600;
+  color: #fff !important;       /* fuerza texto blanco */
+  transition: all 0.2s ease;
+}
+
+.platform-badges .badge:hover {
+  background: var(--acc);       /* opcional: color de acento al pasar */
+  color: #fff;
+}
+
+.badge[data-active="true"] {
+  outline: 2px solid var(--acc);
+  color: #fff !important;
+}
 .badge {
   display: inline-flex;
   align-items: center;
