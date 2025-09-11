@@ -744,3 +744,32 @@ a.card-link:hover { text-decoration: underline; }
   height: auto;
   border-radius: 0.5rem;
 }
+
+
+/* ==============================
+   LISTAS RESPONSIVAS
+   ============================== */
+.post-content ul,
+.post-content ol {
+  padding-left: clamp(1em, 4vw, 2em); /* sangría flexible según pantalla */
+  list-style-position: inside;         /* números alineados al texto */
+  margin: 12px 0 16px 0;
+}
+
+.post-content li {
+  margin-bottom: 8px;
+  line-height: 1.6;
+  word-break: break-word;              /* evita overflow en palabras largas */
+}
+
+/* Ajustes en pantallas pequeñas */
+@media (max-width: 600px) {
+  .post-content ul,
+  .post-content ol {
+    padding-left: 1.2em;              /* menos sangría en móvil */
+  }
+  .post-content li {
+    font-size: 0.9rem;                /* texto un poco más compacto */
+  }
+}
+
