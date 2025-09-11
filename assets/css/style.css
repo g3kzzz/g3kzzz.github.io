@@ -536,3 +536,46 @@ a.card-link:hover { text-decoration: underline; }
   .grid { grid-template-columns: 1fr; }
   .header-inner { gap: 10px; }
 }
+
+/* ==============================
+   LISTAS EN POST
+   ============================== */
+.post-content ul,
+.post-content ol {
+  padding-left: 1.6em; /* sangría profesional */
+  margin: 12px 0 12px 0; /* separación arriba y abajo */
+  color: #999; /* texto gris profesional */
+  line-height: 1.7;
+  word-wrap: break-word; /* evita overflow horizontal */
+}
+
+.post-content li {
+  margin-bottom: 8px;
+}
+
+/* Numeración estilizada */
+.post-content ol li::marker {
+  color: var(--acc);
+  font-weight: 700;
+}
+
+/* RESPONSIVO */
+@media (max-width: 900px) {
+  .post-content ul,
+  .post-content ol {
+    padding-left: 1.2em;
+  }
+  .post-content li {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .post-content ul,
+  .post-content ol {
+    padding-left: 1em;
+  }
+  .post-content li {
+    font-size: 0.9rem;
+  }
+}
