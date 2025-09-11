@@ -417,118 +417,124 @@ a.card-link {
 }
 
 a.card-link:hover { text-decoration: underline; }
+
+
+
 /* ==============================
-   POST / WRITEUP
+   POST / WRITEUP REDISEÑADO
    ============================== */
 .post {
-  padding: 24px 0;
+  max-width: 900px; /* ancho máximo del contenido */
+  margin: 40px auto; /* centrado vertical/horizontal */
+  padding: 0 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 32px;
 }
 
 .post-header {
-  margin-bottom: 16px;
+  margin-bottom: 24px;
+  text-align: center;
 }
 
 .post-header h1 {
-  font-size: 2rem;
-  margin-bottom: 6px;
+  font-size: 2.4rem;
   color: var(--text);
+  margin-bottom: 10px;
+  line-height: 1.2;
 }
 
 .post-meta {
   color: var(--muted);
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 .post-content {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 24px;
+  border-radius: 18px;
+  padding: 28px;
   box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  overflow-wrap: break-word; /* evita overflow de texto largo */
-}
-
-.post-content * {
-  box-sizing: border-box;
+  gap: 22px;
+  word-break: break-word;
 }
 
 .post-content p {
   font-size: 1rem;
-  color: #999; /* gris profesional */
-  line-height: 1.7;
+  color: #999; /* texto gris profesional */
+  line-height: 1.8;
 }
 
 .post-content h2,
 .post-content h3,
 .post-content h4 {
-  margin-top: 1.5em;
   color: var(--text);
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
 }
 
 .post-content img {
   max-width: 100%;
   height: auto;
+  display: block;
+  margin: 24px auto;
   border-radius: 12px;
   box-shadow: var(--shadow);
-  display: block;
-  margin: 20px auto;
 }
 
-.post-content pre,
-.post-content code {
+.post-content pre {
   background: #111;
   color: #00ff88;
-  border-radius: 12px;
-  padding: 12px;
+  border-radius: 14px;
+  padding: 18px;
   overflow-x: auto;
   font-family: "Fira Code", "JetBrains Mono", monospace;
   font-size: 0.95rem;
   line-height: 1.5;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
   margin: 12px 0;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
 }
 
 .post-content code {
-  padding: 0.2em 0.35em;
+  background: #111;
+  color: #00ff88;
+  padding: 0.2em 0.4em;
   border-radius: 6px;
+  font-family: "Fira Code", "JetBrains Mono", monospace;
+  font-size: 0.9rem;
 }
 
 .copy-btn {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 10px;
+  right: 10px;
   background: var(--acc);
   color: #fff;
   border: none;
   border-radius: 6px;
-  padding: 4px 8px;
+  padding: 5px 9px;
   font-size: 0.75rem;
   cursor: pointer;
   opacity: 0.85;
   transition: opacity 0.2s ease;
 }
 
-.copy-btn:hover {
-  opacity: 1;
-}
+.copy-btn:hover { opacity: 1; }
 
-/* POST NAVIGATION BUTTONS */
+/* POST NAV */
 .post-nav {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   flex-wrap: wrap;
-  margin-top: 24px;
+  justify-content: center;
+  margin-top: 28px;
 }
 
 .post-nav .btn {
-  padding: 8px 16px;
+  padding: 10px 18px;
   font-weight: 600;
   border-radius: 12px;
   text-decoration: none;
@@ -539,32 +545,27 @@ a.card-link:hover { text-decoration: underline; }
    ============================== */
 @media (max-width: 900px) {
   .post {
-    padding: 20px 10px;
+    margin: 30px 16px;
+    padding: 0 12px;
   }
-  .post-header h1 {
-    font-size: 1.7rem;
-  }
-  .post-content {
-    padding: 18px;
-  }
-  .post-content pre,
-  .post-content code {
-    font-size: 0.85rem;
-  }
+  .post-header h1 { font-size: 2rem; }
+  .post-content { padding: 22px; gap: 18px; }
+  .post-content pre { font-size: 0.9rem; padding: 16px; }
+  .post-content code { font-size: 0.85rem; }
 }
 
 @media (max-width: 600px) {
-  .post-header h1 {
-    font-size: 1.5rem;
+  .post {
+    margin: 24px 12px;
   }
-  .post-content {
-    padding: 14px;
-  }
+  .post-header h1 { font-size: 1.7rem; }
+  .post-content { padding: 16px; gap: 14px; }
   .post-nav {
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
   }
 }
+
 
 /* ==============================
    PROFILE / AVATAR
