@@ -426,7 +426,7 @@ main { flex: 1; }
 .post-content ol {
   padding-left: 5em;          /* dale un poco más de espacio */
   margin: 12px 0 16px 0;
-  list-style-position: outside; /* los números alineados afuera */
+  list-style-position: inside; /* los números alineados afuera */
   color: inherit;               /* usa el color normal del texto */
 }
 
