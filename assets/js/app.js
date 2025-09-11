@@ -1,5 +1,3 @@
-
-
 (function(){
   const root = document.documentElement;
   const themeToggle = document.getElementById('themeToggle');
@@ -54,6 +52,9 @@
   showView('home');
 
   // Elements and state
+  const osSelect = document.getElementById('osSelect');
+  let selectedOS = '';
+
   const platformBadges = document.getElementById('platformBadges');
   const resultsGrid = document.getElementById('resultsGrid');
   const recentGrid = document.getElementById('recentGrid');
@@ -80,7 +81,7 @@
     .then(data => {
       ALL = data;
       initUI();
-      // ✅ cuando todo cargó, si el usuario pidió profile → lo llevamos ahí
+      // cuando todo cargó, si el usuario pidió profile → lo llevamos ahí
       if (requestedView === 'profile') {
         location.hash = '#profile';
         showView('profile');
@@ -172,9 +173,12 @@
     if(searchBtn) searchBtn.addEventListener('click', doSearch);
     if(searchInput) searchInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doSearch(); });
     if(difficultySelect) difficultySelect.addEventListener('change', ()=>{ selectedDifficulty = difficultySelect.value; applyFilters(); });
+    if(osSelect) osSelect.addEventListener('change', ()=>{ selectedOS = osSelect.value; applyFilters(); });
     if(clearBtn) clearBtn.addEventListener('click', ()=>{
-      selectedPlatform=''; searchQuery=''; selectedDifficulty='';
-      if(searchInput) searchInput.value=''; if(difficultySelect) difficultySelect.value='';
+      selectedPlatform=''; searchQuery=''; selectedDifficulty=''; selectedOS='';
+      if(searchInput) searchInput.value=''; 
+      if(difficultySelect) difficultySelect.value='';
+      if(osSelect) osSelect.value='';
       for(const b of platformBadges.querySelectorAll('.badge')) b.dataset.active = String(b.dataset.platform==='');
       applyFilters();
     });
@@ -197,6 +201,9 @@
     }
     if(selectedDifficulty){
       arr = arr.filter(w => (w.difficulty || '') === selectedDifficulty);
+    }
+    if(selectedOS){
+      arr = arr.filter(w => (w.os || '') === selectedOS);
     }
     if(searchInput && searchInput.value){
       searchQuery = (searchInput.value || '').trim().toLowerCase();
@@ -243,3 +250,4 @@
   function escapeAttr(s){ return String(s||'').replace(/["']/g, c => ({'"':'&quot;',"'":'&#39;'}[c])); }
 
 })();
+
