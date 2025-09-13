@@ -284,11 +284,12 @@ main { flex: 1; }
 .section-title { font-size: 1.3rem; margin: 22px 0 10px; }
 .filters, .search, .results, .recent, .about { margin: 18px 0 28px; }
 
-.platform-badges {
+platform-badges {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap;      /* mantiene los wraps si hay muchas */
   gap: 10px;
-  color: #fff;
+  width: 100%;          /* ocupar todo el ancho */
+  justify-content: flex-start; /* alinear al inicio */
 }
 
 
@@ -857,6 +858,7 @@ a.card-link:hover { text-decoration: underline; }
   border-color: var(--primary, #333);
 }
 /* Barra de búsqueda de posts (igual que la de writeups) */
+
 #searchPost {
   display: flex;
   align-items: center;
@@ -866,18 +868,18 @@ a.card-link:hover { text-decoration: underline; }
   border-radius: 14px;
   padding: 10px 12px;
   width: 100%;
-  max-width: 400px; /* mismo tamaño que la de writeups */
+  flex: 1;            /* ocupa todo el espacio posible */
   margin-bottom: 20px;
   box-shadow: var(--shadow);
+  max-width: none;     /* elimina el límite */
 }
 
 #searchPost input {
+  flex: 1;             /* ocupa todo el espacio dentro de la barra */
   background: transparent;
   border: none;
   outline: none;
   color: var(--text);
-  width: 100%;
   font-size: 0.95rem;
 }
-
 
