@@ -287,7 +287,7 @@ main { flex: 1; }
 platform-badges {
   display: flex;
   flex-wrap: wrap;      /* mantiene los wraps si hay muchas */
-  gap: 10px;
+  gap: 15px;
   width: 100%;          /* ocupar todo el ancho */
   justify-content: flex-start; /* alinear al inicio */
 }
