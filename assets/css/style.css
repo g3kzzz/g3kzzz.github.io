@@ -257,7 +257,7 @@ main { flex: 1; }
 /* ==============================
    RESPONSIVE ABOUT ME
    ============================== */
-@media (max-width: 900px) {
+@media (max-width: 900px) { 
   .about-card { flex-direction: column; align-items: center; text-align: center; }
   .about-left { flex-direction: column; }
   .about-left .about-avatar { margin-bottom: 8px; }
@@ -340,49 +340,51 @@ main { flex: 1; }
 }
 
 /* ==============================
-   GRID CARDS / RESULTADOS
-   ============================== */
-.results-header { display: flex; justify-content: space-between; align-items: end; }
-
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
-
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  box-shadow: var(--shadow);
-}
-
-.card h3 { margin-top: 6px; font-size: 1.35rem; }
-.card .meta { display: flex; gap: 10px; flex-wrap: wrap; font-size: 0.85rem; font-weight: 600; color: var(--muted); }
-
-.tag {
-  font-size: 0.78rem;
-  background: color-mix(in hsl, var(--acc), #000 85%);
-  padding: 2px 8px;
-  border-radius: 999px;
-}
-
-a.card-link { margin-top: auto; text-decoration: none; font-weight: 700; color: var(--acc); }
-a.card-link:hover { text-decoration: underline; }
-
-/* ==============================
    POSTS / WRITEUPS
    ============================== */
-#resultsGridPost {
+.posts-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.post {
+  background-color: var(--card);
+  color: var(--text);
+  padding: 1rem;
+  border-radius: 0.8rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+}
+
+.post h3 { font-size: clamp(1rem, 2vw, 1.3rem); margin-bottom: 0.5rem; }
+.post img { width: 100%; height: auto; border-radius: 0.5rem; }
+
+/* LISTAS */
+.post-content ul,
+.post-content ol { padding-left: clamp(1em, 4vw, 2em); list-style-position: inside; margin: 12px 0 16px 0; }
+.post-content li { margin-bottom: 8px; line-height: 1.6; word-break: break-word; }
+.post-content ol li::marker { color: var(--acc); font-weight: 700; }
+
+/* ==============================
+   POSTS GRID / POST LIST
+   ============================== */
+#resultsGrid, #resultsGridPost {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1rem;
-  min-height: 200px; /* evita colapso cuando no hay resultados */
 }
 
-#resultsGridPost:empty::before { content: "No results found."; display: block; text-align: center; color: var(--muted); padding: 2rem; }
+#resultsGrid:empty::before,
+#resultsGridPost:empty::before {
+  content: "No results found.";
+  display: block;
+  text-align: center;
+  color: var(--muted, #888);
+  padding: 2rem;
+}
 
-/* Posts de GitHub en grilla igual que writeups */
 #resultsGridPost .card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -426,12 +428,6 @@ a.card-link:hover { text-decoration: underline; }
 .pagination button.active { background: var(--acc); color: #fff; border-color: var(--acc); }
 
 /* ==============================
-   RESPONSIVE
-   ============================== */
-@media (max-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
-
-/* ==============================
    BARRA DE BÚSQUEDA POST
    ============================== */
 #searchPost {
@@ -455,5 +451,22 @@ a.card-link:hover { text-decoration: underline; }
   color: var(--text);
   width: 100%;
   font-size: 0.95rem;
+}
+
+/* ==============================
+   RESPONSIVE
+   ============================== */
+@media (max-width: 900px) { 
+  .grid { grid-template-columns: 1fr 1fr; }
+  .profile-grid { grid-template-columns: 1fr; }
+  .hero { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) { 
+  .grid { grid-template-columns: 1fr; }
+  .header-inner { gap: 10px; }
+  .post-content ul,
+  .post-content ol { padding-left: 1.2em; }
+  .post-content li { font-size: 0.9rem; }
 }
 
