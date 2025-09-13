@@ -282,12 +282,11 @@ main { flex: 1; }
    SECTIONS & BADGES
    ============================== */
 .section-title { font-size: 1.3rem; margin: 22px 0 10px; }
-.filters, .search, .results, .recent, .about { margin: 18px 0 28px; }
-
-platform-badges {
+.filters, .search, .results, .recent, .about { margin: 18px 0 28px; }30
+.platform-badges {
   display: flex;
   flex-wrap: wrap;      /* mantiene los wraps si hay muchas */
-  gap: 30px;
+  gap: 15px;
   width: 100%;          /* ocupar todo el ancho */
   justify-content: flex-start; /* alinear al inicio */
 }
