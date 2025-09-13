@@ -15,7 +15,7 @@
 :root.light {
   /* Escala de azules para Light Mode - Ajustada según imagen */
   --bg: #f5f7fa;           /* fondo muy claro azulado */
-  --bg-soft: #e8edf2;      /* azul muy claro para secciones */
+  --bg-soft: #16181c;      /* azul muy claro para secciones */
   --card: #ffffff;         /* tarjetas blancas */
   --text: #2c3e50;         /* azul oscuro para texto principal */
   --muted: #7f8c8d;        /* gris azulado para texto secundario */
