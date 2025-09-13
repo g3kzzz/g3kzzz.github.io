@@ -14,7 +14,7 @@
 }
 :root.light {
   /* Escala de azules para Light Mode */
-  --bg: #eaf3fc;        /* azul muy claro, fondo general */
+  --bg: #9da3ae;        /* azul muy claro, fondo general */
   --bg-soft: #d6e6fa;   /* azul claro para secciones */
   --card: #ffffff;       /* tarjetas blancas para contraste */
   --text: #0f1d3a;       /* azul muy oscuro para texto principal */
