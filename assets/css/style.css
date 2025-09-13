@@ -287,7 +287,7 @@ main { flex: 1; }
 platform-badges {
   display: flex;
   flex-wrap: wrap;      /* mantiene los wraps si hay muchas */
-  gap: 15px;
+  gap: 30px;
   width: 100%;          /* ocupar todo el ancho */
   justify-content: flex-start; /* alinear al inicio */
 }
@@ -297,8 +297,8 @@ platform-badges {
 .platform-badges .badge {
   display: inline-flex;
   align-items: center;
-  gap: 15px;
-  padding: 5px 7px;
+  gap: 30px;
+  padding: 8px 12px;
   border-radius: 999px;
   background: var(--card);      /* mantiene fondo del modo actual */
   border: 1px solid var(--border);
