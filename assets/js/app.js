@@ -32,7 +32,7 @@
   let currentPagePost = 1;
   const POSTS_PER_PAGE = 9;
 
-  fetch('data/post.json?nocache=' + new Date().getTime())
+  fetch('/data/post.json?nocache=' + new Date().getTime())
     .then(r => r.json())
     .then(data => {
       POSTS = data;
@@ -193,7 +193,7 @@
   const WRITEUPS_PER_PAGE = 9;
 
   // Load data
-  fetch('data/writeups.json?nocache=' + new Date().getTime())
+  fetch('/data/writeups.json?nocache=' + new Date().getTime())
     .then(r => r.json())
     .then(data => {
       ALL = data;
