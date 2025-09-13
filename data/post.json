@@ -2,18 +2,242 @@
   {
     "id": "post1",
     "title": "Mi primer post",
-    "summary": "Este es un resumen del primer post en GitHubresumen del primer post en GitHubresumen del primer post en GitHubresumen del primer post en GitHubresumen del primer post en GitHubresumen del primer post en GitHubresumen del primer post en GitHubresumen del primer post en GitHubresumen del primer post en GitHubresumen del primer post en GitHub.",
+    "summary": "Este es un resumen del primer post en GitHub. Aquí explico en detalle cómo inicié mi primer proyecto, los retos que enfrenté y las lecciones aprendidas. Además, comparto enlaces útiles y recursos que me ayudaron a entender GitHub y control de versiones de forma más profunda.",
     "date": "2025-09-01",
     "tags": ["GitHub", "Proyecto"],
     "link": "https://github.com/g3kzzz/mi-proyecto"
   },
   {
     "id": "post2",
-    "title": "CTF Writeup nuevo",
-    "summary": "Resolviendo un CTF intresumen del primer post en GitHubresumen del primer post en GitHubresumen del primer post en GitHubresumen del primer post en GitHubresumen del primer post en GitHubresumen del primer post en GitHubresumen del primer post en GitHubresumen del primer post en GitHuberesante.",
-    "date": "2025-09-05",
+    "title": "CTF Writeup Básico",
+    "summary": "Resolviendo un CTF básico, este writeup detalla paso a paso cómo se abordaron los desafíos de seguridad. Se explican técnicas de enumeración, explotación y cómo se logró obtener las flags usando herramientas comunes de hacking ético.",
+    "date": "2025-09-02",
     "tags": ["CTF", "Writeup"],
-    "link": "https://github.com/g3kzzz/ctf-writeups"
+    "link": "https://github.com/g3kzzz/ctf-writeup1"
+  },
+  {
+    "id": "post3",
+    "title": "Automatizando tareas con Python",
+    "summary": "En este post explico cómo automatizar tareas repetitivas usando Python. Incluye ejemplos de scripts para manejo de archivos, web scraping y automatización de comandos del sistema. Ideal para mejorar la productividad y ahorrar tiempo.",
+    "date": "2025-09-03",
+    "tags": ["Python", "Automatización"],
+    "link": "https://github.com/g3kzzz/python-automation"
+  },
+  {
+    "id": "post4",
+    "title": "Introducción a Docker",
+    "summary": "Este post introduce Docker y su ecosistema. Aprenderás a crear contenedores, administrar imágenes y ejecutar aplicaciones aisladas en entornos reproducibles. También cubro buenas prácticas para desarrollo y despliegue.",
+    "date": "2025-09-04",
+    "tags": ["Docker", "DevOps"],
+    "link": "https://github.com/g3kzzz/docker-intro"
+  },
+  {
+    "id": "post5",
+    "title": "Mi proyecto web con React",
+    "summary": "Detalles sobre cómo desarrollé una aplicación web usando React. Explico la estructura de componentes, manejo de estado, consumo de APIs y optimización de rendimiento. Incluye consejos para principiantes y recursos de aprendizaje.",
+    "date": "2025-09-05",
+    "tags": ["React", "Web"],
+    "link": "https://github.com/g3kzzz/react-web"
+  },
+  {
+    "id": "post6",
+    "title": "Seguridad en redes WiFi",
+    "summary": "Este post analiza cómo proteger una red WiFi de ataques comunes. Se describen técnicas de cifrado, autenticación segura y monitoreo de dispositivos. También se incluyen ejemplos prácticos de configuración segura de routers y firewalls.",
+    "date": "2025-09-06",
+    "tags": ["Seguridad", "WiFi"],
+    "link": "https://github.com/g3kzzz/wifi-security"
+  },
+  {
+    "id": "post7",
+    "title": "Explorando APIs REST",
+    "summary": "En este writeup se explica cómo consumir APIs REST con diferentes lenguajes de programación. Incluye ejemplos en Python y JavaScript, cómo manejar autenticación y errores, y cómo estructurar peticiones para obtener datos de manera eficiente.",
+    "date": "2025-09-07",
+    "tags": ["API", "REST"],
+    "link": "https://github.com/g3kzzz/rest-api-examples"
+  },
+  {
+    "id": "post8",
+    "title": "Escribiendo un blog con Jekyll",
+    "summary": "Guía completa para crear un blog estático usando Jekyll. Incluye instalación, configuración de plantillas, personalización de estilos y despliegue en GitHub Pages. Ideal para desarrolladores que quieren publicar contenido técnico sin depender de CMS complejos.",
+    "date": "2025-09-08",
+    "tags": ["Jekyll", "Blog"],
+    "link": "https://github.com/g3kzzz/jekyll-blog"
+  },
+  {
+    "id": "post9",
+    "title": "Introducción a Kubernetes",
+    "summary": "Este post explica los conceptos básicos de Kubernetes, incluyendo pods, servicios y deployments. También cubre cómo desplegar aplicaciones contenedorizadas y gestionar la escalabilidad y disponibilidad en clústeres de producción.",
+    "date": "2025-09-09",
+    "tags": ["Kubernetes", "DevOps"],
+    "link": "https://github.com/g3kzzz/kubernetes-intro"
+  },
+  {
+    "id": "post10",
+    "title": "Pentesting web básico",
+    "summary": "Writeup sobre pruebas de penetración web. Se detallan técnicas de reconocimiento, inyección SQL, XSS y explotación de vulnerabilidades comunes. Ideal para aprender metodologías de pentesting ético y buenas prácticas de seguridad web.",
+    "date": "2025-09-10",
+    "tags": ["Pentesting", "Web"],
+    "link": "https://github.com/g3kzzz/web-pentesting"
+  },
+  {
+    "id": "post11",
+    "title": "Aprendiendo Node.js",
+    "summary": "Este post explica cómo crear aplicaciones del lado del servidor con Node.js. Se cubren módulos básicos, manejo de rutas, integración con bases de datos y despliegue en entornos locales y en la nube.",
+    "date": "2025-09-11",
+    "tags": ["Node.js", "Backend"],
+    "link": "https://github.com/g3kzzz/nodejs-projects"
+  },
+  {
+    "id": "post12",
+    "title": "Fundamentos de SQL",
+    "summary": "Post sobre cómo usar SQL para manejar bases de datos. Se explican comandos básicos y avanzados, consultas JOIN, agregaciones y buenas prácticas para optimizar consultas y mantener la integridad de los datos.",
+    "date": "2025-09-12",
+    "tags": ["SQL", "Base de datos"],
+    "link": "https://github.com/g3kzzz/sql-basics"
+  },
+  {
+    "id": "post13",
+    "title": "Escribiendo scripts Bash",
+    "summary": "Tutorial sobre scripting en Bash. Incluye ejemplos de automatización, loops, condicionales y manejo de archivos. Perfecto para administradores de sistemas que buscan optimizar tareas repetitivas en Linux.",
+    "date": "2025-09-13",
+    "tags": ["Bash", "Scripting"],
+    "link": "https://github.com/g3kzzz/bash-scripts"
+  },
+  {
+    "id": "post14",
+    "title": "Introducción a Linux",
+    "summary": "Post explicando los conceptos básicos de Linux, incluyendo terminal, comandos esenciales y administración de usuarios. También cubre personalización del entorno y buenas prácticas de seguridad.",
+    "date": "2025-09-14",
+    "tags": ["Linux", "Sistemas"],
+    "link": "https://github.com/g3kzzz/linux-intro"
+  },
+  {
+    "id": "post15",
+    "title": "Aprendiendo Git avanzado",
+    "summary": "Post sobre técnicas avanzadas de Git, incluyendo branching, rebase, cherry-pick y resolución de conflictos. También explico flujos de trabajo colaborativos y estrategias para mantener repositorios limpios y organizados.",
+    "date": "2025-09-15",
+    "tags": ["Git", "Avanzado"],
+    "link": "https://github.com/g3kzzz/git-advanced"
+  },
+  {
+    "id": "post16",
+    "title": "Scraping web con Python",
+    "summary": "Este writeup detalla cómo obtener información de sitios web usando Python y librerías como BeautifulSoup y Requests. Se incluyen ejemplos prácticos de extracción de datos y cómo manejar paginación y formularios.",
+    "date": "2025-09-16",
+    "tags": ["Python", "Scraping"],
+    "link": "https://github.com/g3kzzz/web-scraping"
+  },
+  {
+    "id": "post17",
+    "title": "Introducción a Linux Servers",
+    "summary": "Post sobre administración de servidores Linux. Incluye configuración de SSH, manejo de usuarios, servicios y seguridad básica. Ideal para quienes quieren montar un servidor propio o aprender administración de sistemas.",
+    "date": "2025-09-17",
+    "tags": ["Linux", "Servidor"],
+    "link": "https://github.com/g3kzzz/linux-server"
+  },
+  {
+    "id": "post18",
+    "title": "CTF Writeup Intermedio",
+    "summary": "Writeup de CTF de nivel intermedio. Incluye técnicas de explotación de vulnerabilidades más complejas, bypass de autenticación y captura de flags mediante herramientas automatizadas y manuales.",
+    "date": "2025-09-18",
+    "tags": ["CTF", "Writeup", "Intermedio"],
+    "link": "https://github.com/g3kzzz/ctf-writeup2"
+  },
+  {
+    "id": "post19",
+    "title": "Seguridad en APIs",
+    "summary": "Este post explica cómo proteger APIs REST de ataques comunes, incluyendo autenticación, validación de inputs y control de acceso. Incluye ejemplos prácticos con Node.js y Python.",
+    "date": "2025-09-19",
+    "tags": ["Seguridad", "API"],
+    "link": "https://github.com/g3kzzz/api-security"
+  },
+  {
+    "id": "post20",
+    "title": "Deploy de aplicaciones con Docker",
+    "summary": "Post sobre cómo desplegar aplicaciones usando Docker y Docker Compose. Incluye ejemplos con múltiples contenedores y cómo manejar redes, volúmenes y configuración de entornos.",
+    "date": "2025-09-20",
+    "tags": ["Docker", "Deploy"],
+    "link": "https://github.com/g3kzzz/docker-deploy"
+  },
+  {
+    "id": "post21",
+    "title": "Introducción a React Hooks",
+    "summary": "Este post explica cómo usar React Hooks para manejar estado, efectos y referencias dentro de componentes funcionales. Incluye ejemplos prácticos y buenas prácticas de desarrollo moderno.",
+    "date": "2025-09-21",
+    "tags": ["React", "Hooks"],
+    "link": "https://github.com/g3kzzz/react-hooks"
+  },
+  {
+    "id": "post22",
+    "title": "Monitorización de servidores",
+    "summary": "Post sobre herramientas y técnicas para monitorizar servidores Linux y servicios críticos. Incluye ejemplos con Prometheus, Grafana y métricas básicas para mantener la salud del sistema.",
+    "date": "2025-09-22",
+    "tags": ["Linux", "Monitorización"],
+    "link": "https://github.com/g3kzzz/server-monitoring"
+  },
+  {
+    "id": "post23",
+    "title": "Introducción a Machine Learning",
+    "summary": "Este post explica los fundamentos de Machine Learning, incluyendo algoritmos supervisados, no supervisados y técnicas de validación. Incluye ejemplos en Python con scikit-learn.",
+    "date": "2025-09-23",
+    "tags": ["ML", "Python"],
+    "link": "https://github.com/g3kzzz/ml-intro"
+  },
+  {
+    "id": "post24",
+    "title": "GitHub Actions para CI/CD",
+    "summary": "Tutorial sobre cómo usar GitHub Actions para integrar CI/CD en tus proyectos. Incluye ejemplos de workflows, pruebas automatizadas y despliegues continuos.",
+    "date": "2025-09-24",
+    "tags": ["GitHub", "CI/CD"],
+    "link": "https://github.com/g3kzzz/github-actions"
+  },
+  {
+    "id": "post25",
+    "title": "Introducción a REST API con Flask",
+    "summary": "Post detallando cómo crear APIs RESTful usando Flask. Incluye rutas, manejo de errores, serialización de datos y conexión con bases de datos.",
+    "date": "2025-09-25",
+    "tags": ["Python", "Flask"],
+    "link": "https://github.com/g3kzzz/flask-api"
+  },
+  {
+    "id": "post26",
+    "title": "Pentesting avanzado web",
+    "summary": "Este writeup muestra técnicas avanzadas de pentesting web, incluyendo bypass de WAF, explotación de vulnerabilidades lógicas y técnicas de evasión. Ideal para quienes ya conocen fundamentos básicos.",
+    "date": "2025-09-26",
+    "tags": ["Pentesting", "Avanzado"],
+    "link": "https://github.com/g3kzzz/advanced-pentesting"
+  },
+  {
+    "id": "post27",
+    "title": "Automatización con Ansible",
+    "summary": "Post sobre cómo usar Ansible para automatizar la configuración de servidores, despliegue de aplicaciones y gestión de infraestructura. Incluye ejemplos de playbooks y roles.",
+    "date": "2025-09-27",
+    "tags": ["Ansible", "DevOps"],
+    "link": "https://github.com/g3kzzz/ansible-automation"
+  },
+  {
+    "id": "post28",
+    "title": "Creando un portfolio web",
+    "summary": "Este post explica cómo construir un portfolio personal para mostrar proyectos y habilidades. Incluye diseño responsive, integración de animaciones y buenas prácticas de SEO.",
+    "date": "2025-09-28",
+    "tags": ["Web", "Portfolio"],
+    "link": "https://github.com/g3kzzz/portfolio-web"
+  },
+  {
+    "id": "post29",
+    "title": "Escribiendo tests unitarios",
+    "summary": "Post sobre cómo crear tests unitarios en proyectos Python y JavaScript. Incluye ejemplos con pytest y Jest, y explica la importancia de mantener la calidad del código mediante pruebas automatizadas.",
+    "date": "2025-09-29",
+    "tags": ["Testing", "Unit"],
+    "link": "https://github.com/g3kzzz/unit-testing"
+  },
+  {
+    "id": "post30",
+    "title": "Optimización de performance web",
+    "summary": "Este post cubre técnicas para mejorar el rendimiento de sitios web, incluyendo lazy loading, optimización de imágenes, reducción de requests y uso de caching efectivo.",
+    "date": "2025-09-30",
+    "tags": ["Web", "Performance"],
+    "link": "https://github.com/g3kzzz/web-performance"
   }
 ]
 
