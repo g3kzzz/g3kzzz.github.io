@@ -106,7 +106,7 @@
   searchInput.addEventListener('input', applySearch);
 
   // ===== FETCH POSTS =====
-  fetch('data/writeups.json?nocache=' + new Date().getTime())
+  fetch('/data/writeups.json?nocache=' + new Date().getTime())
     .then(r => r.json())
     .then(list => {
       posts = list;
