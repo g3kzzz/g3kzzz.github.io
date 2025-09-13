@@ -19,6 +19,69 @@
       setTheme(next);
     });
   }
+    // --- POSTS ---
+  const searchInputPost = document.getElementById('searchInputPost');
+  const searchBtnPost = document.getElementById('searchBtnPost');
+  const clearPost = document.getElementById('clearPost');
+  const resultsMetaPost = document.getElementById('resultsMetaPost');
+  const resultsGridPost = document.getElementById('resultsGridPost');
+
+  let POSTS = [];
+  let postSearchQuery = '';
+
+  fetch('data/post.json?nocache=' + new Date().getTime())
+    .then(r => r.json())
+    .then(data => {
+      POSTS = data;
+      renderPosts(POSTS.slice(0,10)); // últimos 10
+    })
+    .catch(err => {
+      console.error(err);
+      if(resultsMetaPost) resultsMetaPost.textContent = 'Failed to load posts.';
+    });
+
+  function renderPosts(list){
+    if(!resultsGridPost) return;
+    resultsGridPost.innerHTML = list.map(toCardHTMLPost).join('');
+    if(resultsMetaPost) resultsMetaPost.textContent = `${list.length} post(s)`;
+  }
+
+  function toCardHTMLPost(p){
+    const date = new Date(p.date);
+    const dateStr = date.toLocaleDateString(undefined, {year:'numeric', month:'short', day:'2-digit'});
+    const tags = (p.tags||[]).slice(0,4).map(t=>`<span class="tag">${escape(t)}</span>`).join(' ');
+    const href = p.link || '#';
+    return `
+      <article class="card">
+        <div class="meta">${dateStr}</div>
+        <h3>${escape(p.title)}</h3>
+        <p class="muted">${escape(p.summary || '')}</p>
+        <div class="meta">${tags}</div>
+        <a class="card-link" href="${href}" target="_blank">Read post →</a>
+      </article>
+    `;
+  }
+
+  // eventos de búsqueda en POSTS
+  function doSearchPost(){
+    postSearchQuery = (searchInputPost.value || '').trim().toLowerCase();
+    let arr = POSTS;
+    if(postSearchQuery){
+      arr = arr.filter(p => {
+        const hay = (p.title + ' ' + (p.tags||[]).join(' ')).toLowerCase();
+        return hay.includes(postSearchQuery);
+      });
+    }
+    renderPosts(arr.slice(0,10));
+  }
+
+  if(searchBtnPost) searchBtnPost.addEventListener('click', doSearchPost);
+  if(searchInputPost) searchInputPost.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doSearchPost(); });
+  if(clearPost) clearPost.addEventListener('click', ()=>{
+    postSearchQuery='';
+    if(searchInputPost) searchInputPost.value='';
+    renderPosts(POSTS.slice(0,10));
+  });
 
   // Simple view router using hash
   const views = Array.from(document.querySelectorAll('[data-view]'));
