@@ -772,4 +772,96 @@ a.card-link:hover { text-decoration: underline; }
     font-size: 0.9rem;                /* texto un poco más compacto */
   }
 }
+/* --- Corregir colapso cuando no hay resultados --- */
+#resultsGrid:empty::before,
+#resultsGridPost:empty::before {
+  content: "No results found.";
+  display: block;
+  text-align: center;
+  color: var(--muted, #888);
+  padding: 2rem;
+}
+
+/* --- Vista normal (Articles/Home) en grilla --- */
+#resultsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+/* --- Vista Post en lista horizontal --- */
+#resultsGridPost {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Cada post ocupa todo el ancho como “tarjeta horizontal” */
+#resultsGridPost .card {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 8px;
+  background: var(--surface, #fff);
+  transition: box-shadow 0.2s ease;
+}
+
+#resultsGridPost .card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Imagen o miniatura opcional */
+#resultsGridPost .card img {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-right: 1rem;
+}
+
+/* Contenido del post */
+#resultsGridPost .card-content {
+  flex: 1;
+}
+
+#resultsGridPost .card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+#resultsGridPost .card-meta {
+  font-size: 0.85rem;
+  color: var(--muted, #666);
+}
+
+/* --- Paginación --- */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+  gap: 6px;
+}
+
+.pagination button {
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--border, #ccc);
+  background: var(--surface, #fff);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.pagination button:hover {
+  background: var(--hover, #f2f2f2);
+}
+
+.pagination button.active {
+  background: var(--primary, #333);
+  color: #fff;
+  border-color: var(--primary, #333);
+}
 
