@@ -29,12 +29,14 @@
 
   let POSTS = [];
   let postSearchQuery = '';
+  let currentPage = 1;
+  const POSTS_PER_PAGE = 9;
 
   fetch('data/post.json?nocache=' + new Date().getTime())
     .then(r => r.json())
     .then(data => {
       POSTS = data;
-      renderPosts(POSTS.slice(0,10)); // últimos 10
+      renderPosts(POSTS); // render inicial
     })
     .catch(err => {
       console.error(err);
@@ -43,8 +45,63 @@
 
   function renderPosts(list){
     if(!resultsGridPost) return;
-    resultsGridPost.innerHTML = list.map(toCardHTMLPost).join('');
+
+    const totalPages = Math.ceil(list.length / POSTS_PER_PAGE);
+    if(currentPage > totalPages) currentPage = totalPages || 1;
+    const start = (currentPage - 1) * POSTS_PER_PAGE;
+    const end = start + POSTS_PER_PAGE;
+    const pageItems = list.slice(start, end);
+
+    resultsGridPost.innerHTML = pageItems.map(toCardHTMLPost).join('');
     if(resultsMetaPost) resultsMetaPost.textContent = `${list.length} post(s)`;
+
+    renderPagination(list.length, totalPages);
+  }
+
+  function renderPagination(totalItems, totalPages){
+    let pagination = document.getElementById('pagination');
+    if(!pagination){
+      pagination = document.createElement('div');
+      pagination.id = 'pagination';
+      pagination.className = 'pagination';
+      resultsGridPost.parentNode.appendChild(pagination);
+    }
+    pagination.innerHTML = '';
+
+    if(totalPages <= 1) return;
+
+    if(currentPage > 1){
+      const prev = document.createElement('button');
+      prev.textContent = 'Anterior';
+      prev.onclick = () => { currentPage--; renderPosts(filterPosts()); };
+      pagination.appendChild(prev);
+    }
+
+    for(let i = 1; i <= totalPages; i++){
+      const btn = document.createElement('button');
+      btn.textContent = i;
+      btn.disabled = i === currentPage;
+      btn.onclick = () => { currentPage = i; renderPosts(filterPosts()); };
+      pagination.appendChild(btn);
+    }
+
+    if(currentPage < totalPages){
+      const next = document.createElement('button');
+      next.textContent = 'Siguiente';
+      next.onclick = () => { currentPage++; renderPosts(filterPosts()); };
+      pagination.appendChild(next);
+    }
+  }
+
+  function filterPosts(){
+    let arr = POSTS;
+    if(postSearchQuery){
+      arr = arr.filter(p => {
+        const hay = (p.title + ' ' + (p.tags||[]).join(' ')).toLowerCase();
+        return hay.includes(postSearchQuery);
+      });
+    }
+    return arr;
   }
 
   function toCardHTMLPost(p){
@@ -63,27 +120,20 @@
     `;
   }
 
-  // eventos de búsqueda en POSTS
   function doSearchPost(){
     postSearchQuery = (searchInputPost.value || '').trim().toLowerCase();
-    let arr = POSTS;
-    if(postSearchQuery){
-      arr = arr.filter(p => {
-        const hay = (p.title + ' ' + (p.tags||[]).join(' ')).toLowerCase();
-        return hay.includes(postSearchQuery);
-      });
-    }
-    renderPosts(arr.slice(0,10));
+    currentPage = 1;
+    renderPosts(filterPosts());
   }
 
   if(searchBtnPost) searchBtnPost.addEventListener('click', doSearchPost);
   if(searchInputPost) searchInputPost.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doSearchPost(); });
   if(clearPost) clearPost.addEventListener('click', ()=>{
     postSearchQuery='';
+    currentPage = 1;
     if(searchInputPost) searchInputPost.value='';
-    renderPosts(POSTS.slice(0,10));
+    renderPosts(POSTS);
   });
- 
 
   // --- VIEW ROUTER ---
   const views = Array.from(document.querySelectorAll('[data-view]'));
