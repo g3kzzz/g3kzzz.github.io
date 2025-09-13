@@ -6,18 +6,64 @@
     "os": "Linux",
     "date": "2025-09-11",
     "difficulty": "Medium",
-    "excerpt": "Este writeup explica cómo se resolvió Epsilon en HackTheBox.",
-    "tags": ["Linux", "Git", "AWS Lambda", "JWT"]
+    "tags": ["Linux", "Git", "AWS Lambda", "JWT", "Flask", "SSTI", "Reverse Shell"],
+    "summary": "Medium difficulty Linux box. Exploit exposed Git repo to recover AWS Lambda credentials, generate admin JWT, exploit Flask SSTI, and escalate via cronjob with tar -h.",
+    "post": "Epsilon is a medium-difficulty Linux machine that exposes a Git repository on the web server. During enumeration, AWS Lambda credentials leaked in previous commits are discovered. Using these credentials, the secret key for signing JWTs in the Flask app is obtained, allowing admin cookie generation. Finally, root access is obtained exploiting a cronjob that runs tar -h with symbolic links."
   },
   {
-    "id": "htb-zeta",
-    "title": "Zeta",
+    "id": "htb-woolf",
+    "title": "Woolf",
     "platform": "HackTheBox",
-    "os": "Windows",
-    "date": "2025-09-12",
+    "os": "Linux",
+    "date": "2025-09-10",
     "difficulty": "Hard",
-    "excerpt": "Writeup de Zeta con explotación de SMB.",
-    "tags": ["Windows", "SMB", "RCE"]
+    "tags": ["Linux", "SSH", "SUID", "Enumeration", "Exploitation"],
+    "summary": "Hard Linux machine focusing on SSH exploitation and SUID binaries. Gain initial access via SSH misconfigurations and escalate with SUID misused binaries.",
+    "post": "Woolf is a challenging Linux box with SSH misconfigurations and custom SUID binaries. Initial access is achieved through weak SSH keys, followed by enumeration and exploitation of SUID binaries to gain root privileges."
+  },
+  {
+    "id": "thm-chronos",
+    "title": "Chronos",
+    "platform": "TryHackMe",
+    "os": "Windows",
+    "date": "2025-09-09",
+    "difficulty": "Medium",
+    "tags": ["Windows", "RDP", "Enumeration", "Kerberoasting", "Privilege Escalation"],
+    "summary": "Windows machine exploiting RDP and weak service permissions. Enumerate users, extract hashes, perform Kerberoasting, and escalate privileges.",
+    "post": "Chronos is a Windows target where initial access is gained via RDP. By enumerating users and extracting service hashes, Kerberoasting is performed to escalate privileges to Administrator."
+  },
+  {
+    "id": "vh-forest",
+    "title": "Forest",
+    "platform": "VulnHub",
+    "os": "Linux",
+    "date": "2025-09-08",
+    "difficulty": "Easy",
+    "tags": ["Linux", "Web", "SQLi", "Enumeration"],
+    "summary": "Easy VulnHub box designed for learning web exploitation and SQL injection basics.",
+    "post": "Forest is a beginner-friendly Linux machine with a vulnerable web application. Exploit SQL injection to extract user data and gain access, perfect for practicing web enumeration and basic exploitation."
+  },
+  {
+    "id": "htb-celestial",
+    "title": "Celestial",
+    "platform": "HackTheBox",
+    "os": "Linux",
+    "date": "2025-09-07",
+    "difficulty": "Insane",
+    "tags": ["Linux", "Reverse Engineering", "Exploit Development", "Buffer Overflow"],
+    "summary": "Extreme difficulty box focusing on reverse engineering and buffer overflows. Analyze binaries and develop custom exploits for root access.",
+    "post": "Celestial is a very challenging Linux machine requiring deep reverse engineering skills. Users must analyze binaries, identify buffer overflow vulnerabilities, and craft exploits to achieve root."
+  },
+  {
+    "id": "thm-odyssey",
+    "title": "Odyssey",
+    "platform": "TryHackMe",
+    "os": "Linux",
+    "date": "2025-09-06",
+    "difficulty": "Medium",
+    "tags": ["Linux", "Web", "LFI", "RCE", "Privilege Escalation"],
+    "summary": "Medium Linux machine exploiting local file inclusion to gain RCE and escalate privileges.",
+    "post": "Odyssey is a Linux target where the web application is vulnerable to LFI. Using the vulnerability, RCE is achieved, followed by enumeration and privilege escalation to root."
   }
 ]
 
