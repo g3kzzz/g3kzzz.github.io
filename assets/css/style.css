@@ -298,7 +298,7 @@ platform-badges {
   display: inline-flex;
   align-items: center;
   gap: 15px;
-  padding: 10px 14px;
+  padding: 5px 7px;
   border-radius: 999px;
   background: var(--card);      /* mantiene fondo del modo actual */
   border: 1px solid var(--border);
