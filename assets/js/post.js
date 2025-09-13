@@ -47,7 +47,7 @@
 
   // --- FETCH AND RENDER WRITEUP IF ID IS PRESENT ---
   if(writeupId){
-    fetch('writeups.json?nocache=' + new Date().getTime())
+    fetch('/data/writeups.json?nocache=' + new Date().getTime())
       .then(r => r.json())
       .then(list => {
         const w = list.find(x => x.id === writeupId);
@@ -65,7 +65,7 @@
   }
 
   // --- FETCH POSTS ---
-  fetch('writeups.json?nocache=' + new Date().getTime())
+  fetch('/data/writeups.json?nocache=' + new Date().getTime())
     .then(r => r.json())
     .then(data => {
       POSTS = data;
