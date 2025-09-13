@@ -1,8 +1,8 @@
-(function() {
+document.addEventListener('DOMContentLoaded', () => {
   const root = document.documentElement;
   const themeToggle = document.getElementById('themeToggle');
   const yearEl = document.getElementById('year');
-  const searchInput = document.getElementById('searchPost');
+  const searchInput = document.getElementById('searchInputPost');
   const resultsContainer = document.getElementById('resultsGridPost');
   const paginationContainer = document.getElementById('pagination');
 
@@ -18,7 +18,7 @@
   }
   setTheme(userPref || (mql.matches ? 'light' : 'dark'));
   if(themeToggle){
-    themeToggle.addEventListener('click', ()=>{
+    themeToggle.addEventListener('click', () => {
       const next = root.classList.contains('light') ? 'dark' : 'light';
       setTheme(next);
     });
@@ -38,6 +38,7 @@
   let filteredPosts = [];
 
   function renderPosts() {
+    if(!resultsContainer) return;
     resultsContainer.innerHTML = '';
     const start = (currentPage - 1) * perPage;
     const end = start + perPage;
@@ -45,7 +46,7 @@
 
     if(pagePosts.length === 0) {
       resultsContainer.innerHTML = '<p style="text-align:center;color:var(--muted);padding:2rem;">No results found.</p>';
-      paginationContainer.innerHTML = '';
+      if(paginationContainer) paginationContainer.innerHTML = '';
       return;
     }
 
@@ -65,6 +66,7 @@
   }
 
   function renderPagination() {
+    if(!paginationContainer) return;
     paginationContainer.innerHTML = '';
     const totalPages = Math.ceil(filteredPosts.length / perPage);
     if(totalPages <= 1) return;
@@ -73,7 +75,7 @@
       const btn = document.createElement('button');
       btn.textContent = text;
       if(page === currentPage) btn.classList.add('active');
-      btn.addEventListener('click', ()=> {
+      btn.addEventListener('click', () => {
         currentPage = page;
         renderPosts();
       });
@@ -97,13 +99,14 @@
   }
 
   function applySearch() {
+    if(!searchInput) return;
     const query = searchInput.value.trim().toLowerCase();
     filteredPosts = posts.filter(p => p.title.toLowerCase().includes(query));
     currentPage = 1;
     renderPosts();
   }
 
-  searchInput.addEventListener('input', applySearch);
+  if(searchInput) searchInput.addEventListener('input', applySearch);
 
   // ===== FETCH POSTS =====
   fetch('/data/writeups.json?nocache=' + new Date().getTime())
@@ -114,8 +117,8 @@
       renderPosts();
     })
     .catch(err => {
-      resultsContainer.innerHTML = '<p style="text-align:center;color:var(--muted);padding:2rem;">Failed to load posts.</p>';
+      if(resultsContainer) resultsContainer.innerHTML = '<p style="text-align:center;color:var(--muted);padding:2rem;">Failed to load posts.</p>';
       console.error(err);
     });
-})();
+});
 
