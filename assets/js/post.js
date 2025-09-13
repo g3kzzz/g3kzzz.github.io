@@ -16,24 +16,38 @@
   const POSTS_PER_PAGE = 9;
 
   // --- ESCAPE FUNCTION ---
-  function escapeHTML(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function escapeHTML(s){ 
+    return String(s||'').replace(/[&<>"']/g, c => ({
+      '&':'&amp;',
+      '<':'&lt;',
+      '>':'&gt;',
+      '"':'&quot;',
+      "'":'&#39;'
+    }[c])); 
+  }
 
   // --- RENDER SINGLE WRITEUP ---
   function renderWriteup(w){
     if(!resultsContainer) return;
+
+    // Si existe un archivo HTML completo, redirigimos automáticamente
+    if(w.file){
+      window.location.href = w.file;
+      return;
+    }
+
     resultsContainer.innerHTML = `
       <article class="card writeup-full">
         <h1>${escapeHTML(w.title)}</h1>
         <div class="meta">${escapeHTML(w.platform || 'Other')} • ${escapeHTML(w.difficulty || 'Unknown')} • ${new Date(w.date).toLocaleDateString()}</div>
         <p>${escapeHTML(w.summary)}</p>
-        <a href="${w.file}" target="_blank">Open full writeup →</a>
       </article>
     `;
   }
 
   // --- FETCH AND RENDER WRITEUP IF ID IS PRESENT ---
   if(writeupId){
-    fetch('data/writeups.json?nocache=' + new Date().getTime())
+    fetch('writeups.json?nocache=' + new Date().getTime())
       .then(r => r.json())
       .then(list => {
         const w = list.find(x => x.id === writeupId);
@@ -51,7 +65,7 @@
   }
 
   // --- FETCH POSTS ---
-  fetch('data/post.json?nocache=' + new Date().getTime())
+  fetch('writeups.json?nocache=' + new Date().getTime())
     .then(r => r.json())
     .then(data => {
       POSTS = data;
@@ -76,6 +90,18 @@
     if(resultsMeta) resultsMeta.textContent = `${list.length} post(s)`;
 
     renderPaginationPost(list.length, totalPages);
+  }
+
+  // --- CONVERT WRITEUP TO CARD HTML ---
+  function toCardHTMLPost(w){
+    return `
+      <article class="card">
+        <h2>${escapeHTML(w.title)}</h2>
+        <div class="meta">${escapeHTML(w.platform || 'Other')} • ${escapeHTML(w.difficulty || 'Unknown')} • ${new Date(w.date).toLocaleDateString()}</div>
+        <p>${escapeHTML(w.summary)}</p>
+        <a href="?id=${w.id}">Read more →</a>
+      </article>
+    `;
   }
 
   // --- PAGINATION ---
