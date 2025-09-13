@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
@@ -11,7 +11,6 @@
   <link rel="stylesheet" href="assets/css/style.css"/>
 </head>
 <body>
-  <!-- HEADER -->
   <header class="site-header">
     <div class="container header-inner">
       <a href="#home" class="brand" data-link>
@@ -31,17 +30,13 @@
     </div>
   </header>
 
-  <!-- MAIN -->
   <main class="container">
     <!-- HOME view -->
     <section class="view" data-view="home">
       <section class="hero small-hero">
         <div class="hero-left">
           <h1>Writeups for Learners</h1>
-          <p class="muted">
-            Explore CTF solutions, HackTheBox machines, VulnHub labs, and custom challenges. 
-            Every writeup is structured to teach, guide, and inspire the offensive security mindset.
-          </p>
+          <p class="muted">Explore CTF solutions, HackTheBox machines, VulnHub labs, and custom challenges. Every writeup is structured to teach, guide, and inspire the offensive security mindset.</p>
         </div>
         <div class="hero-right">
           <div class="stats-grid">
@@ -66,11 +61,16 @@
       <section class="search" aria-labelledby="search-title">
         <h2 id="search-title" class="section-title">Search & Filter</h2>
         <div class="search-bar" style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+          <!-- Buscador -->
           <div class="search-input" style="flex:1;">
             <span class="search-icon" aria-hidden="true">⌕</span>
             <input id="searchInput" type="search" placeholder="Search writeups (title, tags, platform)..." />
           </div>
+
+          <!-- Botón de búsqueda -->
           <button id="searchBtn" class="btn">Search</button>
+
+          <!-- Filtros combinados: dificultad y OS -->
           <select id="difficultySelect" class="select">
             <option value="">All difficulties</option>
             <option>Easy</option>
@@ -78,11 +78,14 @@
             <option>Hard</option>
             <option>Insane</option> 
           </select>
+
           <select id="osSelect" class="select">
             <option value="">All OS</option>
             <option>Linux</option>
             <option>Windows</option>
           </select>
+
+          <!-- Limpiar filtros -->
           <button id="clearFilters" class="btn ghost">Clear</button>
         </div>
       </section>
@@ -96,19 +99,34 @@
       </section>
     </section>
 
+    <!-- TAGS view -->
+    <section class="view" data-view="tags" hidden>
+      <h2 class="section-title">Platforms & Tag Overview</h2>
+      <p class="muted">Visualize the distribution of writeups by platform and tags. A quick way to discover learning paths.</p>
+      <div id="platformOverview" class="platform-grid"></div>
+      <hr/>
+      <div id="tagOverview" class="tag-overview"></div>
+      <div class="muted" style="margin-top:12px">Tip: Use the top search bar to refine results even further.</div>
+      <div style="height:20px"></div>
+    </section>
+
     <!-- PROFILE view -->
     <section class="view" data-view="profile" hidden>
       <div class="profile-hero">
         <img src="assets/images/user-image.png" alt="Profile avatar" class="avatar"/>
         <h1 id="profileName">G3Kzzz</h1>
-        <div class="about-certifications">XXXX | XXXX | XXXX <br> XXXX | XXXX</div>
+        <div class="about-certifications">
+          XXXX | XXXX | XXXX <br>
+          XXXX | XXXX
+        </div>
         <p class="muted" id="profileTagline">Dreams fade with dawn, yet their echoes light the path ahead.</p>
         <div class="profile-social">
-          <a href="mailto:fabian.huamani@ucsm.edu.pe">Contacto</a> • 
-          <a href="https://app.hackthebox.com/profile/#2426983" target="_blank" rel="noopener">HackTheBox</a> • 
-          <a href="https://github.com/g3kzzz" target="_blank" rel="noopener">GitHub</a>
+          <a href="mailto:fabian.huamani@ucsm.edu.pe" aria-label="Email">Contacto</a> • 
+          <a href="https://app.hackthebox.com/profile/#2426983" target="_blank" rel="noopener" aria-label="HackTheBox">HackTheBox</a> • 
+          <a href="https://github.com/g3kzzz" target="_blank" rel="noopener" aria-label="GitHub">GitHub</a>
         </div>
       </div>
+
       <section class="recent" aria-labelledby="recent-profile">
         <div class="results-header">
           <h2 id="recent-profile" class="section-title">Recent writeups</h2>
@@ -123,12 +141,17 @@
       <div class="about-card">
         <div class="about-left">
           <img src="assets/images/user-image.png" alt="Profile picture" class="about-avatar"/>
-          <div class="about-certifications">XXXX | XXXX | XXXX <br> XXXX | XXXX</div>
+          <div class="about-certifications">
+            XXXX | XXXX | XXXX <br>
+            XXXX | XXXX
+          </div>
         </div>
         <div class="about-right">
           <h1 class="about-name">G3Kzzz</h1>
           <h3 class="about-role">Cybersecurity Enthusiast & CTF Player</h3>
-          <p>Hello! I'm <strong>G3Kzzz</strong>, a passionate offensive security learner...</p>
+          <p>Hello! I'm <strong>G3Kzzz</strong>, a passionate offensive security learner. I enjoy solving challenges, exploring vulnerabilities, and sharing detailed writeups to help others level up in cybersecurity.</p>
+          <p>My main focus is penetration testing, vulnerability research, and CTF competitions. I use platforms like HackTheBox, VulnHub, and TryHackMe to sharpen my skills.</p>
+          <p>Beyond hacking labs, I love mentoring and making complex technical concepts accessible to learners in the community. This project is my way of sharing knowledge and inspiring others in the infosec path.</p>
           <div class="about-links">
             <a href="mailto:fabian.huamani@ucsm.edu.pe" class="btn about-btn">Contact Me</a>
             <a href="https://github.com/g3kzzz" target="_blank" rel="noopener" class="btn about-btn">GitHub</a>
@@ -139,28 +162,35 @@
     </section>
 
     <!-- POST view -->
-    <!-- POST view -->
-<section class="view" data-view="post" hidden>
-  <h2 class="section-title">Post</h2>
-  <div class="post-card">
-    <h3>Mis proyectos en GitHub</h3>
-    <p>Aquí iré compartiendo mi repositorio y avances 🚀</p>
-    <div class="post-links">
-      <a href="https://github.com/g3kzzz" target="_blank" rel="noopener" class="btn about-btn">Ver GitHub</a>
-    </div>
-  </div>
-</section>
+    <section class="view" data-view="post" hidden>
+      <section class="search" aria-labelledby="search-post">
+        <h2 id="search-post" class="section-title">Search Posts</h2>
+        <div class="search-bar" style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+          <div class="search-input" style="flex:1;">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input id="searchInputPost" type="search" placeholder="Search posts (title, tags)..." />
+          </div>
+          <button id="searchBtnPost" class="btn">Search</button>
+          <button id="clearPost" class="btn ghost">Clear</button>
+        </div>
+      </section>
 
+      <section class="results" aria-labelledby="results-post">
+        <div class="results-header">
+          <h2 id="results-post" class="section-title">Results</h2>
+          <div id="resultsMetaPost" class="muted">No posts yet.</div>
+        </div>
+        <div id="resultsGridPost" class="grid"></div>
+      </section>
+    </section>
   </main>
 
-  <!-- FOOTER -->
   <footer class="site-footer">
     <div class="container footer-inner">
       <div>© <span id="year"></span> G3K. All rights reserved.</div>
     </div>
   </footer>
 
-  <!-- JS -->
   <script src="assets/js/app.js" defer></script>
 </body>
 </html>
