@@ -26,60 +26,25 @@
   const clearPost = document.getElementById('clearPost');
   const resultsMetaPost = document.getElementById('resultsMetaPost');
   const resultsGridPost = document.getElementById('resultsGridPost');
-  const paginationPost = document.getElementById('paginationPost');
 
   let POSTS = [];
   let postSearchQuery = '';
-  let filteredPosts = [];
-  let currentPage = 1;
-  const RESULTS_PER_PAGE = 10;
 
   fetch('data/post.json?nocache=' + new Date().getTime())
     .then(r => r.json())
     .then(data => {
       POSTS = data;
-      filteredPosts = [...POSTS];
-      renderPosts();
+      renderPosts(POSTS.slice(0,10)); // últimos 10
     })
     .catch(err => {
       console.error(err);
       if(resultsMetaPost) resultsMetaPost.textContent = 'Failed to load posts.';
     });
 
-  function renderPosts(){
+  function renderPosts(list){
     if(!resultsGridPost) return;
-    resultsGridPost.innerHTML = '';
-    paginationPost.innerHTML = '';
-
-    if(filteredPosts.length === 0){
-      resultsMetaPost.textContent = 'No posts found.';
-      return;
-    }
-
-    resultsMetaPost.textContent = `${filteredPosts.length} post(s)`;
-
-    const start = (currentPage - 1) * RESULTS_PER_PAGE;
-    const end = start + RESULTS_PER_PAGE;
-    const pageResults = filteredPosts.slice(start, end);
-
-    pageResults.forEach(p => {
-      resultsGridPost.insertAdjacentHTML('beforeend', toCardHTMLPost(p));
-    });
-
-    // paginación
-    const totalPages = Math.ceil(filteredPosts.length / RESULTS_PER_PAGE);
-    if(totalPages > 1){
-      for(let i=1;i<=totalPages;i++){
-        const btn = document.createElement('button');
-        btn.textContent = i;
-        if(i === currentPage) btn.classList.add('active');
-        btn.addEventListener('click', ()=>{
-          currentPage = i;
-          renderPosts();
-        });
-        paginationPost.appendChild(btn);
-      }
-    }
+    resultsGridPost.innerHTML = list.map(toCardHTMLPost).join('');
+    if(resultsMetaPost) resultsMetaPost.textContent = `${list.length} post(s)`;
   }
 
   function toCardHTMLPost(p){
@@ -88,31 +53,27 @@
     const tags = (p.tags||[]).slice(0,4).map(t=>`<span class="tag">${escape(t)}</span>`).join(' ');
     const href = p.link || '#';
     return `
-      <div class="post-card">
-        <img src="${p.image || 'assets/images/post.png'}" alt="Preview" style="width:80px; height:80px; object-fit:cover; border-radius:6px;">
-        <div class="post-content">
-          <h3>${escape(p.title)}</h3>
-          <p class="muted">${escape(p.summary || '')}</p>
-          <div class="meta">${dateStr} ${tags}</div>
-          <a class="card-link" href="${href}" target="_blank">Read post →</a>
-        </div>
-      </div>
+      <article class="card">
+        <div class="meta">${dateStr}</div>
+        <h3>${escape(p.title)}</h3>
+        <p class="muted">${escape(p.summary || '')}</p>
+        <div class="meta">${tags}</div>
+        <a class="card-link" href="${href}" target="_blank">Read post →</a>
+      </article>
     `;
   }
 
   // eventos de búsqueda en POSTS
   function doSearchPost(){
     postSearchQuery = (searchInputPost.value || '').trim().toLowerCase();
+    let arr = POSTS;
     if(postSearchQuery){
-      filteredPosts = POSTS.filter(p => {
+      arr = arr.filter(p => {
         const hay = (p.title + ' ' + (p.tags||[]).join(' ')).toLowerCase();
         return hay.includes(postSearchQuery);
       });
-    } else {
-      filteredPosts = [...POSTS];
     }
-    currentPage = 1;
-    renderPosts();
+    renderPosts(arr.slice(0,10));
   }
 
   if(searchBtnPost) searchBtnPost.addEventListener('click', doSearchPost);
@@ -120,10 +81,9 @@
   if(clearPost) clearPost.addEventListener('click', ()=>{
     postSearchQuery='';
     if(searchInputPost) searchInputPost.value='';
-    filteredPosts = [...POSTS];
-    currentPage = 1;
-    renderPosts();
+    renderPosts(POSTS.slice(0,10));
   });
+ 
 
   // --- VIEW ROUTER ---
   const views = Array.from(document.querySelectorAll('[data-view]'));

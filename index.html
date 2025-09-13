@@ -139,30 +139,18 @@
     </section>
 
     <!-- POST view -->
-    <section class="view" data-view="post" hidden>
-      <section class="search" aria-labelledby="search-post">
-        <h2 id="search-post" class="section-title">Search Posts</h2>
-        <div class="search-bar" style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
-          <div class="search-input" style="flex:1;">
-            <span class="search-icon" aria-hidden="true">⌕</span>
-            <input id="searchInputPost" type="search" placeholder="Search posts (title, tags)..." />
-          </div>
-          <button id="searchBtnPost" class="btn">Search</button>
-          <button id="clearPost" class="btn ghost">Clear</button>
-        </div>
-      </section>
+    <!-- POST view -->
+<section class="view" data-view="post" hidden>
+  <h2 class="section-title">Post</h2>
+  <div class="post-card">
+    <h3>Mis proyectos en GitHub</h3>
+    <p>Aquí iré compartiendo mi repositorio y avances 🚀</p>
+    <div class="post-links">
+      <a href="https://github.com/g3kzzz" target="_blank" rel="noopener" class="btn about-btn">Ver GitHub</a>
+    </div>
+  </div>
+</section>
 
-      <section class="results" aria-labelledby="results-post">
-        <div class="results-header">
-          <h2 id="results-post" class="section-title">Results</h2>
-          <div id="resultsMetaPost" class="muted">No posts yet.</div>
-        </div>
-        <!-- Listado horizontal -->
-        <div id="resultsGridPost" class="post-list"></div>
-        <!-- Paginación -->
-        <div id="paginationPost" class="pagination"></div>
-      </section>
-    </section>
   </main>
 
   <!-- FOOTER -->
