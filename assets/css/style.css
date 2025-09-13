@@ -13,15 +13,15 @@
   --shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
 }
 :root.light {
-  /* Escala de azules para Light Mode */
-  --bg: #9da3ae;        /* azul muy claro, fondo general */
-  --bg-soft: #d6e6fa;   /* azul claro para secciones */
-  --card: #ffffff;       /* tarjetas blancas para contraste */
-  --text: #0f1d3a;       /* azul muy oscuro para texto principal */
-  --muted: #5a7cae;      /* azul grisáceo para texto secundario */
-  --acc: #1d4ed8;        /* azul intenso para botones/acento */
-  --border: rgba(29, 78, 216, 0.2); /* azul translúcido para bordes */
-  --shadow: 0 4px 14px rgba(29, 78, 216, 0.15); /* sombra azul muy suave */
+  /* Escala de azules para Light Mode - Ajustada según imagen */
+  --bg: #f5f7fa;           /* fondo muy claro azulado */
+  --bg-soft: #e8edf2;      /* azul muy claro para secciones */
+  --card: #ffffff;         /* tarjetas blancas */
+  --text: #2c3e50;         /* azul oscuro para texto principal */
+  --muted: #7f8c8d;        /* gris azulado para texto secundario */
+  --acc: #3498db;          /* azul vibrante para botones/acento */
+  --border: rgba(52, 152, 219, 0.15); /* azul muy translúcido para bordes */
+  --shadow: 0 4px 14px rgba(52, 152, 219, 0.1); /* sombra azul muy suave */
 }
 
 /* ==============================
