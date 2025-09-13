@@ -970,4 +970,9 @@ a.card-link:hover { text-decoration: underline; }
     grid-template-columns: 1fr;
   }
 }
-
+.pagination button.active {
+  background: var(--acc); /* azul intenso de acento */
+  color: #fff;            /* texto blanco */
+  border-color: var(--acc);
+  box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3); /* sombra azul suave */
+}
