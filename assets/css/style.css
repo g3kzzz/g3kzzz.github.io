@@ -173,7 +173,7 @@ main { flex: 1; }
    ============================== */
 .about-card {
   display: flex;
-  align-items: center; /* centra verticalmente la imagen y el texto */
+  align-items: center;
   gap: 36px;
   background: var(--card);
   border: 1px solid var(--border);
@@ -187,7 +187,7 @@ main { flex: 1; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* centra verticalmente dentro de la columna */
+  justify-content: center;
   gap: 12px;
   flex-shrink: 0;
 }
@@ -204,7 +204,7 @@ main { flex: 1; }
 .about-certifications {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--text); /* blanco dark / negro light */
+  color: var(--text);
   text-align: center;
 }
 
@@ -229,7 +229,7 @@ main { flex: 1; }
 
 .about-right p {
   font-size: 1rem;
-  color: #999; /* gris profesional */
+  color: #999;
   line-height: 1.7;
 }
 
@@ -258,25 +258,11 @@ main { flex: 1; }
    RESPONSIVE ABOUT ME
    ============================== */
 @media (max-width: 900px) {
-  .about-card {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .about-left {
-    flex-direction: column;
-  }
-
-  .about-left .about-avatar {
-    margin-bottom: 8px;
-  }
-
-  .about-links {
-    justify-content: center;
-  }
+  .about-card { flex-direction: column; align-items: center; text-align: center; }
+  .about-left { flex-direction: column; }
+  .about-left .about-avatar { margin-bottom: 8px; }
+  .about-links { justify-content: center; }
 }
-
 
 /* ==============================
    SECTIONS & BADGES
@@ -291,34 +277,7 @@ main { flex: 1; }
   color: #fff;
 }
 
-
-
 .platform-badges .badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  border-radius: 999px;
-  background: var(--card);      /* mantiene fondo del modo actual */
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-  cursor: pointer;
-  user-select: none;
-  font-weight: 600;
-  color: #fff !important;       /* fuerza texto blanco */
-  transition: all 0.2s ease;
-}
-
-.platform-badges .badge:hover {
-  background: var(--acc);       /* opcional: color de acento al pasar */
-  color: #fff;
-}
-
-.badge[data-active="true"] {
-  outline: 2px solid var(--acc);
-  color: #fff !important;
-}
-.badge {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -328,8 +287,15 @@ main { flex: 1; }
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
   cursor: pointer;
-  font-weight: 600;
   user-select: none;
+  font-weight: 600;
+  color: #fff !important;
+  transition: all 0.2s ease;
+}
+
+.platform-badges .badge:hover {
+  background: var(--acc);
+  color: #fff;
 }
 
 .badge[data-active="true"] { outline: 2px solid var(--acc); }
@@ -374,189 +340,11 @@ main { flex: 1; }
 }
 
 /* ==============================
-   POSTS / WRITEUPS
-   ============================== */
-.post {
-  padding: 24px 20px;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.post-header h1 {
-  font-size: 2rem;
-  margin-bottom: 6px;
-  word-break: break-word;
-}
-
-.post-meta {
-  color: var(--muted);
-  font-size: 0.9rem;
-  margin-bottom: 18px;
-}
-
-/* POST CONTENT */
-.post-content {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: var(--shadow);
-  line-height: 1.7;
-  word-wrap: break-word;
-  color: #ccc;
-}
-
-/* Párrafos */
-.post-content p {
-  margin-bottom: 16px;
-  color: #aaa;
-}
-
-/* Encabezados dentro del post */
-.post-content h2, 
-.post-content h3, 
-.post-content h4 {
-  margin-top: 1.6em;
-  margin-bottom: 0.8em;
-  color: var(--text);
-}
-
-/* Listas */
-.post-content ol,
-.post-content ul {
-  margin: 12px 0 16px 0;
-  padding-left: 1.5em;        /* mete todo un poco a la derecha */
-  list-style-position: inside; /* números y texto alineados */
-  color: inherit;
-}
-
-.post-content li {
-  margin-bottom: 8px;
-  line-height: 1.6;
-}
-
-.post-content ol li::marker {
-  color: var(--acc);
-  font-weight: 700;
-}
-
-/* COMANDOS / SALIDAS */
-.post-content pre,
-.post-content code {
-  background: #111;
-  color: #00ff88;
-  border-radius: 12px;
-  padding: 12px;
-  font-family: "Fira Code", monospace;
-  font-size: 0.95rem;
-  overflow-x: auto;
-  display: block;
-  margin: 16px 0;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-}
-
-/* Línea de comandos */
-.post-content pre.command {
-  background: #0c0c0c;
-  border-left: 4px solid var(--acc);
-}
-
-/* Imágenes dentro del post */
-.post-content img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 16px auto;
-  border-radius: 12px;
-  box-shadow: var(--shadow);
-}
-
-/* BOTONES DENTRO DE POSTS (si hay links) */
-.post-content a.btn {
-  display: inline-block;
-  margin: 8px 4px 12px 0;
-}
-
-/* NAVEGACIÓN POST */
-.post-nav {
-  margin-top: 24px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-/* RESPONSIVO */
-@media (max-width: 900px) {
-  .post {
-    padding: 20px 16px;
-  }
-  .post-content pre,
-  .post-content code {
-    font-size: 0.9rem;
-    padding: 10px;
-  }
-  .post-content ul,
-  .post-content ol {
-    padding-left: 1.5em;
-  }
-}
-
-@media (max-width: 600px) {
-  .post {
-    padding: 16px 12px;
-  }
-  .post-content h2 {
-    font-size: 1.4rem;
-  }
-  .post-content h3 {
-    font-size: 1.2rem;
-  }
-  .post-content p, 
-  .post-content li {
-    font-size: 0.9rem;
-  }
-  .post-content pre,
-  .post-content code {
-    font-size: 0.85rem;
-    padding: 8px;
-  }
-}
-
-
-/* ==============================
-   BUTTONS
-   ============================== */
-.btn {
-  background: linear-gradient(180deg, var(--acc), color-mix(in hsl, var(--acc), #000 12%));
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  padding: 10px 14px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: var(--shadow);
-}
-
-.btn.ghost {
-  background: transparent;
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-
-/* ==============================
    GRID CARDS / RESULTADOS
    ============================== */
-.results-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-}
+.results-header { display: flex; justify-content: space-between; align-items: end; }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
 
 .card {
   background: var(--card);
@@ -570,14 +358,7 @@ main { flex: 1; }
 }
 
 .card h3 { margin-top: 6px; font-size: 1.35rem; }
-.card .meta {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--muted);
-}
+.card .meta { display: flex; gap: 10px; flex-wrap: wrap; font-size: 0.85rem; font-weight: 600; color: var(--muted); }
 
 .tag {
   font-size: 0.78rem;
@@ -586,222 +367,22 @@ main { flex: 1; }
   border-radius: 999px;
 }
 
-a.card-link {
-  margin-top: auto;
-  text-decoration: none;
-  font-weight: 700;
-  color: var(--acc);
-}
-
+a.card-link { margin-top: auto; text-decoration: none; font-weight: 700; color: var(--acc); }
 a.card-link:hover { text-decoration: underline; }
 
-
-
-
 /* ==============================
-   LISTAS EN POST
+   POSTS / WRITEUPS
    ============================== */
-.post-content ul,
-.post-content ol {
-  padding-left: 1.6em; /* sangría profesional */
-  margin: 12px 0 12px 0; /* separación arriba y abajo */
-  color: #999; /* texto gris profesional */
-  line-height: 1.7;
-}
-
-.post-content ul li,
-.post-content ol li {
-  margin-bottom: 8px;
-  word-wrap: break-word; /* evita overflow horizontal */
-}
-
-/* Lista numerada más estilizada */
-.post-content ol {
-  counter-reset: section;
-}
-
-.post-content ol li::marker {
-  color: var(--acc); /* color de los números de la lista */
-  font-weight: 700;
-}
-
-/* Listas en móvil */
-@media (max-width: 900px) {
-  .post-content ul,
-  .post-content ol {
-    padding-left: 1.2em;
-  }
-  .post-content li {
-    font-size: 0.95rem;
-  }
-}
-
-@media (max-width: 600px) {
-  .post-content ul,
-  .post-content ol {
-    padding-left: 1em;
-  }
-  .post-content li {
-    font-size: 0.9rem;
-  }
-}
-
-
-/* ==============================
-   PROFILE / AVATAR
-   ============================== */
-.profile-hero, .profile-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 36px 0;
-}
-
-.profile-social a {
-  color: var(--acc);
-  text-decoration: none;
-  font-weight: 700;
-  margin: 0 6px;
-}
-
-.profile-social a:hover { text-decoration: underline; }
-
-.profile-grid {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 18px;
-  align-items: start;
-}
-
-.profile-card .input {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text);
-  margin: 8px 0;
-}
-
-.file-btn { position: relative; overflow: hidden; cursor: pointer; }
-.file-btn input { position: absolute; left:0; top:0; opacity: 0; height:100%; width:100%; cursor:pointer; }
-
-/* TAG CLOUD */
-#tagsCloud .tag { cursor:pointer; opacity: .95; }
-#tagsCloud .tag:hover { transform: translateY(-3px); }
-
-/* ==============================
-   SCREEN / VIEWS
-   ============================== */
-.view { padding: 10px 0 28px 0; }
-.view[hidden] { display: none; }
-.screen { display: none; padding-top: 18px; min-height: calc(100vh - 120px); }
-.screen.visible { display: block; }
-
-/* ==============================
-   RESPONSIVE
-   ============================== */
-@media (max-width: 900px) {
-  .grid { grid-template-columns: 1fr 1fr; }
-  .profile-grid { grid-template-columns: 1fr; }
-  .hero { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 600px) {
-  .grid { grid-template-columns: 1fr; }
-  .header-inner { gap: 10px; }
-}
-
-/* Contenedor principal de posts */
-.posts-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Se adapta al ancho */
-  gap: 1.5rem; /* espacio entre posts */
-  padding: 1rem;
-}
-
-/* Cada post */
-.post {
-  background-color: var(--card);
-  color: var(--text);
-  padding: 1rem;
-  border-radius: 0.8rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-  font-size: clamp(0.9rem, 1.5vw, 1.1rem); /* Texto escalable según pantalla */
-}
-
-/* Si tienes títulos dentro del post */
-.post h3 {
-  font-size: clamp(1rem, 2vw, 1.3rem);
-  margin-bottom: 0.5rem;
-}
-
-/* Para imágenes dentro del post */
-.post img {
-  width: 100%; /* siempre se adapta al contenedor */
-  height: auto;
-  border-radius: 0.5rem;
-}
-
-
-/* ==============================
-   LISTAS RESPONSIVAS
-   ============================== */
-.post-content ul,
-.post-content ol {
-  padding-left: clamp(1em, 4vw, 2em); /* sangría flexible según pantalla */
-  list-style-position: inside;         /* números alineados al texto */
-  margin: 12px 0 16px 0;
-}
-
-.post-content li {
-  margin-bottom: 8px;
-  line-height: 1.6;
-  word-break: break-word;              /* evita overflow en palabras largas */
-}
-
-/* Ajustes en pantallas pequeñas */
-@media (max-width: 600px) {
-  .post-content ul,
-  .post-content ol {
-    padding-left: 1.2em;              /* menos sangría en móvil */
-  }
-  .post-content li {
-    font-size: 0.9rem;                /* texto un poco más compacto */
-  }
-}
-/* --- Corregir colapso cuando no hay resultados --- */
-#resultsGrid:empty::before,
-#resultsGridPost:empty::before {
-  content: "No results found.";
-  display: block;
-  text-align: center;
-  color: var(--muted, #888);
-  padding: 2rem;
-}
-
-/* --- Vista normal (Articles/Home) en grilla --- */
-#resultsGrid {
+#resultsGridPost {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1rem;
+  min-height: 200px; /* evita colapso cuando no hay resultados */
 }
 
-/* --- Vista Post en lista horizontal --- */
-#resultsGridPost {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
+#resultsGridPost:empty::before { content: "No results found."; display: block; text-align: center; color: var(--muted); padding: 2rem; }
+
 /* Posts de GitHub en grilla igual que writeups */
-#resultsGridPost {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1rem;
-}
-
 #resultsGridPost .card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -819,18 +400,12 @@ a.card-link:hover { text-decoration: underline; }
   box-shadow: 0 6px 20px rgba(0,0,0,0.4);
 }
 
-#resultsGridPost .card h3 {
-  font-size: 1.2rem;
-  margin-bottom: 6px;
-  color: var(--text);
-}
+#resultsGridPost .card h3 { font-size: 1.2rem; margin-bottom: 6px; color: var(--text); }
+#resultsGridPost .card .meta { font-size: 0.85rem; color: var(--muted); }
 
-#resultsGridPost .card .meta {
-  font-size: 0.85rem;
-  color: var(--muted);
-}
-
-/* --- Paginación --- */
+/* ==============================
+   PAGINACIÓN
+   ============================== */
 .pagination {
   display: flex;
   justify-content: center;
@@ -841,22 +416,24 @@ a.card-link:hover { text-decoration: underline; }
 .pagination button {
   padding: 0.5rem 0.8rem;
   border: 1px solid var(--border, #ccc);
-  background: var(--surface, #fff);
+  background: var(--card);
   border-radius: 4px;
   cursor: pointer;
   transition: background 0.2s ease;
 }
 
-.pagination button:hover {
-  background: var(--hover, #f2f2f2);
-}
+.pagination button:hover { background: var(--acc); color: #fff; }
+.pagination button.active { background: var(--acc); color: #fff; border-color: var(--acc); }
 
-.pagination button.active {
-  background: var(--primary, #333);
-  color: #fff;
-  border-color: var(--primary, #333);
-}
-/* Barra de búsqueda de posts (igual que la de writeups) */
+/* ==============================
+   RESPONSIVE
+   ============================== */
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+
+/* ==============================
+   BARRA DE BÚSQUEDA POST
+   ============================== */
 #searchPost {
   display: flex;
   align-items: center;
@@ -866,7 +443,7 @@ a.card-link:hover { text-decoration: underline; }
   border-radius: 14px;
   padding: 10px 12px;
   width: 100%;
-  max-width: 400px; /* mismo tamaño que la de writeups */
+  max-width: 400px;
   margin-bottom: 20px;
   box-shadow: var(--shadow);
 }
