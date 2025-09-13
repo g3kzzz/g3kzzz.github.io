@@ -12,17 +12,16 @@
   --border: rgba(255, 255, 255, 0.08);
   --shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
 }
-
 :root.light {
-  /* Colores Light Mode */
-  --bg: #1c1c1c;
-  --bg-soft: #e8ecf2;
-  --card: #f4f6fa;
-  --text: #22262e;
-  --muted: #586070;
-  --acc: #3b6cff;
-  --border: rgba(0, 0, 0, 0.08);
-  --shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  /* Colores Light Mode (escala de azules) */
+  --bg: #e6f0fa;        /* azul muy claro de fondo */
+  --bg-soft: #d0e0f8;   /* azul suave para secciones */
+  --card: #ffffff;       /* blanco puro para tarjetas */
+  --text: #0f1b2b;       /* azul muy oscuro casi negro para texto */
+  --muted: #5578a1;      /* azul grisáceo para textos secundarios */
+  --acc: #3b82f6;        /* azul vivo/acento para botones y enlaces */
+  --border: rgba(59, 130, 246, 0.2); /* azul translúcido para bordes */
+  --shadow: 0 4px 14px rgba(59, 130, 246, 0.15); /* sombra azul muy suave */
 }
 
 /* ==============================
