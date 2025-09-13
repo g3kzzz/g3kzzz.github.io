@@ -2,7 +2,7 @@
   REGLAS DE FORMATO:
 
   1. Usar <code> solo para mostrar comandos, salidas literales o valores exactos.
-     NO usar <code> para “Key steps” en frases como "usando X" o "with X".
+     NO usar <code> para “Key steps” ni en "Overview" en frases como "usando X" o "with X".
   
   2. Para listados completos, salidas de comandos o directorios:
      Agrupar todo dentro de <pre><code> ... </code></pre>, no múltiples <code> en <li>.
@@ -13,7 +13,7 @@
 -->
 
 <h2>Overview</h2>
-<p>Epsilon is a medium-difficulty Linux machine that exposes a Git repository on the web server. During enumeration, AWS Lambda credentials leaked in previous commits are discovered. Using these credentials, we obtain the secret key used to sign JWTs in the Flask application, allowing us to generate admin cookies and access protected routes. Finally, root access is obtained by exploiting a cronjob that runs <code>tar -h</code>, allowing critical files to be replaced via symbolic links.</p>
+<p>Epsilon is a medium-difficulty Linux machine that exposes a Git repository on the web server. During enumeration, AWS Lambda credentials leaked in previous commits are discovered. Using these credentials, we obtain the secret key used to sign JWTs in the Flask application, allowing us to generate admin cookies and access protected routes. Finally, root access is obtained by exploiting a cronjob that runs tar -h, allowing critical files to be replaced via symbolic links.</p>
 
 <h2>Key steps</h2>
 <ol>
