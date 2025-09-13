@@ -883,3 +883,93 @@ a.card-link:hover { text-decoration: underline; }
   font-size: 0.95rem;
 }
 
+/* ==============================
+   PAGINACIÓN (BOTONES)  
+   ============================== */
+.pagination button {
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.pagination button:hover {
+  background: var(--acc);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.pagination button.active {
+  background: var(--acc);
+  color: #fff;
+  border-color: var(--acc);
+}
+
+/* ==============================
+   POSTS / GRID DE POSTS
+   ============================== */
+.posts-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem 0;
+}
+
+.posts-container .card {
+  background: var(--card);
+  color: var(--text);
+  padding: 1rem;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.posts-container .card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+.posts-container .card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+.posts-container .card .meta {
+  font-size: 0.85rem;
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.posts-container .card .tag {
+  font-size: 0.75rem;
+  background: var(--acc);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+/* ==============================
+   RESPONSIVE POSTS
+   ============================== */
+@media (max-width: 900px) {
+  .posts-container {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .posts-container {
+    grid-template-columns: 1fr;
+  }
+}
+
