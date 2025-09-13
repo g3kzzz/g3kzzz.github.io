@@ -19,7 +19,7 @@
   --card: #0d0f11;         /* tarjetas blancas */
   --text: #4f7cff;         /* azul oscuro para texto principal */
   --muted: #7f8c8d;        /* gris azulado para texto secundario */
-  --acc: #3498db;          /* azul vibrante para botones/acento */
+  --acc: #4f7cff;          /* azul vibrante para botones/acento */
   --border: rgba(52, 152, 219, 0.15); /* azul muy translúcido para bordes */
   --shadow: 0 4px 14px rgba(52, 152, 219, 0.1); /* sombra azul muy suave */
 }
