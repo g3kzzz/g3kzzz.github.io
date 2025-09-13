@@ -1,8 +1,8 @@
-document.addEventListener('DOMContentLoaded', () => {
+(function() {
   const root = document.documentElement;
   const themeToggle = document.getElementById('themeToggle');
   const yearEl = document.getElementById('year');
-  const searchInput = document.getElementById('searchInputPost');
+  const searchInput = document.getElementById('searchPost');
   const resultsContainer = document.getElementById('resultsGridPost');
   const paginationContainer = document.getElementById('pagination');
 
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   setTheme(userPref || (mql.matches ? 'light' : 'dark'));
   if(themeToggle){
-    themeToggle.addEventListener('click', () => {
+    themeToggle.addEventListener('click', ()=>{
       const next = root.classList.contains('light') ? 'dark' : 'light';
       setTheme(next);
     });
@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderPosts() {
     if(!resultsContainer) return;
+
     resultsContainer.innerHTML = '';
     const start = (currentPage - 1) * perPage;
     const end = start + perPage;
@@ -57,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <h3>${post.title}</h3>
         <div class="meta">${[post.platform, post.difficulty, new Date(post.date).toLocaleDateString()].filter(Boolean).join(' • ')}</div>
         <p>${post.excerpt || ''}</p>
-        <a href="post.html?id=${post.id}" class="card-link">Read more →</a>
+        <a href="writeups/${post.id}" class="card-link">Read more →</a>
       `;
       resultsContainer.appendChild(card);
     });
@@ -67,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderPagination() {
     if(!paginationContainer) return;
+
     paginationContainer.innerHTML = '';
     const totalPages = Math.ceil(filteredPosts.length / perPage);
     if(totalPages <= 1) return;
@@ -75,14 +77,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const btn = document.createElement('button');
       btn.textContent = text;
       if(page === currentPage) btn.classList.add('active');
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', ()=> {
         currentPage = page;
         renderPosts();
       });
       return btn;
     }
 
-    // Simple pagination with 1 ... 2 3 ... n
     for(let i = 1; i <= totalPages; i++) {
       if(i === 1 || i === totalPages || Math.abs(i - currentPage) <= 1) {
         paginationContainer.appendChild(createBtn(i, i));
@@ -109,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if(searchInput) searchInput.addEventListener('input', applySearch);
 
   // ===== FETCH POSTS =====
-  fetch('/data/writeups.json?nocache=' + new Date().getTime())
+  fetch('data/writeups.json?nocache=' + new Date().getTime())
     .then(r => r.json())
     .then(list => {
       posts = list;
@@ -120,5 +121,5 @@ document.addEventListener('DOMContentLoaded', () => {
       if(resultsContainer) resultsContainer.innerHTML = '<p style="text-align:center;color:var(--muted);padding:2rem;">Failed to load posts.</p>';
       console.error(err);
     });
-});
+})();
 
