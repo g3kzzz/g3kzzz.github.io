@@ -35,7 +35,7 @@
   const postId = getQueryParam('id');
   if(postId && postContent){
     // Primero cargamos el JSON con metadata
-    fetch('writeups.json?nocache=' + new Date().getTime())
+    fetch('/data/writeups.json?nocache=' + new Date().getTime())
       .then(r => r.json())
       .then(list => {
         const w = list.find(x => x.id === postId.replace('.html','') || x.id === postId);
@@ -45,13 +45,13 @@
           return;
         }
 
-        // Título real de la máquina
+        // --- Título real de la máquina ---
         postTitle.textContent = w.title;
 
-        // Meta: plataforma, dificultad, fecha
+        // --- Meta: plataforma, dificultad, fecha ---
         postMeta.textContent = `${w.platform || 'Other'} • ${w.difficulty || 'Unknown'} • ${new Date(w.date).toLocaleDateString()}`;
 
-        // Cargar contenido HTML de la writeup
+        // --- Cargar contenido HTML de la writeup ---
         fetch(`writeups/${postId}`)
           .then(r => r.text())
           .then(html => { postContent.innerHTML = html; })
@@ -60,7 +60,7 @@
             console.error(err);
           });
 
-        // Botón "Open Full Writeup"
+        // --- Botón "Open Full Writeup" ---
         if(fullWriteupBtn){
           fullWriteupBtn.href = `writeups/${postId}`;
           fullWriteupBtn.style.display = 'inline-block';
