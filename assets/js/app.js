@@ -29,7 +29,7 @@
 
   let POSTS = [];
   let postSearchQuery = '';
-  let currentPage = 1;
+  let currentPagePost = 1;
   const POSTS_PER_PAGE = 9;
 
   fetch('data/post.json?nocache=' + new Date().getTime())
@@ -47,22 +47,22 @@
     if(!resultsGridPost) return;
 
     const totalPages = Math.ceil(list.length / POSTS_PER_PAGE);
-    if(currentPage > totalPages) currentPage = totalPages || 1;
-    const start = (currentPage - 1) * POSTS_PER_PAGE;
+    if(currentPagePost > totalPages) currentPagePost = totalPages || 1;
+    const start = (currentPagePost - 1) * POSTS_PER_PAGE;
     const end = start + POSTS_PER_PAGE;
     const pageItems = list.slice(start, end);
 
     resultsGridPost.innerHTML = pageItems.map(toCardHTMLPost).join('');
     if(resultsMetaPost) resultsMetaPost.textContent = `${list.length} post(s)`;
 
-    renderPagination(list.length, totalPages);
+    renderPaginationPost(list.length, totalPages);
   }
 
-  function renderPagination(totalItems, totalPages){
-    let pagination = document.getElementById('pagination');
+  function renderPaginationPost(totalItems, totalPages){
+    let pagination = document.getElementById('paginationPost');
     if(!pagination){
       pagination = document.createElement('div');
-      pagination.id = 'pagination';
+      pagination.id = 'paginationPost';
       pagination.className = 'pagination';
       resultsGridPost.parentNode.appendChild(pagination);
     }
@@ -70,25 +70,25 @@
 
     if(totalPages <= 1) return;
 
-    if(currentPage > 1){
+    if(currentPagePost > 1){
       const prev = document.createElement('button');
       prev.textContent = 'Anterior';
-      prev.onclick = () => { currentPage--; renderPosts(filterPosts()); };
+      prev.onclick = () => { currentPagePost--; renderPosts(filterPosts()); };
       pagination.appendChild(prev);
     }
 
     for(let i = 1; i <= totalPages; i++){
       const btn = document.createElement('button');
       btn.textContent = i;
-      btn.disabled = i === currentPage;
-      btn.onclick = () => { currentPage = i; renderPosts(filterPosts()); };
+      btn.disabled = i === currentPagePost;
+      btn.onclick = () => { currentPagePost = i; renderPosts(filterPosts()); };
       pagination.appendChild(btn);
     }
 
-    if(currentPage < totalPages){
+    if(currentPagePost < totalPages){
       const next = document.createElement('button');
       next.textContent = 'Siguiente';
-      next.onclick = () => { currentPage++; renderPosts(filterPosts()); };
+      next.onclick = () => { currentPagePost++; renderPosts(filterPosts()); };
       pagination.appendChild(next);
     }
   }
@@ -122,7 +122,7 @@
 
   function doSearchPost(){
     postSearchQuery = (searchInputPost.value || '').trim().toLowerCase();
-    currentPage = 1;
+    currentPagePost = 1;
     renderPosts(filterPosts());
   }
 
@@ -130,7 +130,7 @@
   if(searchInputPost) searchInputPost.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doSearchPost(); });
   if(clearPost) clearPost.addEventListener('click', ()=>{
     postSearchQuery='';
-    currentPage = 1;
+    currentPagePost = 1;
     if(searchInputPost) searchInputPost.value='';
     renderPosts(POSTS);
   });
@@ -189,6 +189,8 @@
   let selectedPlatform = '';
   let searchQuery = '';
   let selectedDifficulty = '';
+  let currentPageWriteups = 1;
+  const WRITEUPS_PER_PAGE = 9;
 
   // Load data
   fetch('data/writeups.json?nocache=' + new Date().getTime())
@@ -232,6 +234,7 @@
         for(const b of platformBadges.querySelectorAll('.badge')){
           b.dataset.active = String(b.dataset.platform === selectedPlatform);
         }
+        currentPageWriteups = 1;
         applyFilters();
         location.hash = '#home';
       });
@@ -250,6 +253,7 @@
           for(const b of document.querySelectorAll('#platformBadges .badge')){
             b.dataset.active = String(b.dataset.platform === selectedPlatform);
           }
+          currentPageWriteups = 1;
           applyFilters();
         }, 120);
       });
@@ -268,27 +272,25 @@
       });
     }
 
-    const recent = [...ALL].sort((a,b)=> new Date(b.date) - new Date(a.date)).slice(0,9);
-    if(recentGrid) renderGrid(recentGrid, recent);
-    if(recentGridProfile) renderGrid(recentGridProfile, recent);
-
     applyFilters();
 
     function doSearch(){
       searchQuery = (searchInput.value || '').trim().toLowerCase();
+      currentPageWriteups = 1;
       applyFilters();
       location.hash = '#home';
     }
     if(searchBtn) searchBtn.addEventListener('click', doSearch);
     if(searchInput) searchInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doSearch(); });
-    if(difficultySelect) difficultySelect.addEventListener('change', ()=>{ selectedDifficulty = difficultySelect.value; applyFilters(); });
-    if(osSelect) osSelect.addEventListener('change', ()=>{ selectedOS = osSelect.value; applyFilters(); });
+    if(difficultySelect) difficultySelect.addEventListener('change', ()=>{ selectedDifficulty = difficultySelect.value; currentPageWriteups = 1; applyFilters(); });
+    if(osSelect) osSelect.addEventListener('change', ()=>{ selectedOS = osSelect.value; currentPageWriteups = 1; applyFilters(); });
     if(clearBtn) clearBtn.addEventListener('click', ()=>{
       selectedPlatform=''; searchQuery=''; selectedDifficulty=''; selectedOS='';
       if(searchInput) searchInput.value=''; 
       if(difficultySelect) difficultySelect.value='';
       if(osSelect) osSelect.value='';
       for(const b of platformBadges.querySelectorAll('.badge')) b.dataset.active = String(b.dataset.platform==='');
+      currentPageWriteups = 1;
       applyFilters();
     });
   }
@@ -323,20 +325,63 @@
         return hay.includes(searchQuery);
       });
     }
+
     if(resultsMeta) resultsMeta.textContent = `${arr.length} result(s)`;
-    if(resultsGrid) renderGrid(resultsGrid, arr);
+
+    renderWriteupsPage(arr);
   }
 
-  function renderGrid(container, list){
-    if(!container) return;
-    container.innerHTML = list.map(toCardHTML).join('');
+  function renderWriteupsPage(list){
+    if(!resultsGrid) return;
+    const totalPages = Math.ceil(list.length / WRITEUPS_PER_PAGE);
+    if(currentPageWriteups > totalPages) currentPageWriteups = totalPages || 1;
+    const start = (currentPageWriteups - 1) * WRITEUPS_PER_PAGE;
+    const end = start + WRITEUPS_PER_PAGE;
+    const pageItems = list.slice(start, end);
+
+    resultsGrid.innerHTML = pageItems.map(toCardHTML).join('');
+    renderPaginationWriteups(list.length, totalPages);
+  }
+
+  function renderPaginationWriteups(totalItems, totalPages){
+    let pagination = document.getElementById('paginationWriteups');
+    if(!pagination){
+      pagination = document.createElement('div');
+      pagination.id = 'paginationWriteups';
+      pagination.className = 'pagination';
+      resultsGrid.parentNode.appendChild(pagination);
+    }
+    pagination.innerHTML = '';
+    if(totalPages <= 1) return;
+
+    if(currentPageWriteups > 1){
+      const prev = document.createElement('button');
+      prev.textContent = 'Anterior';
+      prev.onclick = () => { currentPageWriteups--; applyFilters(); };
+      pagination.appendChild(prev);
+    }
+
+    for(let i = 1; i <= totalPages; i++){
+      const btn = document.createElement('button');
+      btn.textContent = i;
+      btn.disabled = i === currentPageWriteups;
+      btn.onclick = () => { currentPageWriteups = i; applyFilters(); };
+      pagination.appendChild(btn);
+    }
+
+    if(currentPageWriteups < totalPages){
+      const next = document.createElement('button');
+      next.textContent = 'Siguiente';
+      next.onclick = () => { currentPageWriteups++; applyFilters(); };
+      pagination.appendChild(next);
+    }
   }
 
   function renderRecentInto(id){
     const container = document.getElementById(id);
     if(!container) return;
     const recent = [...ALL].sort((a,b)=> new Date(b.date) - new Date(a.date)).slice(0,3);
-    renderGrid(container, recent);
+    container.innerHTML = recent.map(toCardHTML).join('');
   }
 
   function toCardHTML(w){
