@@ -1,16 +1,15 @@
 <!--
   REGLAS DE FORMATO:
 
-  1. Usar <code> solo para mostrar comandos o valores literales dentro del texto.
-     NO usar <code> en “Key steps” para palabras generales o acciones.
+  1. Usar <code> solo para mostrar comandos, salidas literales o valores exactos.
+     NO usar <code> para “Key steps” en frases como "usando X" o "with X".
   
-  2. Para salidas de comandos, directorios, o listados completos:
-     Agrupar todo dentro de un <pre><code> ... </code></pre>
-     en lugar de múltiples <code> dentro de <li>.
+  2. Para listados completos, salidas de comandos o directorios:
+     Agrupar todo dentro de <pre><code> ... </code></pre>, no múltiples <code> en <li>.
 
-  3. Cada bloque de “Key steps” debe ser texto simple, sin <code> en acciones, excepto comandos puntuales.
-  
-  4. Imágenes, capturas o resultados deben ir como <img src="..." alt="..."> con texto descriptivo.
+  3. Cada bloque de “Key steps” debe ser texto simple, sin <code> en acciones, excepto comandos exactos.
+
+  4. Imágenes o capturas van con <img src="..." alt="..."> y texto descriptivo.
 -->
 
 <h2>Overview</h2>
@@ -53,7 +52,7 @@
 |_http-title: Costume Shop</code></pre>
 
 <h3>2. HTTP enumeration and Git repository dump</h3>
-<p>Visiting <code>http://10.10.11.134</code> returns a 403. We check if the Git repository is exposed at <code>/.git</code> using <code>gitdumper</code>:</p>
+<p>Visiting <code>http://10.10.11.134</code> returns a 403. We check if the Git repository is exposed at <code>/.git</code> using gitdumper:</p>
 
 <pre><code>./gitdumper.sh http://10.10.11.134/.git/ ~/CTF/Epsilon/loot/epsilon-repo</code></pre>
 
@@ -205,5 +204,4 @@ cat checksum  # Contains id_rsa</code></pre>
 <pre><code>ssh -i id_rsa root@10.10.11.134</code></pre>
 
 <p>Full access to the Epsilon machine is obtained.</p>
-
 
