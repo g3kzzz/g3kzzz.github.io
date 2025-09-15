@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>G3Kzzz</title>
+  <link rel="stylesheet" href="src/css/style.css"/>
+  <link rel="stylesheet" href="src/css/aboutme.css"/>
+  <link rel="stylesheet" href="src/css/writetups.css"/>
+  <link rel="stylesheet" href="src/css/post.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#profile" class="brand" id="brandLink">✦ g3kzzz</a>
+
+      <nav class="nav">
+        <a href="#" class="nav-link active" data-page="profile">Profile</a>
+        <a href="#" class="nav-link" data-page="writeups">Writeups</a>
+        <a href="#" class="nav-link" data-page="aboutme">About Me</a>
+        <a href="#" class="nav-link" data-page="posts">Posts</a>
+      </nav>
+
+      <button id="themeToggle" class="icon-btn" aria-label="Toggle theme" title="Toggle theme">
+        <svg id="icon-sun" class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zm10.48 0l1.79-1.8-1.41-1.41-1.8 1.79 1.42 1.42zM12 4V1h-0v3h0zm0 19v-3h0v3h0zM4 12H1v0h3v0zm19 0h-3v0h3v0zM6.76 19.16l-1.42 1.42-1.79-1.8 1.41-1.41 1.8 1.79zM19.16 17.24l1.8 1.79 1.41-1.41-1.79-1.8-1.42 1.42zM12 6a6 6 0 100 12 6 6 0 000-12z"/>
+        </svg>
+        <svg id="icon-moon" class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="workspace-container">
+      <!-- PROFILE -->
+      <div class="workspace active" id="profile">
+        <div class="profile-hero">
+          <div class="avatar-wrapper">
+            <img src="src/img/user-image.png" alt="G3Kzzz Avatar" class="avatar"/>
+            <h1 id="profileName">G3Kzzz</h1>
+            <p class="certifications">XXXX | XXXX</p>
+          </div>
+          <p class="muted">Dreams fade with dawn, yet their echoes light the path ahead.</p>
+          <div class="profile-social-animated">
+            <a href="mailto:fabian.huamani@ucsm.edu.pe">Contact</a> •
+            <a href="https://app.hackthebox.com/profile/#2426983" target="_blank">HackTheBox</a> •
+            <a href="https://github.com/g3kzzz" target="_blank">GitHub</a>
+          </div>
+        </div>
+        <section class="recent">
+          <h2 class="section-title">Recent Writeups</h2>
+          <div id="recentGridProfile" class="grid"></div>
+        </section>
+      </div>
+
+      <!-- WRITEUPS -->
+      <div class="workspace" id="writeups">
+        <section class="hero small-hero">
+          <div class="hero-left">
+            <h1>Writeups for Learners</h1>
+            <p class="muted">Explore CTF solutions, HackTheBox machines, VulnHub labs, and custom challenges. Each writeup is structured to teach, guide, and inspire the offensive security mindset.</p>
+          </div>
+          <div class="hero-right">
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-number" id="totalWriteups">0</div>
+                <div class="stat-label">Total Writeups</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number" id="platformCount">0</div>
+                <div class="stat-label">Platforms</div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="search">
+          <h2 class="section-title">Search & Filter</h2>
+          <div class="search-bar">
+            <input id="searchInput" type="search" placeholder="Filter for anything you want!"/>
+            <button id="searchBtn" class="btn">Search</button>
+            <select id="difficultySelect" class="select">
+              <option value="">All difficulties</option>
+              <option>Easy</option>
+              <option>Medium</option>
+              <option>Hard</option>
+              <option>Insane</option>
+            </select>
+            <select id="osSelect" class="select">
+              <option value="">All OS</option>
+              <option>Linux</option>
+              <option>Windows</option>
+            </select>
+            <button id="clearFilters" class="btn ghost">Clear</button>
+          </div>
+        </section>
+        <section class="results">
+          <div class="results-header">
+            <h2 class="section-title">Results</h2>
+            <div id="resultsMeta" class="muted">No results yet. Use search or filters.</div>
+          </div>
+          <div id="resultsGrid" class="grid"></div>
+        </section>
+      </div>
+
+      <!-- ABOUT ME -->
+      <div class="workspace" id="aboutme">
+        <h2 class="section-title">About Me</h2>
+        <div class="about-card">
+          <div class="about-left">
+            <div class="avatar-wrapper">
+              <img src="src/img/user-image.png" alt="G3Kzzz Avatar" class="avatar"/>
+              <p class="certifications">XXXX | XXXX</p>
+            </div>
+            <div class="contact-icons">
+              <a href="mailto:fabian.huamani@ucsm.edu.pe" title="Email"><i class="fas fa-envelope"></i></a>
+              <a href="https://github.com/g3kzzz" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+              <a href="https://app.hackthebox.com/profile/#2426983" target="_blank" title="HackTheBox"><i class="fas fa-shield-alt"></i></a>
+            </div>
+          </div>
+          <div class="about-right">
+            <h1 class="about-name">G3Kzzz</h1>
+            <p>Cybersecurity Enthusiast & CTF Player. Hi! I'm <strong>G3Kzzz</strong>, passionate about offensive security, CTF challenges, and ethical hacking. I love exploring vulnerabilities, creating writeups, and sharing knowledge with the community.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- POSTS -->
+      <div class="workspace" id="posts">
+        <section class="hero small-hero">
+          <div class="hero-left">
+            <h1>Welcome to My GitHub Posts</h1>
+            <p class="muted">Here you will find my most recent and highlighted repositories, displayed elegantly and in the same dimensions as my writeups.</p>
+          </div>
+          <div class="hero-right">
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-number" id="totalRepos">--</div>
+                <div class="stat-label">Total Repos</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number" id="recentRepos">--</div>
+                <div class="stat-label">Recent Repos</div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <div class="search-bar">
+          <input id="searchInputPost" type="search" placeholder="Search repositories..." />
+          <button id="searchBtnPost" class="btn">Search</button>
+          <button id="clearPost" class="btn ghost">Clear</button>
+        </div>
+        <section class="results">
+          <h2 class="section-title">Results</h2>
+          <div id="resultsMetaPost" class="muted">No repositories loaded.</div>
+          <div id="resultsGridPost" class="grid"></div>
+        </section>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">© <span id="year"></span> G3K. All rights reserved.</div>
+  </footer>
+
+  <script src="src/js/app.js" defer></script>
+</body>
+</html>

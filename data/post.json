@@ -1,0 +1,50 @@
+[
+  {
+    "id": "post1",
+    "title": "Automating Pentesting Tools with Python",
+    "summary": "Automated installer and uninstaller for pentesting tools on Arch Linux and derivatives, including Responder, Evil-WinRM, and more, with automatic dependency management and configuration.",
+    "date": "2025-09-03",
+    "tags": [
+      "Python",
+      "Automation",
+      "Pentesting",
+      "Arch Linux",
+      "Security",
+      "Ethical Hacking",
+      "Scripting",
+      "Linux Tools",
+      "Responder",
+      "Evil-WinRM",
+      "Dependency Management",
+      "Configuration",
+      "CLI Tools",
+      "Open Source",
+      "Cybersecurity"
+    ],
+    "link": "https://github.com/g3kzzz/archTools"
+  },
+  {
+    "id": "post2",
+    "title": "G3K Dotfiles",
+    "summary": "A customized environment based on Arch Linux with a minimal and efficient bspwm setup. It includes optimized configurations and essential tools like nvim, tmux, rofi, picom, eww, and more — designed for productivity and a clean, modern aesthetic.",
+    "date": "2025-09-04",
+    "tags": [
+      "Arch Linux",
+      "Dotfiles",
+      "bspwm",
+      "Productivity",
+      "Linux",
+      "Configuration",
+      "Customization",
+      "Nvim",
+      "Tmux",
+      "Rofi",
+      "Picom",
+      "Eww",
+      "Minimalism",
+      "Open Source",
+      "Desktop Setup"
+    ],
+    "link": "https://github.com/g3kzzz/dotfiles"
+  }
+]

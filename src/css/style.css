@@ -1,0 +1,748 @@
+:root {
+  --bg: #0b0c0d;
+  --surface: #121315;
+  --muted: #9aa0a6;
+  --text: #e6eef6;
+  --accent: #8b2e3a;
+  --accent-2: #930618;
+  --card: #171819;
+  --radius: 14px;
+}
+
+[data-theme="light"] {
+  --bg: #f7f8fb;
+  --surface: #ffffff;
+  --muted: #546069;
+  --text: #0b0c0d;
+  --accent: #8b2e3a;
+  --accent-2: #2e6fdb;
+  --card: #f0f1f4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+body {
+  font-family: "Segoe UI", Roboto, "Fira Code", monospace;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+/* ---------- Container ---------- */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ---------- Header & Nav ---------- */
+.site-header {
+  width: 100%;
+  background: rgba(18, 19, 21, 0.85);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 60;
+}
+
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 20px;
+  color: #ffffff;
+  text-decoration: none;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+  flex: 1 1 auto;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.nav-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 15px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  transition: color 0.18s ease, background 0.18s ease, transform 0.12s ease;
+  white-space: nowrap;
+  font-weight: bold;
+}
+
+.nav-link:hover {
+  color: var(--text);
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  transform: translateY(-1px);
+    font-weight: bold;
+
+}
+
+.nav-link.active {
+  color: var(--accent-2);
+  font-weight: 600;
+    font-weight: bold;
+
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 10px;
+  margin-left: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  color: var(--muted);
+}
+
+.icon-btn:focus {
+  outline: 2px solid rgba(255,255,255,0.06);
+  outline-offset: 2px;
+}
+
+/* ---------- Profile Hero ---------- */
+.profile-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 48px 20px;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid var(--surface);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  margin-bottom: 10px;
+  object-fit: cover;
+}
+
+.profile-hero h1 {
+  margin: 0px 0 0px;
+  font-size: 28px;
+}
+
+.profile-hero .muted {
+  color: var(--muted);
+  max-width: 720px;
+  margin: 8px auto 0;
+  font-size: 15px;
+}
+
+.profile-social-animated {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.profile-social-animated a {
+  position: relative;
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: bold;
+  padding-bottom: 2px;
+  transition: color 0.2s ease;
+}
+
+.profile-social-animated a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.profile-social-animated a:hover::after {
+  width: 100%;
+}
+
+.profile-social-animated a:hover {
+  color: var(--accent);
+}
+
+.certificaciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 0px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.certificaciones span {
+  background: rgba(46, 111, 219, 0.15);
+  color: var(--muted);
+  padding: 6px 12px;
+  border-radius: 14px;
+  transition: background 0.25s ease, color 0.25s ease;
+  cursor: default;
+}
+
+.certificaciones span:hover {
+  background: var(--muted);
+  color: var(--text);
+}
+
+/* ---------- Sections & Grid ---------- */
+.section-title {
+  font-size: 20px;
+  margin: 28px 0 16px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--card);
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.42);
+}
+
+.card h3,
+.card h4 {
+  margin: 6px 0;
+}
+
+.card p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 14px;
+  background: rgba(0,0,0,0.08);
+  margin: 6px 6px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.read-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: var(--accent-2);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.read-link:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+  text-align: center;
+  padding: 28px;
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  flex-shrink: 0;
+  background: var(--surface);
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ---------- Workspace ---------- */
+.workspace {
+  display: none;
+}
+
+.workspace.active {
+  display: block;
+}
+
+/* ---------- Recientes Profile ---------- */
+#recentGridProfile {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+#recentGridProfile .card {
+  flex: 1 1 calc(33.333% - 12px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 200px;
+}
+
+#recentGridProfile .card h4 {
+  font-size: 18px;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+#recentGridProfile .card p {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 4px 0;
+}
+
+/* ---------- Pagination ---------- */
+.pagination {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin: 16px 0 32px;
+}
+
+.pagination button {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: none;
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: var(--accent);
+  color: var(--text);
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.pagination button.active {
+  background: var(--accent-2);
+  color: var(--text);
+}
+
+/* ---------- Results Meta ---------- */
+#resultsMeta {
+  margin-bottom: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  #recentGridProfile .card {
+    flex: 1 1 calc(50% - 12px);
+  }
+}
+
+@media (max-width: 600px) {
+  #recentGridProfile .card {
+    flex: 1 1 100%;
+  }
+
+  .nav-link {
+    font-size: 14px;
+    padding: 6px 8px;
+  }
+
+  .avatar {
+    width: 88px;
+    height: 88px;
+  }
+}
+/* Contenedor de tags dentro de card */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+/* Cada tag como "pill" */
+.tag-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: var(--accent-2); /* color suave */
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.tag-pill:hover {
+  background: var(--accent);
+  color: var(--text);
+}
+
+.tag-pill.name-tag {
+  background: var(--accent); /* fondo destacado */
+  color: var(--text);            /* texto blanco */
+  font-weight: 600;
+}
+.results-header {
+  display: flex;
+  justify-content: space-between; /* Results izquierda, cantidad derecha */
+  align-items: center;
+  margin-bottom: 1rem; /* Espacio con la grilla */
+  flex-wrap: wrap; /* Por si la pantalla es pequeña */
+}
+
+.results-header .section-title {
+  margin: 0; /* Evitar márgenes por defecto */
+}
+
+.results-header #resultsMeta {
+  margin: 0;
+  font-weight: 500; /* Opcional: que resalte */
+}
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* toda la altura de la ventana */
+}
+
+main {
+  flex: 1; /* ocupa todo el espacio restante */
+}
+
+.site-footer {
+  text-align: center;
+  padding: 1rem 0;
+  background: var(--surface);
+  color: var(--muted);
+}
+.clickable-card {
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.clickable-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+/* Título acorde al tema, sin subrayado */
+.post-title {
+  color: var(--text);
+  text-decoration: none;
+}
+
+/* Si quieres que todo el card cambie de color según tema también */
+.clickable-card {
+  background-color: var(--card);
+  color: var(--text);
+}
+/* ----------------- Resultados ----------------- */
+.results {
+  margin: 32px 0;
+}
+
+#resultsMeta {
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+#resultsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+/* Cards animadas coherentes con perfil */
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 36px rgba(0,0,0,0.42);
+}
+
+/* ----------------- Responsive ----------------- */
+@media (max-width: 700px) {
+  .hero.small-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .hero-right {
+    margin-top: 12px;
+    justify-content: flex-start;
+  }
+
+  .search-bar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .search-bar input[type="search"],
+  .search-bar .select,
+  .search-bar .btn {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .platform-badges {
+    gap: 10px;
+  }
+}
+@media (max-width: 700px) {
+  .hero.small-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px; /* espacio mínimo entre texto y stats */
+    padding: 16px;
+  }
+
+  .hero-left {
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  .hero-left h1 {
+    font-size: 24px;
+    margin-bottom: 2px;
+  }
+
+  .hero-left .muted {
+    font-size: 14px;
+    margin-bottom: 0; /* elimina cualquier margen extra */
+  }
+
+  .hero-right {
+    width: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: space-between; /* cuadros pegados pero con espacio proporcional */
+  }
+
+  .stats-grid {
+    display: flex;
+    width: 100%;
+    gap: 8px; /* separación mínima entre los dos cuadros */
+  }
+
+  .stat-card {
+    flex: 1;          /* que cada cuadro ocupe la mitad disponible */
+    margin: 0;
+  }
+}
+/* Título y meta centrados */
+.post-header {
+  text-align: center;
+}
+
+#postMeta {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Pre y Code elegantes combinados */
+#postContent pre {
+  background: var(--surface);
+  color: #ffffff; /* todo el código en blanco */
+  font-family: 'Fira Code', monospace;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);
+  margin: 12px 0;
+}
+
+#postContent code {
+  font-family: 'Fira Code', monospace;
+  font-weight: 700;
+  background: transparent; /* hereda el fondo del pre */
+  color: var(--text); /* código blanco */
+}
+
+/* Subtítulos dentro del writeup */
+#postContent h2,
+#postContent h3,
+#postContent h4 {
+  color: var(--accent-2); /* rojo/acento */
+  margin-top: 24px;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+/* ===============================
+   Estilo para post-nav botones
+   =============================== */
+.post-nav {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.post-nav .btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: var(--radius);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Botón principal */
+.post-nav .btn:not(.ghost) {
+  background-color: var(--accent);
+  color: #fff;
+  border: 1px solid var(--accent);
+}
+
+.post-nav .btn:not(.ghost):hover {
+  background-color: var(--accent-2);
+  border-color: var(--accent-2);
+}
+
+/* Botón ghost */
+.post-nav .btn.ghost {
+  background-color: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+.post-nav .btn.ghost:hover {
+  background-color: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* Responsivo para pantallas pequeñas */
+@media (max-width: 480px) {
+  .post-nav {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+/* ===== Imágenes dentro de writeups ===== */
+.post-content img {
+  display: block;        /* Bloque para respetar márgenes */
+  width: 100%;           /* Siempre ocupa el ancho del contenedor */
+  height: auto;          /* Mantiene proporción */
+  margin: 16px 0;        /* Separación vertical */
+  border-radius: 8px;    /* Opcional, bordes suaves */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3); /* Opcional, sombra ligera */
+  object-fit: contain;   /* Ajusta contenido sin cortar ni deformar */
+}
+
+
+.recent-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline; /* misma línea base */
+}
+
+.recent-header .post-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1; /* evita que el título "empuje" la fecha */
+  color: var(--text);
+}
+
+.recent-date {
+  font-size: 0.65rem;  
+  font-weight: 500;
+  color: var(--muted); /* 🔥 ahora sí color pomo */
+  margin-left: 12px;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.recent-meta {
+  font-size: 0.8rem;
+  color: var(--accent-2);
+  margin: 2px 0 10px 0; /* 🔥 súper pegado al título */
+  line-height: 1.2;
+}
+
+.post-title {
+  color: var(--text);   /* o var(--accent) si lo quieres llamativo */
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.post-title {
+  margin-top: 0;       /* sin espacio arriba */
+  margin-bottom: 4px;  /* un poco de aire debajo */
+  padding-top: 0;      /* por si algún reset mete padding */
+}
+.muted, .recent-meta {
+  margin-top: 0;       /* pegado al título */
+  margin-bottom: 6px;  /* un poco de aire hacia abajo */
+}

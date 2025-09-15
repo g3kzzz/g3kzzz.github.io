@@ -1,0 +1,184 @@
+/* ----------------- Hero pequeño ----------------- */
+.hero.small-hero {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin: 32px 0;
+  padding: 24px;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+}
+
+.hero-left {
+  flex: 1 1 300px;
+}
+
+.hero-left h1 {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.hero-left .muted {
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.hero-right {
+  flex: 1 1 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(80px, 120px));
+  gap: 12px;
+}
+
+.stat-card {
+  background: var(--surface);
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.32);
+}
+
+.stat-number {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent-2);
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* ----------------- Search bar para posts ----------------- */
+.search-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.search-bar input[type="search"] {
+  padding: 8px 14px;
+  border: 1px solid var(--muted);
+  border-radius: var(--radius);
+  min-width: 50%;
+  font-size: 14px;
+  background: var(--surface);
+  color: var(--text);
+  transition: border-color 0.2s ease;
+}
+
+.search-bar input[type="search"]:focus {
+  outline: none;
+  border-color: var(--accent-2);
+}
+
+.search-bar .btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent-2);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.search-bar .btn:hover {
+  background: var(--accent);
+  transform: translateY(-1px);
+}
+
+.search-bar .btn.ghost {
+  background: transparent;
+  border: 1px solid var(--accent-2);
+  color: var(--accent-2);
+}
+
+.search-bar .btn.ghost:hover {
+  background: var(--accent-2);
+  color: var(--text);
+}
+
+/* ----------------- Resultados ----------------- */
+.results {
+  margin: 32px 0;
+}
+#resultsMetaPost {
+  color: var(--bg);
+}
+
+#resultsGridPost {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+/* Cards animadas coherentes con perfil */
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 36px rgba(0,0,0,0.42);
+}
+
+/* ----------------- Responsive ----------------- */
+@media (max-width: 700px) {
+  .hero.small-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .hero-right {
+    margin-top: 12px;
+    justify-content: flex-start;
+  }
+
+  .search-bar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .search-bar input[type="search"],
+  .search-bar .btn {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 500px) {
+  .hero-left h1 {
+    font-size: 24px;
+  }
+
+  .hero-left .muted {
+    font-size: 14px;
+  }
+
+  .stats-grid {
+    display: flex;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .stat-card {
+    flex: 1;
+    margin: 0;
+  }
+}

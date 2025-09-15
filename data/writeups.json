@@ -1,0 +1,219 @@
+[
+  {
+    "id": "htb-epsilon",
+    "title": "Epsilon",
+    "platform": "HackTheBox",
+    "os": "Linux",
+    "date": "2025-09-11",
+    "difficulty": "Medium",
+    "tags": [
+      "Linux",
+      "Git",
+      "AWS Lambda",
+      "JWT",
+      "Flask",
+      "SSTI",
+      "Reverse Shell",
+      "RCE",
+      "Enumeration",
+      "Privilege Escalation",
+      "Cronjob",
+      "tar -h",
+      "Symbolic Link",
+      "Exploitation",
+      "Web Application",
+      "Vulnerability"
+    ],
+    "summary": "Medium difficulty Linux box. Exploit exposed Git repo to recover AWS Lambda credentials, generate admin JWT, exploit Flask SSTI, and escalate via cronjob with tar -h.",
+    "post": "Epsilon is a medium-difficulty Linux machine that exposes a Git repository on the web server. During enumeration, AWS Lambda credentials leaked in previous commits are discovered. Using these credentials, the secret key for signing JWTs in the Flask app is obtained, allowing admin cookie generation. Finally, root access is obtained exploiting a cronjob that runs tar -h with symbolic links."
+  },
+  {
+    "id": "vh-djinn3",
+    "title": "Djinn3",
+    "platform": "XDD",
+    "os": "Linux",
+    "date": "2025-09-13",
+    "difficulty": "easy",
+    "tags": [
+      "Linux",
+      "HTTP",
+      "Web",
+      "SSTI",
+      "Reverse Shell",
+      "RCE",
+      "Ticketing System",
+      "Exploit",
+      "Enumeration",
+      "PrivEsc",
+      "PwnKit",
+      "SUID",
+      "Initial Access",
+      "www-data",
+      "root"
+    ],
+    "summary": "Medium difficulty Linux box. Exploit exposed Git repo to recover AWS Lambda credentials, generate admin JWT, exploit Flask SSTI, and escalate via cronjob with tar -h.",
+    "post": "Djinn3 is a Linux machine exposing multiple services including a custom service on port 31337. A ticketing system running on this port is vulnerable to SSTI, which is exploited to obtain a reverse shell as www-data. Privilege escalation is achieved using the PwnKit SUID binary, allowing full root access."
+  },
+  {
+    "id": "htb-alpha",
+    "title": "Alpha",
+    "platform": "HackTheBox",
+    "os": "Linux",
+    "date": "2025-08-30",
+    "difficulty": "Easy",
+    "tags": [
+      "Linux",
+      "HTTP",
+      "Web",
+      "Enumeration",
+      "SQLi",
+      "Reverse Shell",
+      "RCE",
+      "Exploitation",
+      "Privilege Escalation",
+      "www-data"
+    ],
+    "summary": "Medium difficulty Linux box. Exploit exposed Git repo to recover AWS Lambda credentials, generate admin JWT, exploit Flask SSTI, and escalate via cronjob with tar -h.",
+    "post": "Alpha is a beginner-friendly Linux box exposing a vulnerable web application. SQL injection on the login form allows obtaining database credentials. Using these, a reverse shell is achieved. Privilege escalation is done via a sudo misconfiguration, allowing the user to become root."
+  },
+  {
+    "id": "vh-bravo",
+    "title": "Bravo",
+    "platform": "VulnHub",
+    "os": "Windows",
+    "date": "2025-08-28",
+    "difficulty": "Medium",
+    "tags": [
+      "Windows",
+      "SMB",
+      "Enumeration",
+      "Null Session",
+      "Brute Force",
+      "Reverse Shell",
+      "RCE",
+      "Privilege Escalation",
+      "Pass-the-Hash",
+      "Exploitation"
+    ],
+    "summary": "Medium Windows box. Exploit SMB null session and weak passwords to gain access, then escalate privileges using Pass-the-Hash.",
+    "post": "Bravo is a Windows VM exposing SMB shares with weak credentials. A null session enumeration reveals usernames. Using a brute-force attack, credentials are obtained, leading to a reverse shell. Privilege escalation is achieved using Pass-the-Hash technique to obtain Administrator access."
+  },
+  {
+    "id": "htb-charlie",
+    "title": "Charlie",
+    "platform": "HackTheBox",
+    "os": "Linux",
+    "date": "2025-08-25",
+    "difficulty": "Hard",
+    "tags": [
+      "Linux",
+      "SSH",
+      "Enumeration",
+      "SUID",
+      "PrivEsc",
+      "Exploit",
+      "Reverse Shell",
+      "RCE",
+      "Kernel Exploit"
+    ],
+    "summary": "Hard Linux box. Exploit SSH with weak credentials, escalate privileges via a SUID binary and a kernel exploit to get root.",
+    "post": "Charlie is a challenging Linux box exposing SSH with a weak password. Initial enumeration leads to user access. Privilege escalation involves exploiting a misconfigured SUID binary and finally a kernel vulnerability to obtain root access."
+  },
+  {
+    "id": "vh-delta",
+    "title": "Delta",
+    "platform": "VulnHub",
+    "os": "Linux",
+    "date": "2025-08-22",
+    "difficulty": "Medium",
+    "tags": [
+      "Linux",
+      "HTTP",
+      "Web",
+      "LFI",
+      "Reverse Shell",
+      "RCE",
+      "Privilege Escalation",
+      "Enumeration"
+    ],
+    "summary": "Medium Linux box. Local File Inclusion in a web app leads to reverse shell and root via sudo misconfig.",
+    "post": "Delta exposes a web service vulnerable to LFI. Reading configuration files gives credentials for a reverse shell. Privilege escalation is achieved by exploiting a sudo misconfiguration, giving root."
+  },
+  {
+    "id": "htb-omega",
+    "title": "Omega",
+    "platform": "HackTheBox",
+    "os": "Windows",
+    "date": "2025-08-20",
+    "difficulty": "Hard",
+    "tags": [
+      "Windows",
+      "RDP",
+      "Enumeration",
+      "SMB",
+      "Brute Force",
+      "Reverse Shell",
+      "RCE",
+      "Privilege Escalation"
+    ],
+    "summary": "Hard Windows box. Exploit RDP and SMB misconfigurations to gain a foothold, then escalate to SYSTEM using weak service permissions.",
+    "post": "Omega is a Windows box with exposed RDP and SMB. Enumeration identifies weak passwords and misconfigured services. Exploiting these allows a reverse shell, followed by privilege escalation via weak service permissions to SYSTEM."
+  },
+  {
+    "id": "vh-echo",
+    "title": "Echo",
+    "platform": "VulnHub",
+    "os": "Linux",
+    "date": "2025-08-18",
+    "difficulty": "Easy",
+    "tags": [
+      "Linux",
+      "Web",
+      "Enumeration",
+      "SQLi",
+      "Reverse Shell",
+      "RCE",
+      "Exploitation"
+    ],
+    "summary": "Easy Linux box with SQL injection on a blog application leading to shell access.",
+    "post": "Echo is a beginner-friendly Linux box exposing a vulnerable blog application. SQL injection in the comment section allows database enumeration and eventually a reverse shell on the machine."
+  },
+  {
+    "id": "htb-foxtrot",
+    "title": "Foxtrot",
+    "platform": "HackTheBox",
+    "os": "Linux",
+    "date": "2025-08-15",
+    "difficulty": "Medium",
+    "tags": [
+      "Linux",
+      "HTTP",
+      "Web",
+      "XSS",
+      "Reverse Shell",
+      "RCE",
+      "Enumeration",
+      "PrivEsc"
+    ],
+    "summary": "Medium Linux box vulnerable to XSS leading to a reverse shell, then privilege escalation via cron jobs.",
+    "post": "Foxtrot exposes a web application with stored XSS vulnerabilities. Exploiting XSS allows a reverse shell. Privilege escalation is achieved by abusing a cron job owned by root."
+  },
+  {
+    "id": "vh-golf",
+    "title": "Golf",
+    "platform": "VulnHub",
+    "os": "Linux",
+    "date": "2025-08-12",
+    "difficulty": "Hard",
+    "tags": [
+      "Linux",
+      "SSH",
+      "Enumeration",
+      "Kernel Exploit",
+      "Reverse Shell",
+      "Privilege Escalation"
+    ],
+    "summary": "Hard Linux box requiring kernel exploitation after SSH access.",
+    "post": "Golf is a Linux VM with SSH exposed. After obtaining a normal user shell, enumeration reveals a vulnerable kernel version. Exploiting the kernel vulnerability allows root access."
+  }
+]

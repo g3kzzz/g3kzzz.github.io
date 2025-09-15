@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Writeup</title>
+  <link rel="stylesheet" href="src/css/style.css" />
+  <link rel="stylesheet" href="src/css/post.css" />
+</head>
+<body data-theme="">
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html#profile" class="brand">✦ g3kzzz</a>
+      <nav class="nav">
+        <a href="index.html#profile" class="nav-link">Profile</a>
+        <a href="index.html#writeups" class="nav-link">Writeups</a>
+        <a href="index.html#aboutme" class="nav-link">About Me</a>
+        <a href="index.html#posts" class="nav-link">Posts</a>
+      </nav>
+      <!-- No theme toggle, viene del index -->
+    </div>
+  </header>
+
+  <main class="container">
+    <article class="post card">
+      <header class="post-header" style="text-align:center;">
+        <h1 id="postTitle" class="post-title">Writeup</h1>
+        <div id="postMeta" class="muted post-meta">HackTheBox | Linux | Difficulty: Medium</div>
+      </header>
+
+      <div id="postContent" class="post-content">
+        <p>Cargando writeup…</p>
+      </div>
+
+      <div class="tags-container" id="postTags"></div>
+
+      <nav class="post-nav" style="margin-top:24px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <button id="backHome" class="btn ghost">← Back to all writeups</button>
+        <button id="viewProfile" class="btn ghost">👤 View Profile</button>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>© <span id="year"></span> G3K. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+  // ===============================
+  // Hereda el tema del index
+  // ===============================
+  document.addEventListener('DOMContentLoaded', () => {
+    const theme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+  });
+  </script>
+
+  <script>
+  // ===============================
+  // Cargar writeup
+  // ===============================
+  document.addEventListener('DOMContentLoaded', async () => {
+    const postTitleEl = document.getElementById('postTitle');
+    const postMetaEl = document.getElementById('postMeta');
+    const postContentEl = document.getElementById('postContent');
+    const fullWriteupBtn = document.getElementById('fullWriteup');
+    const postTagsEl = document.getElementById('postTags');
+
+    const writeupId = sessionStorage.getItem('currentWriteup');
+    if (!writeupId) {
+      postContentEl.innerHTML = '<p>No se seleccionó ningún writeup.</p>';
+      return;
+    }
+
+    try {
+      const resJson = await fetch('data/writeups.json');
+      const allWriteups = await resJson.json();
+      const w = allWriteups.find(w => w.id === writeupId);
+      if (!w) throw new Error('Writeup no encontrado.');
+
+      postTitleEl.textContent = w.title;
+      postMetaEl.textContent = `${w.platform} | ${w.os} | ${w.difficulty}`;
+
+      const htmlRes = await fetch(`writeups/${writeupId}.html`);
+      if (!htmlRes.ok) throw new Error('HTML del writeup no encontrado.');
+      postContentEl.innerHTML = await htmlRes.text();
+
+      if (fullWriteupBtn) {
+        fullWriteupBtn.style.display = 'inline-block';
+        fullWriteupBtn.href = `writeups/${writeupId}.html`;
+      }
+
+      if (postTagsEl && w.tags) {
+        postTagsEl.innerHTML = '';
+        w.tags.forEach(tag => {
+          const span = document.createElement('span');
+          span.className = 'tag-pill';
+          span.textContent = tag;
+          postTagsEl.appendChild(span);
+        });
+      }
+
+      document.getElementById('backHome').addEventListener('click', () => location.href='index.html#writeups');
+      document.getElementById('viewProfile').addEventListener('click', () => location.href='index.html#profile');
+
+    } catch (err) {
+      console.error(err);
+      postContentEl.innerHTML = '<p>Error cargando el writeup completo.</p>';
+    }
+  });
+  </script>
+
+</body>
+</html>
